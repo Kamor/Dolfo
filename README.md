@@ -1,2 +1,2 @@
 # Dolfo
-My presentation server for www.daimonin.de
+My presentation server for www.daimonin.org
