@@ -1,0 +1,38 @@
+Daimonin Folder and Packages
+
+The Daimonin project has a fixed folder structure to provide simple access to the
+required files and executables under different OS.
+
+Aside from the whole project package there are some other packages for special use
+(e.g. mapmaker and music packages).
+
+The default project structure:
+
+Daimonin/
+	arch/			<- Arch files and server files for server/lib
+	bin/			<- Binaries and/or script files to run binaries
+	client/			<- The SDL client
+	client3d/		<- The 3D client (under development)
+	dev/			<- OS specific dev tools (DEV team only)
+	doc/			<- Project documentation
+	editor/			<- Available via separate package (http://gridarta.sourceforge.net/)
+	maps/			<- Map files (for use with editor or server)
+	project_tools		<- Various tools for different aspects of the project
+	server/			<- The Daimonin server
+
+
+For the server/ folder you will see this
+	server/
+		data/		<- Generated from /install/
+		install/	<- Scripts to install the server and generate folders and files
+		lib/		<- Files generated from /arch with the editor
+		make/		<- Make files, only included if this package contains a /src folder
+		man/		<- The online manual for server commands
+		plugins/	<- Plugins. Default plugin is the LUA script engine
+		src/		<- Source files for the server. Binary packages have no /src folder
+
+
+For help ask the dev team:
+
+http://daimonin.sourceforge.net
+http://www.daimonin.org
