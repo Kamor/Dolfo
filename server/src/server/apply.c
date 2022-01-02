@@ -1298,12 +1298,12 @@ static void ApplyFood(object_t *op, object_t *tmp)
         return;
     }
 
-  // cap food, only one meal allowed
-	if (QUERY_FLAG(op, FLAG_EATING))
-	{
-		ndi(NDI_UNIQUE| NDI_NAVY, 0, op, "Wait till you finished your current meal!");
-		return;
-	}
+    // cap food, only one meal allowed
+    if (QUERY_FLAG(op, FLAG_EATING))
+    {
+	ndi(NDI_UNIQUE| NDI_NAVY, 0, op, "Wait till you finished your current meal!");
+	return;
+    }
 
     force->type = TYPE_FOOD_FORCE;
     SET_FLAG(force, FLAG_IS_USED_UP); /* or it will auto destroyed with first tick */
