@@ -1,0 +1,333 @@
+#
+# - healing potions (hp)
+#
+Allowed potion_generic
+chance 32
+artifact potion_minor_healing
+def_arch potion_generic
+editor 3:items/spells/potions
+Object
+title of minor healing
+face potion_red.101
+inv_face potionfir.101
+level 1
+type 6
+is_magical 1
+last_eat 2
+hp 25
+sp 0
+value 100
+end
+#
+Allowed potion_generic
+chance 16
+artifact potion_small_healing
+def_arch potion_generic
+editor 3:items/spells/potions
+Object
+title of small healing
+face potion_red.101
+inv_face potionfir.101
+level 1
+type 6
+is_magical 1
+last_eat 2
+hp 50
+sp 0
+value 400
+end
+#
+Allowed potion_generic
+chance 8
+artifact potion_medium_healing
+def_arch potion_generic
+editor 3:items/spells/potions
+Object
+title of medium healing
+face potion_red.101
+inv_face potionfir.101
+level 1
+type 6
+is_magical 1
+last_eat 2
+hp 100
+sp 0
+value 1600
+end
+#
+Allowed potion_generic
+chance 4
+artifact potion_strong_healing
+def_arch potion_generic
+editor 3:items/spells/potions
+Object
+title of strong healing
+face potion_red.101
+inv_face potionfir.101
+level 1
+type 6
+is_magical 1
+last_eat 2
+hp 200
+sp 0
+value 6400
+end
+#
+Allowed potion_generic
+chance 2
+artifact potion_greater_healing
+def_arch potion_generic
+editor 3:items/spells/potions
+Object
+title of greater healing
+face potion_red.101
+inv_face potionfir.101
+level 1
+type 6
+is_magical 1
+last_eat 2
+hp 400
+sp 0
+value 25600
+end
+#
+Allowed potion_generic
+chance 1
+artifact potion_superior_healing
+def_arch potion_generic
+editor 3:items/spells/potions
+Object
+title of superior healing
+face potion_red.101
+inv_face potionfir.101
+level 1
+type 6
+is_magical 1
+last_eat 2
+hp 800
+sp 0
+value 102400
+end
+#
+# mana potions (sp)
+#
+Allowed potion_generic
+chance 32
+artifact potion_minor_mana
+def_arch potion_generic
+editor 3:items/spells/potions
+Object
+title of minor mana
+level 1
+type 6
+is_magical 1
+last_eat 2
+sp 25
+value 100
+end
+#
+Allowed potion_generic
+chance 16
+artifact potion_small_mana
+def_arch potion_generic
+editor 3:items/spells/potions
+Object
+title of small mana
+level 1
+type 6
+is_magical 1
+last_eat 2
+sp 50
+value 400
+end
+#
+Allowed potion_generic
+chance 8
+artifact potion_medium_mana
+def_arch potion_generic
+editor 3:items/spells/potions
+Object
+title of medium mana
+level 1
+type 6
+is_magical 1
+last_eat 2
+sp 100
+value 1600
+end
+#
+Allowed potion_generic
+chance 4
+artifact potion_strong_mana
+def_arch potion_generic
+editor 3:items/spells/potions
+Object
+title of strong mana
+level 1
+type 6
+is_magical 1
+last_eat 2
+sp 200
+value 6400
+end
+#
+Allowed potion_generic
+chance 2
+artifact potion_greater_mana
+def_arch potion_generic
+editor 3:items/spells/potions
+Object
+title of greater mana
+level 1
+type 6
+is_magical 1
+last_eat 2
+sp 400
+value 25600
+end
+#
+Allowed potion_generic
+chance 1
+artifact potion_superior_mana
+def_arch potion_generic
+editor 3:items/spells/potions
+Object
+title of superior mana
+level 1
+type 6
+is_magical 1
+last_eat 2
+sp 800
+value 102400
+end
+#
+# - grace potions (grace)
+#
+Allowed potion_generic
+chance 32
+artifact potion_minor_grace
+def_arch potion_generic
+editor 3:items/spells/potions
+Object
+title of minor grace
+face potion_grey.101
+inv_face potionwis.101
+level 1
+type 6
+is_magical 1
+last_eat 2
+grace 10
+sp 0
+value 100
+end
+#
+Allowed potion_generic
+chance 16
+artifact potion_small_grace
+def_arch potion_generic
+editor 3:items/spells/potions
+Object
+title of small grace
+face potion_grey.101
+inv_face potionwis.101
+level 1
+type 6
+is_magical 1
+last_eat 2
+grace 20
+sp 0
+value 400
+end
+#
+Allowed potion_generic
+chance 8
+artifact potion_medium_grace
+def_arch potion_generic
+editor 3:items/spells/potions
+Object
+title of medium grace
+face potion_grey.101
+inv_face potionwis.101
+level 1
+type 6
+is_magical 1
+last_eat 2
+grace 40
+sp 0
+value 1600
+end
+#
+Allowed potion_generic
+chance 4
+artifact potion_strong_grace
+def_arch potion_generic
+editor 3:items/spells/potions
+Object
+title of strong grace
+face potion_grey.101
+inv_face potionwis.101
+level 1
+type 6
+is_magical 1
+last_eat 2
+grace 80
+sp 0
+value 6400
+end
+#
+Allowed potion_generic
+chance 2
+artifact potion_greater_grace
+def_arch potion_generic
+editor 3:items/spells/potions
+Object
+title of greater grace
+face potion_grey.101
+inv_face potionwis.101
+level 1
+type 6
+is_magical 1
+last_eat 2
+grace 160
+sp 0
+value 25600
+end
+#
+Allowed potion_generic
+chance 1
+artifact potion_superior_grace
+def_arch potion_generic
+editor 3:items/spells/potions
+Object
+title of superior grace
+face potion_grey.101
+inv_face potionwis.101
+level 1
+type 6
+is_magical 1
+last_eat 2
+grace 320
+sp 0
+value 102400
+end
+#
+# test potions to reduce hp, mana and grace, they shows there is no check for <0 on mana or grace, this goes to 65xxx
+#
+Allowed potion_generic
+chance 0
+artifact potion_reduce
+def_arch potion_generic
+editor 3:items/spells/potions
+Object
+title of reduce
+face potion_grey.101
+inv_face potionwis.101
+level 1
+type 6
+is_magical 1
+last_eat 1
+hp -100
+sp -100
+grace -100
+value 10000
+end
