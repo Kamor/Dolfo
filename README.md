@@ -16,7 +16,7 @@ More npc's, upgrades or fixes
 New buyable skill system:
 - daimonin_object.c removed SetSkill cap for indirect skills
 - dolfo.lua prototyp trainer for close weapon skills (on map castle_030a)
-- talues.lua prototyp trainer for ranged weapon skills
+- taleus.lua prototyp trainer for ranged weapon skills
 
 New food system:
 - apply.c capped food to only eat one food same time
