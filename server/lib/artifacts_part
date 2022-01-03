@@ -9,7 +9,7 @@ editor 3:items/spells/potions
 Object
 title of minor healing
 face potion_red.101
-inv_face potionfir.101
+inv_face potion_red.101
 level 1
 type 6
 is_magical 1
@@ -27,7 +27,7 @@ editor 3:items/spells/potions
 Object
 title of small healing
 face potion_red.101
-inv_face potionfir.101
+inv_face potion_red.101
 level 1
 type 6
 is_magical 1
@@ -45,7 +45,7 @@ editor 3:items/spells/potions
 Object
 title of medium healing
 face potion_red.101
-inv_face potionfir.101
+inv_face potion_red.101
 level 1
 type 6
 is_magical 1
@@ -63,7 +63,7 @@ editor 3:items/spells/potions
 Object
 title of strong healing
 face potion_red.101
-inv_face potionfir.101
+inv_face potion_red.101
 level 1
 type 6
 is_magical 1
@@ -81,7 +81,7 @@ editor 3:items/spells/potions
 Object
 title of greater healing
 face potion_red.101
-inv_face potionfir.101
+inv_face potion_red.101
 level 1
 type 6
 is_magical 1
@@ -99,7 +99,7 @@ editor 3:items/spells/potions
 Object
 title of superior healing
 face potion_red.101
-inv_face potionfir.101
+inv_face potion_red.101
 level 1
 type 6
 is_magical 1
@@ -107,6 +107,44 @@ last_eat 2
 hp 800
 sp 0
 value 102400
+end
+#
+Allowed potion_generic
+chance 2
+artifact potion_half_healing
+def_arch potion_generic
+editor 3:items/spells/potions
+Object
+title of half healing
+face potion_red.101
+inv_face potion_red.101
+level 1
+type 6
+is_magical 1
+last_eat 1
+subtype 1
+hp 50
+sp 0
+value 102400
+end
+#
+Allowed potion_generic
+chance 1
+artifact potion_full_healing
+def_arch potion_generic
+editor 3:items/spells/potions
+Object
+title of full healing
+face potion_red.101
+inv_face potion_red.101
+level 1
+type 6
+is_magical 1
+last_eat 1
+subtype 1
+hp 100
+sp 0
+value 204800
 end
 #
 # mana potions (sp)
@@ -122,7 +160,7 @@ level 1
 type 6
 is_magical 1
 last_eat 2
-sp 25
+sp 10
 value 100
 end
 #
@@ -137,7 +175,7 @@ level 1
 type 6
 is_magical 1
 last_eat 2
-sp 50
+sp 20
 value 400
 end
 #
@@ -152,7 +190,7 @@ level 1
 type 6
 is_magical 1
 last_eat 2
-sp 100
+sp 40
 value 1600
 end
 #
@@ -167,7 +205,7 @@ level 1
 type 6
 is_magical 1
 last_eat 2
-sp 200
+sp 80
 value 6400
 end
 #
@@ -182,7 +220,7 @@ level 1
 type 6
 is_magical 1
 last_eat 2
-sp 400
+sp 160
 value 25600
 end
 #
@@ -197,8 +235,40 @@ level 1
 type 6
 is_magical 1
 last_eat 2
-sp 800
+sp 320
 value 102400
+end
+#
+Allowed potion_generic
+chance 2
+artifact potion_half_mana
+def_arch potion_generic
+editor 3:items/spells/potions
+Object
+title of half mana
+level 1
+type 6
+is_magical 1
+last_eat 1
+subtype 1
+sp 50
+value 102400
+end
+#
+Allowed potion_generic
+chance 1
+artifact potion_full_mana
+def_arch potion_generic
+editor 3:items/spells/potions
+Object
+title of full mana
+level 1
+type 6
+is_magical 1
+last_eat 1
+subtype 1
+sp 100
+value 204800
 end
 #
 # - grace potions (grace)
@@ -210,8 +280,7 @@ def_arch potion_generic
 editor 3:items/spells/potions
 Object
 title of minor grace
-face potion_grey.101
-inv_face potionwis.101
+face potionwis.101
 level 1
 type 6
 is_magical 1
@@ -228,7 +297,7 @@ def_arch potion_generic
 editor 3:items/spells/potions
 Object
 title of small grace
-face potion_grey.101
+face potionwis.101
 inv_face potionwis.101
 level 1
 type 6
@@ -246,7 +315,7 @@ def_arch potion_generic
 editor 3:items/spells/potions
 Object
 title of medium grace
-face potion_grey.101
+face potionwis.101
 inv_face potionwis.101
 level 1
 type 6
@@ -264,7 +333,7 @@ def_arch potion_generic
 editor 3:items/spells/potions
 Object
 title of strong grace
-face potion_grey.101
+face potionwis.101
 inv_face potionwis.101
 level 1
 type 6
@@ -282,7 +351,7 @@ def_arch potion_generic
 editor 3:items/spells/potions
 Object
 title of greater grace
-face potion_grey.101
+face potionwis.101
 inv_face potionwis.101
 level 1
 type 6
@@ -300,7 +369,7 @@ def_arch potion_generic
 editor 3:items/spells/potions
 Object
 title of superior grace
-face potion_grey.101
+face potionwis.101
 inv_face potionwis.101
 level 1
 type 6
@@ -309,6 +378,84 @@ last_eat 2
 grace 320
 sp 0
 value 102400
+end
+#
+Allowed potion_generic
+chance 2
+artifact potion_half_grace
+def_arch potion_generic
+editor 3:items/spells/potions
+Object
+title of half grace
+face potionwis.101
+inv_face potionwis.101
+level 1
+type 6
+is_magical 1
+last_eat 1
+subtype 1
+grace 50
+sp 0
+value 102400
+end
+#
+Allowed potion_generic
+chance 1
+artifact potion_full_grace
+def_arch potion_generic
+editor 3:items/spells/potions
+Object
+title of full grace
+face potionwis.101
+inv_face potionwis.101
+level 1
+type 6
+is_magical 1
+last_eat 1
+subtype 1
+grace 100
+sp 0
+value 204800
+end
+#
+Allowed potion_generic
+chance 1
+artifact potion_half_restoration
+def_arch potion_generic
+editor 3:items/spells/potions
+Object
+title of half restoration
+face potion_yellow.101
+inv_face potion_yellow.101
+level 1
+type 6
+is_magical 1
+last_eat 1
+subtype 1
+hp 50
+sp 50
+grace 50
+value 102400
+end
+#
+Allowed potion_generic
+chance 1
+artifact potion_full_restoration
+def_arch potion_generic
+editor 3:items/spells/potions
+Object
+title of full restoration
+face potion_yellow.101
+inv_face potion_yellow.101
+level 1
+type 6
+is_magical 1
+last_eat 1
+subtype 1
+hp 100
+sp 100
+grace 100
+value 204800
 end
 #
 # test potions to reduce hp, mana and grace, they shows there is no check for <0 on mana or grace, this goes to 65xxx
@@ -321,7 +468,7 @@ editor 3:items/spells/potions
 Object
 title of reduce
 face potion_grey.101
-inv_face potionwis.101
+inv_face potion_grey.101
 level 1
 type 6
 is_magical 1
