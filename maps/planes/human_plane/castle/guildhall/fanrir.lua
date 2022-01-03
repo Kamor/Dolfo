@@ -42,6 +42,8 @@
 -- todo money for buying keys is 1 copper todo
 
 
+local test = false -- true -- testmode you have shortcut links and buying keys don't cost money
+
 local npc = event.me
 local player = event.activator
 
@@ -232,7 +234,11 @@ local function topic_greeting()
 						   
 				if qb:GetStatus(2) == game.QSTAT_ACTIVE then
 					-- we allow player to lie for keys, for fanrir easter egg
-					ib:AddLink("I lost my key.", "key")
+					if count_keys()<3 then
+						ib:AddLink("I lost my key.", "key")
+					else
+						ib:AddLink("I need a key.", "key")				
+					end
 				end
             end
         ---------
@@ -274,12 +280,20 @@ local function topic_key(cmd)
 		else
 		
 			if cmd == nil then
-				ib:SetMsg("You have " .. keys .. " keys now.")
-				ib:AddLink("Please can you give me a key, the other keys are broken or don't work.", "key please") -- this joke don't showed full because of limited link chars -- TODO
+			        if math.random() >= 0.50 then
+            ib:SetMsg("Come On!")
+        else
+            ib:SetMsg("Really?")
+        end
+				ib:AddMsg(" You have " .. keys .. " keys.")
+				ib:AddLink("Please can you give me a key, the other keys are broken or don't work.", "key please") -- this joke don't showed full because of limited link length -- TODO
 				
 			-- now players only get more keys if they use "key please" ...
 	        elseif cmd == "please" then
-				if keys<5 then
+				if keys==3 then
+					ib:SetMsg("Ok? Here you have another one. This key is not broken!")
+					give_key()
+				elseif keys==4 then
 					ib:SetMsg("Hm? But if you like, here is another one.")
 					give_key()
 				else
@@ -288,7 +302,7 @@ local function topic_key(cmd)
 				end
 			elseif cmd == "please please" then
 				if keys==5 then
-					ib:SetMsg("Wow. You really have to much time! But ey. here is another one.")
+					ib:SetMsg("Wow. You really have to much time! But hey, here is another one.")
 					give_key()
 				elseif keys==6 then
 					ib:SetMsg("You like this? No problem, here is another one.")
@@ -319,12 +333,13 @@ local function topic_key(cmd)
 			end
 
 		end
-		-- these links are for testing
-		ib:AddMsg("\n\nTestlinks - will be removed later ...")
-		ib:AddLink("I lost my key.", "key")
-		ib:AddLink("I lost my key. Please", "key please")
-		ib:AddLink("I lost my key. Please. Please", "key please please")
-		ib:AddLink("I lost my key. Please. Please. Please", "key please please please")
+
+		if test then
+			ib:AddLink("I lost my key.", "key")
+			ib:AddLink("I lost my key. Please", "key please")
+			ib:AddLink("I lost my key. Please. Please", "key please please")
+			ib:AddLink("I lost my key. Please. Please. Please", "key please please please")
+		end
 	end
 end
 
@@ -837,12 +852,13 @@ local function topic_services()
 end
 
 local function topic_buy()
-
     ib:SetHeader("st_005", npc)
 	local keys=count_keys()
 	local price=10+keys*keys*keys
 	
-	price = 1
+	if test==true then 
+		price = 0
+	end
 	
 	if player:PayAmount(price) == 1 then
 		give_key()
@@ -858,9 +874,9 @@ local function topic_buy()
 				
 
 		end
-		
+	else
+		ib:SetMsg("You don't have enough money.\n")
 	end
-
 	ib:SetLHSButton("Back","services")
 end
 
