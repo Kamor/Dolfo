@@ -1301,8 +1301,8 @@ static void ApplyFood(object_t *op, object_t *tmp)
     // cap food, only one meal allowed
     if (QUERY_FLAG(op, FLAG_EATING))
     {
-	ndi(NDI_UNIQUE| NDI_NAVY, 0, op, "Wait till you finished your current meal!");
-	return;
+      ndi(NDI_UNIQUE| NDI_NAVY, 0, op, "Wait till you finished your current meal!");
+      return;
     }
 
     force->type = TYPE_FOOD_FORCE;
@@ -1312,9 +1312,22 @@ static void ApplyFood(object_t *op, object_t *tmp)
     force->last_eat = tmp->last_eat + 1;    /* we need that to know the base time */
     if (force->stats.food <= 0)
         force->stats.food = 1;
-    force->stats.hp = tmp->stats.hp;
-    force->stats.sp = tmp->stats.sp;
-    force->stats.grace = tmp->stats.grace;
+
+    // subtype 1 on type 6 (food) means it's percent food
+    if(tmp->subtype==1)
+    {
+      force->stats.hp = (int)op->stats.maxhp/(double)100*tmp->stats.hp;
+      force->stats.sp = (int)op->stats.maxsp/(double)100*tmp->stats.sp;
+      force->stats.grace = (int)op->stats.maxgrace/(double)100*tmp->stats.grace;
+    }
+    else
+    {
+      force->stats.hp = tmp->stats.hp;
+      force->stats.sp = tmp->stats.sp;
+      force->stats.grace = tmp->stats.grace;
+    }
+
+
     force->speed = 0.125f;
 
     /* applying the food will put as in "rest mode" - but instead of rest regeneration we
