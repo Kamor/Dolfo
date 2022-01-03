@@ -9,7 +9,7 @@ My changes:
 More npc's, upgrades or fixes
 - fanrir.lua improved key logic, new easter egg and shop
 - cashin.lua reworked the interface flow and new topics
-- stupir.lua fun/smalltalk scipt (guildhall_a_030)
+- stupir.lua fun/smalltalk script (guildhall_a_030)
 - guildhall_guards.lua fun/jail, game hint script
 - guard_default.lua simple basis script for castle guards doing some talking
 
