@@ -19,6 +19,7 @@ New buyable skill system:
 - taleus.lua prototyp trainer for ranged weapon skills
 
 New food system:
-- apply.c capped food to only eat one food same time
-- lib/artifacts new potions
+- apply.c capped food to only eat one food same time, implemented % food
+- lib/artifacts new potions + new % potions
+- dev/testpotions.lua script
 - scripts/alchemist.lua and new npc in guildhall_a_030a selling potions
