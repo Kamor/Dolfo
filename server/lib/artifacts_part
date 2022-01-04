@@ -478,3 +478,19 @@ sp -100
 grace -100
 value 10000
 end
+#
+# - credit card
+#
+Allowed card
+chance 0
+artifact credit_card
+def_arch card
+editor 3:items/signs
+Object
+name creditcard
+identified 1
+type 98
+material 1
+value 8
+weight 20
+end
