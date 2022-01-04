@@ -24,3 +24,4 @@ New food system:
 - lib/artifacts new potions + new % potions
 - dev/testpotions.lua script
 - scripts/alchemist.lua and new npc in guildhall_a_030a selling potions
+- changed tavern food to %
