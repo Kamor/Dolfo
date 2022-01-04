@@ -25,3 +25,7 @@ New food system:
 - dev/testpotions.lua script
 - scripts/alchemist.lua and new npc in guildhall_a_030a selling potions
 - changed tavern food to %
+
+New creditcard system
+- added prototyp functionality in shop.c line line 297
+- added a creditcard to lib/artifacts
