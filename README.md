@@ -20,6 +20,7 @@ New buyable skill system:
 
 New food system:
 - apply.c capped food to only eat one food same time, implemented % food
+- item.c % food showed as % value
 - lib/artifacts new potions + new % potions
 - dev/testpotions.lua script
 - scripts/alchemist.lua and new npc in guildhall_a_030a selling potions
