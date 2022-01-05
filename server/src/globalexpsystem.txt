@@ -1,0 +1,35 @@
+global exp bonus system, to reproduce my changes
+
+implementing global var
+global.c // (new file) 
+int global_exp_bonus = 0; // default exp bonus on server start in percent (-100 to 1000 or higher)
+global.h
+EXTERN int global_exp_bonus;
+
+implementing exp_bonus for players
+player.h line 237
+changed exp_bonus to exp_bonus_amulet
+added exp_bonus
+living.c line 1011 and line 1403
+changed exp_bonus to exp_bonus_amulet
+TODO: exp_bonus resets after one kill, need to be improved
+
+changed the calculation for bonus exp
+exp.c AdjustExp line 481
+and the output
+exp.c AdjustExp line 518
+
+---
+implemented 3 (get/set) command functions:
+c_misc.c
+command_bonus
+gmaster.c
+command_setserverexp
+command_setplayerexp
+sproto.h
+command_bonus
+command_setserverexp
+command_setplayerexp
+commands.c
+/bonus for all players
+/setserverexp /setplayerexp for gm/sa
