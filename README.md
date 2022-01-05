@@ -30,3 +30,7 @@ New food system:
 New creditcard system
 - added prototyp functionality in shop.c line line 297
 - added a creditcard to lib/artifacts
+
+Global exp system
+- added/changed vars, changed exp calculation, added get/set commands
+- -> see server/src/globalexpsystem.txt
