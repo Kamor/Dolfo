@@ -3,7 +3,7 @@ name Guild Hall
 msg
 Creator: Daimonin Map Editor
 Date:    7/16/2004
-Modified: 2021-12-23 Karsten
+Modified: 2022-01-05 Karsten
 endmsg
 width 24
 height 24
@@ -2673,13 +2673,13 @@ arch spawn_point
 x 15
 y 9
 arch dwarf_fighter
-name Dolfo
+name Gimli
 level 5
 friendly 1
 type 83
 arch event_obj
 subtype 13
-race guildhall/dolfo.lua
+race guildhall/gimli.lua
 end
 end
 end
@@ -3153,6 +3153,20 @@ end
 arch bridge_wood_EW.111
 x 18
 y 1
+end
+arch spawn_point
+x 18
+y 1
+arch ship_captain
+name Dolfo
+is_male 1
+is_female 0
+type 83
+arch event_obj
+subtype 13
+race guildhall/dolfo.lua
+end
+end
 end
 arch bridge_wood_EW.101
 x 18
