@@ -18,6 +18,8 @@ New buyable skill system:
 - daimonin_object.c removed SetSkill cap for indirect skills
 - gimli.lua prototyp trainer for close weapon skills
 - taleus.lua prototyp trainer for ranged weapon skills
+- updated the logic to helper/melee_weapon_skill.lua
+- improved scripts/first_weapon.lua
 
 New food system:
 - apply.c capped food to only eat one food same time, implemented % food
