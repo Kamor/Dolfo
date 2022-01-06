@@ -37,8 +37,7 @@ if not ds:Get("weapon given") then
 					weaponname=v
 					-- we continue searching and checking the exp from other weapon skills
 					-- if we find other skills with zero exp, we take this skill
-					-- so on multiply learned weaponskill with all 0 exp, script chooses the last skill for the weapon to give
-					-- somehow slash is currently last skill, looks like pairs() is sorting the array
+					-- so on multiply learned weapon skills with all 0 exp, script chooses the last skillnumber for the weapon to give
 				end
 			end
 		end	
