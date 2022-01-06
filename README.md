@@ -19,6 +19,7 @@ New buyable skill system:
 - gimli.lua prototyp trainer for close weapon skills
 - taleus.lua prototyp trainer for ranged weapon skills
 - updated the logic to helper/melee_weapon_skill.lua
+- updated the logic to helper/ranged_weapon_skill.lua
 - improved scripts/first_weapon.lua
 
 New food system:
