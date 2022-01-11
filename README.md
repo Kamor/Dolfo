@@ -37,3 +37,6 @@ New creditcard system
 Global exp system
 - added/changed vars, changed exp calculation, added get/set commands
 - -> see server/src/globalexpsystem.txt
+
+Improved Pay logic
+- logic now pays first with coppers, then silver, gold, mith
