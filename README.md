@@ -40,3 +40,7 @@ Global exp system
 
 Improved Pay logic
 - logic now pays first with coppers, then silver, gold, mith
+
+New lua function CreateObject to fix container problem
+- This allows to build an object from arch, without inserting it into a body
+- Function returns object. This object works with PickUp()
