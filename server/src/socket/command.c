@@ -89,7 +89,7 @@ CommArray_s Commands[] =
     {"remove",        command_party_remove,   4.0f, 1, NULL}, /* remove a specified player from a group*/
     {"pvp",           command_pvp_stats,      0.0f, 0, NULL}, /* lists pvp stats of specified player */
     {"level",         command_level,          0.0f, 0, NULL}, /* states specified player's level*/
-    {"bonus",         command_bonus,        	0.0f, 1, NULL}, /* shows bonus exp */
+    {"bonus",         command_bonus,          0.0f, 1, NULL}, /* shows bonus exp */
 #ifdef USE_CHANNELS
     {"channel",       command_channel,        1.0f, 0, NULL}, /* channel system */
 #endif
