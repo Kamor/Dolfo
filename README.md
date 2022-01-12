@@ -34,6 +34,9 @@ New creditcard system
 - added prototyp functionality in shop.c line line 297
 - added a creditcard to lib/artifacts
 
+Improved Paylogic
+- First pay with coppers, then silver, gold, mithril
+
 Global exp system
 - added/changed vars, changed exp calculation, added get/set commands
 - -> see server/src/globalexpsystem.txt
