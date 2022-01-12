@@ -491,7 +491,7 @@ static int AdjustExp(object_t *pl, object_t *op, int exp, int cap)
 
                 /* We set limit to 1/4 of a level - thats enormous much */
                 // this cap works only on exp>0
-                int total = MIN(total, (new_levels[op->level + 1] - new_levels[op->level]) / 4);
+                total = MIN(total, (new_levels[op->level + 1] - new_levels[op->level]) / 4);
                 // this cap works only on exp gain, if we want go for more -bonus we need other cap here
             }
 
@@ -525,12 +525,12 @@ static int AdjustExp(object_t *pl, object_t *op, int exp, int cap)
                 else if (bonus_exp>0)
                 {
                     sprintf(buf, "You gain ~%d (+%d bonus)", total, bonus_exp);
-                    //sprintf(buf, "debug: exp %d + bonus %d = total %d", exp, bonus, total);
+                    //sprintf(buf, "debug: exp %d + bonus_exp %d = total %d", exp, bonus, total);
                 }
                 else
                 {
                     sprintf(buf, "You gain ~%d (%d bonus)", total, bonus_exp);
-                    //sprintf(buf, "debug: exp %d + bonus %d = total %d", exp, bonus, total);
+                    //sprintf(buf, "debug: exp %d + bonus %d_exp = total %d", exp, bonus, total);
                 }
             }
 
