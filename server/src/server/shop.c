@@ -470,12 +470,10 @@ uint8 shop_pay_amount(sint64 amount, object_t *op)
         return 0;
     }
 
-    if (amount <= 0)                   // hurray, it's free!
+    if (amount <= 0) // hurray, it's free!
     {
         return 1;
     }
-
-    //arrow = get_split_ob(pl->equipment[PLAYER_EQUIP_AMUN], 1);
 
     // prototyp : paying with a marked creditcard, currently name is relevant
     object_t *mark;
@@ -519,7 +517,7 @@ uint8 shop_pay_amount(sint64 amount, object_t *op)
     }
 
     // new pay logic we pay first with coppers, then silver, gold, last mithril
-    // lets ignore first containers to test this
+    // prototyp : should be improved
 
     if ((amount = PayFromWithCooper(op, amount)) > 0)
     {
