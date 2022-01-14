@@ -47,3 +47,8 @@ Improved Pay logic
 New lua function CreateObject to fix container problem
 - This allows to build an object from arch, without inserting it into a body
 - Function returns object. This object works with PickUp()
+
+- dynamic npc shop - trader.lua script
+- items can be loaded with one array including arch names
+- can adjust nrof and level with command
+- now works with level 1 - 110, nrof 1 - 1000 and added range check
