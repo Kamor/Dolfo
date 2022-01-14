@@ -49,6 +49,7 @@ end
 local for_sale =
 {
 	{arch = "drink_generic"},
+	{arch = "scroll_empty", title = "to write spells"},
 	{arch = "scroll_min_heal", title = "of minor healing"},
     {arch = "scroll_firestorm", title = "of firestorm"},
 	--"scroll_firestorm",
@@ -108,7 +109,10 @@ local function topicDefault()
 	  end	  
 	end
 	
+	-- AddMsg is showed above the selects
 	ib:AddMsg(" ^nrof 1^ ^nrof 5^ ^level 1^ ^level 5^ ")
+	-- AddDesc is also showed above the selects
+	-- ib:AddDesc("test ^level 9^") -- hyperlink is broken here, shows empty body
 	
     pl:Interface(game.GUI_NPC_MODE_NPC, ib:Build())
 end
@@ -164,8 +168,13 @@ end
 local function topicLevel(_level)
 	if _level ~= nil then
 		level = tonumber(_level)
-		pl:Write(level, game.COLOR_YELLOW)
-		ds:Set("level", level) -- calling topicDefault, restart the whole script, so we have check at script start for MIN and MAX
+		if level < 1 then
+			level = 1
+		elseif level>MAX_LEVEL then
+			level = MAX_LEVEL
+		end
+		-- pl:Write(level, game.COLOR_YELLOW)
+		ds:Set("level", level)
 		-- ds:WasChanged() -- looks like this is not needed
 	end
 	topicDefault()
@@ -174,8 +183,13 @@ end
 local function topicNrof(_nrof)
 	if _nrof ~= nil then
 		nrof = tonumber(_nrof)
-		pl:Write(nrof, game.COLOR_YELLOW)
-		ds:Set("nrof", tonumber(nrof)) -- calling topicDefault, restart the whole script, so we have check at script start for MIN and MAX
+		if nrof < 1 then
+			nrof = 1
+		elseif nrof>MAX_NROF then
+			nrof = MAX_NROF
+		end		
+		-- pl:Write(nrof, game.COLOR_YELLOW)
+		ds:Set("nrof", tonumber(nrof))
 		-- ds:WasChanged() -- looks like this is not needed
 	end
 	topicDefault()
@@ -184,7 +198,7 @@ end
 tl = TopicList()
 tl:AddGreeting(nil, topicDefault)
 tl:SetDefault(topicDefault)
-tl:AddTopics("buy (%d) (%d) (%d)", topicBuy)
-tl:AddTopics("nrof (%d)", topicNrof)
-tl:AddTopics("level (%d)", topicLevel)
+tl:AddTopics("buy (%d+) (%d+) (%d+)", topicBuy)
+tl:AddTopics("nrof (%d+)", topicNrof)
+tl:AddTopics("level (%d+)", topicLevel)
 tl:CheckMessage(event)
