@@ -1,0 +1,4070 @@
+arch map
+name Guild Hall
+msg
+Creator: Daimonin Map Editor
+Date:    7/16/2004
+Modified: 2022-11-13 Karsten
+endmsg
+width 24
+height 24
+difficulty 1
+darkness -1
+outdoor 1
+no_harm 1
+tile_path_1 castle_0400
+tile_path_2 castle_050a
+tile_path_4 castle_030a
+tile_path_5 castle_0500
+tile_path_7 castle_030b
+tile_path_8 castle_0300
+background_music ColeForeverPiano.ogg
+end
+arch water_still
+end
+arch water_still
+y 1
+end
+arch water_edge
+y 1
+end
+arch water_still
+y 2
+end
+arch water_edge15
+y 2
+end
+arch grassd_7
+y 3
+end
+arch grassd_4
+y 4
+end
+arch earth_brown4
+y 5
+end
+arch pathway_edge13
+y 5
+end
+arch earth_brown4
+y 6
+end
+arch pathway_edge11
+y 6
+end
+arch earth_brown4
+y 7
+end
+arch plant_flower5
+y 7
+end
+arch pathway_edge12
+y 7
+end
+arch grassd_7
+y 8
+end
+arch grassd_8
+y 9
+end
+arch floor_sand_w3
+y 10
+end
+arch pathway_edge5
+y 10
+end
+arch floor_sand_w4
+y 11
+end
+arch floor_sand_w3
+y 12
+end
+arch pathway_edge6
+y 12
+end
+arch grassd_7
+y 13
+end
+arch grassd_5
+y 14
+end
+arch wall_stone_round_8
+y 14
+end
+arch grassd_3
+y 15
+end
+arch wall_stone_round1_3
+y 15
+end
+arch grassd_7
+y 16
+end
+arch wall_stone_3
+y 16
+end
+arch grassd_2
+y 17
+end
+arch wall_stone_w.131
+y 17
+end
+arch grassd_7
+y 18
+end
+arch wall_stone_3
+y 18
+end
+arch grassd_7
+y 19
+end
+arch wall_stone_3
+y 19
+end
+arch grassd_2
+y 20
+end
+arch wall_stone_round2_3
+y 20
+end
+arch grassd_3
+y 21
+end
+arch grassd_5
+y 22
+end
+arch grassd_8
+y 23
+end
+arch fwall_fstone2
+y 23
+end
+arch water_still
+x 1
+end
+arch water_edge4
+x 1
+end
+arch water_still
+x 1
+y 1
+end
+arch water_edge15
+x 1
+y 1
+end
+arch grassd_2
+x 1
+y 2
+end
+arch grassd_2
+x 1
+y 3
+end
+arch plant8
+x 1
+y 3
+end
+arch grassd_2
+x 1
+y 4
+end
+arch earth_brown4
+x 1
+y 5
+end
+arch pathway_edge9
+x 1
+y 5
+end
+arch earth_brown4
+x 1
+y 6
+end
+arch well_stone
+msg
+You slide yourself down the well a bit, and find a ladder to climb down.
+endmsg
+slaying guildhall/guildhall_a_040a
+hp 1
+sp 6
+x 1
+y 6
+end
+arch earth_brown4
+x 1
+y 7
+end
+arch pathway_edge10
+x 1
+y 7
+end
+arch grassd_5
+x 1
+y 8
+end
+arch grassd_3
+x 1
+y 9
+end
+arch floor_sand_w3
+x 1
+y 10
+end
+arch pathway_edge14
+x 1
+y 10
+end
+arch plant7
+x 1
+y 10
+end
+arch floor_sand_w3
+x 1
+y 11
+end
+arch floor_sand_w3
+x 1
+y 12
+end
+arch pathway_edge10
+x 1
+y 12
+end
+arch grassd_1
+x 1
+y 13
+end
+arch plant8
+x 1
+y 13
+end
+arch grassd_5
+x 1
+y 14
+end
+arch wall_stone_round1_1
+x 1
+y 14
+end
+arch floor_wood2_l2
+x 1
+y 15
+end
+arch candlelight4.101
+x 1
+y 15
+end
+arch floor_wood2_l2
+x 1
+y 16
+end
+arch keg_big.101
+x 1
+y 16
+end
+arch floor_wood2_l1
+x 1
+y 17
+end
+arch beer_barrel.101
+x 1
+y 17
+end
+arch floor_wood2_l2
+x 1
+y 18
+end
+arch barrel.101
+x 1
+y 18
+end
+arch floor_wood2_l2
+x 1
+y 19
+end
+arch light1
+x 1
+y 19
+end
+arch stairs_wood_down
+direction 5
+x 1
+y 19
+end
+arch floor_wood2_l2
+x 1
+y 20
+end
+arch wall_stone_round3_1
+x 1
+y 20
+end
+arch grassd_2
+x 1
+y 21
+end
+arch grassd_1
+x 1
+y 22
+end
+arch grassd_7
+x 1
+y 23
+end
+arch fwall_fstone2
+x 1
+y 23
+end
+arch grassd_4
+x 2
+end
+arch tree27
+x 2
+end
+arch grassd_3
+x 2
+y 1
+end
+arch grassd_6
+x 2
+y 2
+end
+arch grassd_8
+x 2
+y 3
+end
+arch plant12
+x 2
+y 3
+end
+arch grassd_6
+x 2
+y 4
+end
+arch plant_mushroom3
+x 2
+y 4
+end
+arch earth_brown4
+x 2
+y 5
+end
+arch pathway_edge14
+x 2
+y 5
+end
+arch earth_brown4
+x 2
+y 6
+end
+arch pathway_edge8
+x 2
+y 6
+end
+arch earth_brown4
+x 2
+y 7
+end
+arch pathway_edge16
+x 2
+y 7
+end
+arch grassd_8
+x 2
+y 8
+end
+arch grassd_3
+x 2
+y 9
+end
+arch grassd_4
+x 2
+y 10
+end
+arch au_tree1
+x 2
+y 10
+end
+arch floor_sand_w1
+x 2
+y 11
+end
+arch pathway_edge9
+x 2
+y 11
+end
+arch floor_sand_w3
+x 2
+y 12
+end
+arch pathway_edge6
+x 2
+y 12
+end
+arch grassd_5
+x 2
+y 13
+end
+arch grassd_4
+x 2
+y 14
+end
+arch wall_stone_1
+x 2
+y 14
+end
+arch floor_wood2_l2
+x 2
+y 15
+end
+arch spawn_point
+x 2
+y 15
+arch bartender
+name Rhodri
+type 83
+title the Barkeep
+level 7
+speed -0.02
+direction 3
+arch waypoint
+name castle_040a-2-18
+title castle_040a-4-15
+slaying castle_040a
+hp 2
+sp 18
+end
+arch waypoint
+name castle_040a-4-15
+title castle_040a-2-18
+slaying castle_040a
+hp 4
+sp 15
+cursed 1
+end
+arch event_obj
+subtype 13
+race /scripts/tavern.lua
+slaying the Happy Noob
+end
+end
+end
+arch floor_wood2_l2
+x 2
+y 16
+end
+arch floor_wood2_l2
+x 2
+y 17
+end
+arch floor_wood2_l1
+x 2
+y 18
+end
+arch floor_wood2_l2
+x 2
+y 19
+end
+arch floor_wood2_l2
+x 2
+y 20
+end
+arch wall_stone_1
+x 2
+y 20
+end
+arch grassd_6
+x 2
+y 21
+end
+arch grassd_6
+x 2
+y 22
+end
+arch grassd_1
+x 2
+y 23
+end
+arch fwall_fstone2
+x 2
+y 23
+end
+arch grassd_7
+x 3
+end
+arch grassd_5
+x 3
+y 1
+end
+arch wall_stone_8
+x 3
+y 1
+end
+arch grassd_1
+x 3
+y 2
+end
+arch wall_stone_3
+x 3
+y 2
+end
+arch grassd_2
+x 3
+y 3
+end
+arch wall_stone_3
+x 3
+y 3
+end
+arch grassd_1
+x 3
+y 4
+end
+arch wall_stone_3
+x 3
+y 4
+end
+arch grassd_8
+x 3
+y 5
+end
+arch wall_stone_3
+x 3
+y 5
+end
+arch grassd_3
+x 3
+y 6
+end
+arch wall_stone_w.131
+x 3
+y 6
+end
+arch grassd_3
+x 3
+y 7
+end
+arch wall_stone_3
+x 3
+y 7
+end
+arch grassd_8
+x 3
+y 8
+end
+arch wall_stone_3
+x 3
+y 8
+end
+arch grassd_3
+x 3
+y 9
+end
+arch wall_stone_3
+x 3
+y 9
+end
+arch floor_sand_w3
+x 3
+y 10
+end
+arch pathway_edge13
+x 3
+y 10
+end
+arch lantern_magic.131
+x 3
+y 10
+end
+arch floor_sand_w3
+x 3
+y 11
+end
+arch pathway_edge2
+x 3
+y 11
+end
+arch floor_sand_w3
+x 3
+y 12
+end
+arch pathway_edge10
+x 3
+y 12
+end
+arch grassd_6
+x 3
+y 13
+end
+arch grassd_3
+x 3
+y 14
+end
+arch wall_stone_w.111
+x 3
+y 14
+end
+arch floor_wood2_l2
+x 3
+y 15
+end
+arch floor_wood2_l2
+x 3
+y 16
+end
+arch floor_wood2_l2
+x 3
+y 17
+end
+arch bar1
+x 3
+y 17
+end
+arch floor_wood2_l1
+x 3
+y 18
+end
+arch bar1
+direction 7
+x 3
+y 18
+end
+arch floor_wood2_l2
+x 3
+y 19
+end
+arch bar1
+direction 7
+x 3
+y 19
+end
+arch floor_wood2_l2
+x 3
+y 20
+end
+arch bar1
+direction 7
+layer 4
+x 3
+y 20
+end
+arch wall_stone_1
+x 3
+y 20
+end
+arch grassd_1
+x 3
+y 21
+end
+arch grassd_1
+x 3
+y 22
+end
+arch grassd_3
+x 3
+y 23
+end
+arch fwall_fstone2
+x 3
+y 23
+end
+arch grassd_2
+x 4
+end
+arch grassd_2
+x 4
+y 1
+end
+arch wall_stone_w.111
+x 4
+y 1
+end
+arch shortsword
+identified 1
+unpaid 1
+x 4
+y 2
+end
+arch bridge_wood_NS.101
+x 4
+y 2
+end
+arch shop_floor
+name Karamor's Supplies
+x 4
+y 2
+end
+arch bridge_wood_NS.101
+x 4
+y 3
+end
+arch shop_floor
+name Karamor's Supplies
+x 4
+y 3
+end
+arch axe_small
+identified 1
+unpaid 1
+x 4
+y 3
+end
+arch bridge_wood_NS.101
+x 4
+y 4
+end
+arch shop_floor
+name Karamor's Supplies
+x 4
+y 4
+end
+arch dagger_large
+identified 1
+unpaid 1
+x 4
+y 4
+end
+arch mstar_small
+identified 1
+unpaid 1
+x 4
+y 5
+end
+arch bridge_wood_NS.101
+x 4
+y 5
+end
+arch shop_floor
+name Karamor's Supplies
+x 4
+y 5
+end
+arch bridge_wood_NS.101
+x 4
+y 6
+end
+arch shop_floor
+name Karamor's Supplies
+x 4
+y 6
+end
+arch gloves
+unpaid 1
+identified 1
+x 4
+y 6
+end
+arch bridge_wood_NS.101
+x 4
+y 7
+end
+arch shop_floor
+name Karamor's Supplies
+x 4
+y 7
+end
+arch girdle
+unpaid 1
+identified 1
+x 4
+y 7
+end
+arch bridge_wood_NS.101
+x 4
+y 8
+end
+arch shop_floor
+name Karamor's Supplies
+x 4
+y 8
+end
+arch cloak
+identified 1
+unpaid 1
+x 4
+y 8
+end
+arch bridge_wood_NS.101
+x 4
+y 9
+end
+arch wall_stone_1
+x 4
+y 9
+end
+arch floor_sand_w3
+x 4
+y 10
+end
+arch pathway_edge9
+x 4
+y 10
+end
+arch plant8
+x 4
+y 10
+end
+arch floor_sand_w3
+x 4
+y 11
+end
+arch floor_sand_w4
+x 4
+y 12
+end
+arch floor_sand_w3
+x 4
+y 13
+end
+arch pathway_edge18
+x 4
+y 13
+end
+arch grassd_7
+x 4
+y 14
+end
+arch wall_stone_1
+x 4
+y 14
+end
+arch floor_wood2_l2
+x 4
+y 15
+end
+arch door_bar1
+direction 3
+x 4
+y 15
+end
+arch floor_wood2_l2
+x 4
+y 16
+end
+arch bar1
+direction 3
+x 4
+y 16
+end
+arch candlelight4.101
+x 4
+y 16
+end
+arch floor_wood2_l2
+x 4
+y 17
+end
+arch bar1_flower
+x 4
+y 17
+end
+arch floor_wood2_l2
+x 4
+y 18
+end
+arch floor_wood2_l1
+x 4
+y 19
+end
+arch floor_wood2_l2
+x 4
+y 20
+end
+arch carpet1.111
+x 4
+y 20
+end
+arch candlelight4.101
+x 4
+y 20
+end
+arch wall_stone_1
+x 4
+y 20
+end
+arch grassd_8
+x 4
+y 21
+end
+arch grassd_8
+x 4
+y 22
+end
+arch grassd_6
+x 4
+y 23
+end
+arch fwall_fstone2
+x 4
+y 23
+end
+arch grassd_4
+x 5
+end
+arch grassd_6
+x 5
+y 1
+end
+arch wall_stone_1
+x 5
+y 1
+end
+arch bridge_wood_NS.101
+x 5
+y 2
+end
+arch shop_floor
+name Karamor's Supplies
+x 5
+y 2
+end
+arch candlelight4.101
+x 5
+y 2
+end
+arch wall_stone_3
+x 5
+y 2
+end
+arch bridge_wood_NS.101
+x 5
+y 3
+end
+arch shop_floor
+name Karamor's Supplies
+x 5
+y 3
+end
+arch shoulder_leather
+identified 1
+unpaid 1
+x 5
+y 3
+end
+arch bridge_wood_NS.101
+x 5
+y 4
+end
+arch shop_floor
+name Karamor's Supplies
+x 5
+y 4
+end
+arch helm_leather
+identified 1
+unpaid 1
+x 5
+y 4
+end
+arch bridge_wood_NS.101
+x 5
+y 5
+end
+arch shop_floor
+name Karamor's Supplies
+x 5
+y 5
+end
+arch legs_leather
+identified 1
+unpaid 1
+x 5
+y 5
+end
+arch bridge_wood_NS.101
+x 5
+y 6
+end
+arch shop_floor
+name Karamor's Supplies
+x 5
+y 6
+end
+arch bracers_leather
+identified 1
+unpaid 1
+x 5
+y 6
+end
+arch bridge_wood_NS.101
+x 5
+y 7
+end
+arch shop_floor
+name Karamor's Supplies
+x 5
+y 7
+end
+arch leather_armour
+identified 1
+unpaid 1
+x 5
+y 7
+end
+arch bridge_wood_NS.101
+x 5
+y 8
+end
+arch shop_floor
+name Karamor's Supplies
+x 5
+y 8
+end
+arch buckler
+unpaid 1
+identified 1
+x 5
+y 8
+end
+arch bridge_wood_NS.101
+x 5
+y 9
+end
+arch wall_stone_w.111
+x 5
+y 9
+end
+arch floor_sand_w3
+x 5
+y 10
+end
+arch pathway_edge14
+x 5
+y 10
+end
+arch plant6
+x 5
+y 10
+end
+arch floor_sand_w4
+x 5
+y 11
+end
+arch floor_sand_w3
+x 5
+y 12
+end
+arch floor_sand_w1
+x 5
+y 13
+end
+arch pathway_edge10
+x 5
+y 13
+end
+arch plant8
+x 5
+y 13
+end
+arch grassd_5
+x 5
+y 14
+end
+arch wall_stone_1
+x 5
+y 14
+end
+arch floor_wood2_l2
+x 5
+y 15
+end
+arch floor_wood2_l2
+x 5
+y 16
+end
+arch floor_wood2_l1
+x 5
+y 17
+end
+arch floor_wood2_l2
+x 5
+y 18
+end
+arch floor_wood2_l2
+x 5
+y 19
+end
+arch floor_wood2_l2
+x 5
+y 20
+end
+arch wall_stone_1
+x 5
+y 20
+end
+arch grassd_8
+x 5
+y 21
+end
+arch grassd_2
+x 5
+y 22
+end
+arch wall_fstone_round.108
+x 5
+y 22
+end
+arch grassd_6
+x 5
+y 23
+end
+arch fwall_fstone2
+x 5
+y 23
+end
+arch water_still
+x 6
+end
+arch water_edge12
+x 6
+end
+arch grassd_6
+x 6
+y 1
+end
+arch grassd_5
+x 6
+y 2
+end
+arch wall_stone_1
+x 6
+y 2
+end
+arch bridge_wood_NS.101
+x 6
+y 3
+end
+arch shop_floor
+name Karamor's Supplies
+x 6
+y 3
+end
+arch sandals
+identified 1
+unpaid 1
+x 6
+y 3
+end
+arch bridge_wood_NS.101
+x 6
+y 4
+end
+arch shop_floor
+name Karamor's Supplies
+x 6
+y 4
+end
+arch bridge_wood_NS.101
+x 6
+y 5
+end
+arch shop_floor
+name Karamor's Supplies
+x 6
+y 5
+end
+arch t_dagger
+unpaid 1
+identified 1
+nrof 5
+x 6
+y 5
+end
+arch bridge_wood_NS.101
+x 6
+y 6
+end
+arch shop_floor
+name Karamor's Supplies
+x 6
+y 6
+end
+arch torch
+unpaid 1
+identified 1
+nrof 5
+value 5
+x 6
+y 6
+end
+arch bridge_wood_NS.101
+x 6
+y 7
+end
+arch shop_floor
+name Karamor's Supplies
+x 6
+y 7
+end
+arch sack
+unpaid 1
+identified 1
+x 6
+y 7
+end
+arch bridge_wood_NS.101
+x 6
+y 8
+end
+arch shop_floor
+name Karamor's Supplies
+x 6
+y 8
+end
+arch bridge_wood_NS.101
+x 6
+y 9
+end
+arch wall_stone_1
+x 6
+y 9
+end
+arch grassd_1
+x 6
+y 10
+end
+arch sign_generic
+msg
+--------Guild Hall Supplies--------
+*General Store - Basic Supplies *
+endmsg
+name sign
+direction 5
+x 6
+y 10
+end
+arch floor_sand_w3
+x 6
+y 11
+end
+arch pathway_edge9
+x 6
+y 11
+end
+arch floor_sand_w3
+x 6
+y 12
+end
+arch floor_sand_w3
+x 6
+y 13
+end
+arch pathway_edge10
+x 6
+y 13
+end
+arch grassd_5
+x 6
+y 14
+end
+arch wall_stone_1
+x 6
+y 14
+end
+arch floor_wood2_l1
+x 6
+y 15
+end
+arch floor_wood2_l2
+x 6
+y 16
+end
+arch floor_wood2_l2
+x 6
+y 17
+end
+arch floor_wood2_l2
+x 6
+y 18
+end
+arch chair1_111
+direction 7
+x 6
+y 18
+end
+arch floor_wood2_l2
+x 6
+y 19
+end
+arch floor_wood2_l2
+x 6
+y 20
+end
+arch wall_stone_1
+x 6
+y 20
+end
+arch grassd_2
+x 6
+y 21
+end
+arch grassd_6
+x 6
+y 22
+end
+arch fwall_fstone2
+x 6
+y 22
+end
+arch grassd_5
+x 6
+y 23
+end
+arch fwall_fstone2
+x 6
+y 23
+end
+arch water_still
+x 7
+end
+arch water_edge6
+x 7
+end
+arch grassd_7
+x 7
+y 1
+end
+arch grassd_4
+x 7
+y 2
+end
+arch wall_stone_1
+x 7
+y 2
+end
+arch bridge_wood_NS.101
+x 7
+y 3
+end
+arch shop_floor
+x 7
+y 3
+end
+arch wall_stone_3
+x 7
+y 3
+end
+arch bridge_wood_NS.101
+x 7
+y 4
+end
+arch shop_floor
+x 7
+y 4
+end
+arch wall_stone_3
+x 7
+y 4
+end
+arch bridge_wood_NS.101
+x 7
+y 5
+end
+arch shop_floor
+name Karamor's Supplies
+x 7
+y 5
+end
+arch shop_mat
+x 7
+y 5
+end
+arch bridge_wood_NS.101
+x 7
+y 6
+end
+arch shop_floor
+name Karamor's Supplies
+x 7
+y 6
+end
+arch grate2_8
+x 7
+y 6
+end
+arch bridge_wood_NS.101
+x 7
+y 7
+end
+arch shop_floor
+name Karamor's Supplies
+x 7
+y 7
+end
+arch grate1_3
+x 7
+y 7
+end
+arch bridge_wood_NS.101
+x 7
+y 8
+end
+arch shop_floor
+name Karamor's Supplies
+x 7
+y 8
+end
+arch grate1_3
+x 7
+y 8
+end
+arch shop_floor
+name Karamor's Supplies
+x 7
+y 9
+end
+arch wall_stone_1
+x 7
+y 9
+end
+arch grate1_3
+layer 4
+x 7
+y 9
+end
+arch bridge_wood_NS.101
+x 7
+y 9
+end
+arch floor_sand_w3
+x 7
+y 10
+end
+arch pathway_edge13
+x 7
+y 10
+end
+arch plant_mushroom3
+x 7
+y 10
+end
+arch lantern2_magic.131
+x 7
+y 10
+end
+arch floor_sand_w3
+x 7
+y 11
+end
+arch pathway_edge2
+x 7
+y 11
+end
+arch floor_sand_w3
+x 7
+y 12
+end
+arch floor_sand_w3
+x 7
+y 13
+end
+arch pathway_edge15
+x 7
+y 13
+end
+arch grassd_5
+x 7
+y 14
+end
+arch wall_stone_1
+x 7
+y 14
+end
+arch floor_wood2_l2
+x 7
+y 15
+end
+arch floor_wood2_l2
+x 7
+y 16
+end
+arch chair1_111
+direction 7
+x 7
+y 16
+end
+arch floor_wood2_l2
+x 7
+y 17
+end
+arch floor_wood2_l2
+x 7
+y 18
+end
+arch table_round1
+x 7
+y 18
+end
+arch floor_wood2_l2
+x 7
+y 19
+end
+arch chair1_111
+direction 5
+x 7
+y 19
+end
+arch floor_wood2_l2
+x 7
+y 20
+end
+arch wall_stone_w.111
+x 7
+y 20
+end
+arch grassd_6
+x 7
+y 21
+end
+arch grassd_4
+x 7
+y 22
+end
+arch wall_fstone_round.102
+x 7
+y 22
+end
+arch grassd_7
+x 7
+y 23
+end
+arch fwall_fstone2
+x 7
+y 23
+end
+arch water_still
+x 8
+end
+arch water_edge6
+x 8
+end
+arch grassd_6
+x 8
+y 1
+end
+arch plant8
+x 8
+y 1
+end
+arch grassd_6
+x 8
+y 2
+end
+arch grassd_1
+x 8
+y 3
+end
+arch bridge_wood_NS.101
+x 8
+y 4
+end
+arch wall_stone_1
+x 8
+y 4
+end
+arch bridge_wood_NS.101
+x 8
+y 5
+end
+arch shop_floor
+x 8
+y 5
+end
+arch grate1_3
+x 8
+y 5
+end
+arch bridge_wood_NS.101
+x 8
+y 6
+end
+arch shop_floor
+x 8
+y 6
+end
+arch grate2_4
+x 8
+y 6
+end
+arch bridge_wood_NS.101
+x 8
+y 7
+end
+arch spawn_point
+x 8
+y 7
+arch tailor
+name Karamor
+title the Shopkeeper
+level 10
+type 83
+arch event_obj
+subtype 13
+race guildhall/karamor.lua
+end
+arch shop_container
+arch torch
+name cheap torch
+nrof 10000
+value 5
+maxhp 200
+food 200
+identified 1
+known_cursed 1
+known_magical 1
+unpaid 1
+end
+arch lamp
+identified 1
+known_cursed 1
+known_magical 1
+unpaid 1
+nrof 1000
+end
+arch oil_lamp
+identified 1
+known_cursed 1
+known_magical 1
+unpaid 1
+nrof 10000
+end
+arch sack
+identified 1
+unpaid 1
+end
+arch axe_small
+identified 1
+known_cursed 1
+known_magical 1
+unpaid 1
+nrof 10000
+end
+arch club
+identified 1
+known_cursed 1
+known_magical 1
+unpaid 1
+nrof 1000
+end
+arch dagger_small
+identified 1
+known_cursed 1
+known_magical 1
+unpaid 1
+nrof 1000
+end
+arch shortsword
+identified 1
+known_cursed 1
+known_magical 1
+unpaid 1
+nrof 1000
+end
+arch athame
+identified 1
+known_cursed 1
+known_magical 1
+unpaid 1
+nrof 1000
+end
+arch sword
+identified 1
+known_cursed 1
+known_magical 1
+unpaid 1
+nrof 1000
+end
+arch axe
+identified 1
+known_cursed 1
+known_magical 1
+unpaid 1
+nrof 1000
+end
+arch club_big
+identified 1
+known_cursed 1
+known_magical 1
+unpaid 1
+nrof 1000
+end
+arch food_generic
+identified 1
+known_cursed 1
+known_magical 1
+unpaid 1
+nrof 10000
+end
+arch drink_generic
+identified 1
+known_cursed 1
+known_magical 1
+unpaid 1
+nrof 10000
+end
+arch buckler
+identified 1
+unpaid 1
+end
+arch leather_armour
+identified 1
+unpaid 1
+end
+end
+end
+end
+arch bridge_wood_NS.101
+x 8
+y 8
+end
+arch bridge_wood_NS.101
+x 8
+y 9
+end
+arch door_wood4
+x 8
+y 9
+end
+arch floor_sand_w1
+x 8
+y 10
+end
+arch pathway_edge2
+x 8
+y 10
+end
+arch floor_sand_w3
+x 8
+y 11
+end
+arch floor_sand_w3
+x 8
+y 12
+end
+arch pathway_edge10
+x 8
+y 12
+end
+arch grassd_4
+x 8
+y 13
+end
+arch plant1
+x 8
+y 13
+end
+arch grassd_3
+x 8
+y 14
+end
+arch wall_stone_w.111
+x 8
+y 14
+end
+arch floor_wood2_l2
+x 8
+y 15
+end
+arch chair1_111
+x 8
+y 15
+end
+arch floor_wood2_l2
+x 8
+y 16
+end
+arch table_round1
+x 8
+y 16
+end
+arch floor_wood2_l2
+x 8
+y 17
+end
+arch floor_wood2_l2
+x 8
+y 18
+end
+arch chair1_111
+x 8
+y 18
+end
+arch floor_wood2_l2
+x 8
+y 19
+end
+arch floor_wood2_l2
+x 8
+y 20
+end
+arch wall_stone_1
+x 8
+y 20
+end
+arch grassd_3
+x 8
+y 21
+end
+arch grassd_8
+x 8
+y 22
+end
+arch grassd_2
+x 8
+y 23
+end
+arch fwall_fstone2
+x 8
+y 23
+end
+arch water_still
+x 9
+end
+arch water_edge15
+x 9
+end
+arch grassd_6
+x 9
+y 1
+end
+arch grassd_7
+x 9
+y 2
+end
+arch grassd_4
+x 9
+y 3
+end
+arch grassd_1
+x 9
+y 4
+end
+arch wall_stone_1
+x 9
+y 4
+end
+arch bridge_wood_NS.101
+x 9
+y 5
+end
+arch shop_mat
+x 9
+y 5
+end
+arch bridge_wood_NS.101
+x 9
+y 6
+end
+arch bridge_wood_NS.101
+x 9
+y 7
+end
+arch bar1
+direction 3
+x 9
+y 7
+end
+arch bridge_wood_NS.101
+x 9
+y 8
+end
+arch bridge_wood_NS.101
+x 9
+y 9
+end
+arch wall_stone_1
+x 9
+y 9
+end
+arch floor_sand_w3
+x 9
+y 10
+end
+arch pathway_edge9
+x 9
+y 10
+end
+arch floor_sand_w3
+x 9
+y 11
+end
+arch floor_sand_w3
+x 9
+y 12
+end
+arch pathway_edge10
+x 9
+y 12
+end
+arch grassd_2
+x 9
+y 13
+end
+arch grassd_5
+x 9
+y 14
+end
+arch wall_stone_1
+x 9
+y 14
+end
+arch floor_wood2_l2
+x 9
+y 15
+end
+arch floor_wood2_l2
+x 9
+y 16
+end
+arch chair1_111
+x 9
+y 16
+end
+arch floor_wood2_l2
+x 9
+y 17
+end
+arch floor_wood2_l2
+x 9
+y 18
+end
+arch floor_wood2_l2
+x 9
+y 19
+end
+arch candlelight4.101
+x 9
+y 19
+end
+arch floor_wood2_l2
+x 9
+y 20
+end
+arch wall_stone_1
+x 9
+y 20
+end
+arch grassd_4
+x 9
+y 21
+end
+arch grassd_7
+x 9
+y 22
+end
+arch grassd_8
+x 9
+y 23
+end
+arch fwall_fstone2
+x 9
+y 23
+end
+arch grassd_7
+x 10
+end
+arch fwall_fstone2c
+x 10
+end
+arch grassd_3
+x 10
+y 1
+end
+arch wall_fstone_round.106
+x 10
+y 1
+end
+arch grassd_6
+x 10
+y 2
+end
+arch grassd_4
+x 10
+y 3
+end
+arch grassd_1
+x 10
+y 4
+end
+arch wall_stone_1
+x 10
+y 4
+end
+arch bridge_wood_NS.101
+x 10
+y 5
+end
+arch bridge_wood_NS.101
+x 10
+y 6
+end
+arch bridge_wood_NS.101
+x 10
+y 7
+end
+arch bridge_wood_NS.101
+x 10
+y 8
+end
+arch bridge_wood_NS.101
+x 10
+y 9
+end
+arch wall_stone_1
+x 10
+y 9
+end
+arch floor_sand_w3
+x 10
+y 10
+end
+arch pathway_edge14
+x 10
+y 10
+end
+arch lantern2_magic.131
+x 10
+y 10
+end
+arch floor_sand_w4
+x 10
+y 11
+end
+arch floor_sand_w3
+x 10
+y 12
+end
+arch pathway_edge6
+x 10
+y 12
+end
+arch grassd_2
+x 10
+y 13
+end
+arch tree_big2
+x 10
+y 13
+end
+arch grassd_1
+x 10
+y 14
+end
+arch wall_stone_round2_1
+x 10
+y 14
+end
+arch floor_wood2_l2
+x 10
+y 15
+end
+arch candlelight4.101
+x 10
+y 15
+end
+arch wall_stone_round3_3
+x 10
+y 15
+end
+arch floor_wood2_l2
+x 10
+y 16
+end
+arch wall_stone_3
+x 10
+y 16
+end
+arch floor_wood2_l2
+x 10
+y 17
+end
+arch door_wood2
+direction 3
+x 10
+y 17
+end
+arch light1
+x 10
+y 17
+end
+arch magic_mouth
+msg
+Welcome to the Happy Noob!
+endmsg
+splitting 1
+direction 7
+x 10
+y 17
+end
+arch floor_wood2_l2
+x 10
+y 18
+end
+arch wall_stone_3
+x 10
+y 18
+end
+arch floor_wood2_l2
+x 10
+y 19
+end
+arch wall_stone_3
+x 10
+y 19
+end
+arch sign_pub_1
+x 10
+y 19
+end
+arch floor_wood2_l2
+x 10
+y 20
+end
+arch wall_stone_round4
+x 10
+y 20
+end
+arch grassd_6
+x 10
+y 21
+end
+arch grassd_5
+x 10
+y 22
+end
+arch grassd_6
+x 10
+y 23
+end
+arch fwall_fstone2
+x 10
+y 23
+end
+arch grassd_6
+x 11
+end
+arch fwall_fstone2
+x 11
+end
+arch grassd_8
+x 11
+y 1
+end
+arch wall_fstone_round.104
+x 11
+y 1
+end
+arch grassd_7
+x 11
+y 2
+end
+arch plant8
+x 11
+y 2
+end
+arch grassd_5
+x 11
+y 3
+end
+arch plant5
+x 11
+y 3
+end
+arch grassd_1
+x 11
+y 4
+end
+arch wall_stone_w.111
+x 11
+y 4
+end
+arch bridge_wood_NS.101
+x 11
+y 5
+end
+arch box1.101
+x 11
+y 5
+end
+arch bridge_wood_NS.101
+x 11
+y 6
+end
+arch bridge_wood_NS.101
+x 11
+y 7
+end
+arch pottery6.101
+x 11
+y 7
+end
+arch bridge_wood_NS.101
+x 11
+y 8
+end
+arch pottery5.101
+x 11
+y 8
+end
+arch bridge_wood_NS.101
+x 11
+y 9
+end
+arch wall_stone_w.111
+x 11
+y 9
+end
+arch grassd_2
+x 11
+y 10
+end
+arch plant8
+x 11
+y 10
+end
+arch floor_sand_w3
+x 11
+y 11
+end
+arch pathway_edge9
+x 11
+y 11
+end
+arch floor_sand_w1
+x 11
+y 12
+end
+arch floor_sand_w3
+x 11
+y 13
+end
+arch pathway_edge18
+x 11
+y 13
+end
+arch plant8
+x 11
+y 13
+end
+arch grassd_1
+x 11
+y 14
+end
+arch grassd_3
+x 11
+y 15
+end
+arch sign_generic
+msg
+-------The Happy Noob---------
+*Come in and sample our fine ales*
+endmsg
+name sign
+animation sign_pub
+direction 3
+face sign_pub.111
+x 11
+y 15
+end
+arch floor_sand_w3
+x 11
+y 16
+end
+arch pathway_edge13
+x 11
+y 16
+end
+arch lantern2_magic.131
+direction 7
+x 11
+y 16
+end
+arch floor_sand_w4
+x 11
+y 17
+end
+arch floor_sand_w3
+x 11
+y 18
+end
+arch pathway_edge12
+x 11
+y 18
+end
+arch lantern2_magic.131
+direction 7
+x 11
+y 18
+end
+arch grassd_1
+x 11
+y 19
+end
+arch plant8
+x 11
+y 19
+end
+arch grassd_2
+x 11
+y 20
+end
+arch grassd_5
+x 11
+y 21
+end
+arch grassd_5
+x 11
+y 22
+end
+arch grassd_3
+x 11
+y 23
+end
+arch fwall_fstone2
+x 11
+y 23
+end
+arch grassd_8
+x 12
+end
+arch fwall_fstone2
+x 12
+end
+arch grassd_1
+x 12
+y 1
+end
+arch grassd_7
+x 12
+y 2
+end
+arch grassd_2
+x 12
+y 3
+end
+arch grassd_1
+x 12
+y 4
+end
+arch wall_stone_1
+x 12
+y 4
+end
+arch bridge_wood_NS.101
+x 12
+y 5
+end
+arch wall_stone_3
+x 12
+y 5
+end
+arch bridge_wood_NS.101
+x 12
+y 6
+end
+arch wall_stone_w.131
+x 12
+y 6
+end
+arch bridge_wood_NS.101
+x 12
+y 7
+end
+arch wall_stone_3
+x 12
+y 7
+end
+arch bridge_wood_NS.101
+x 12
+y 8
+end
+arch wall_stone_3
+x 12
+y 8
+end
+arch bridge_wood_NS.101
+x 12
+y 9
+end
+arch wall_stone_4
+x 12
+y 9
+end
+arch grassd_4
+x 12
+y 10
+end
+arch floor_sand_w3
+x 12
+y 11
+end
+arch pathway_edge5
+x 12
+y 11
+end
+arch floor_sand_w3
+x 12
+y 12
+end
+arch floor_sand_w3
+x 12
+y 13
+end
+arch pathway_edge1
+x 12
+y 13
+end
+arch floor_sand_w3
+x 12
+y 14
+end
+arch pathway_edge7
+x 12
+y 14
+end
+arch floor_sand_w3
+x 12
+y 15
+end
+arch pathway_edge11
+x 12
+y 15
+end
+arch floor_sand_w3
+x 12
+y 16
+end
+arch pathway_edge2
+x 12
+y 16
+end
+arch floor_sand_w3
+x 12
+y 17
+end
+arch floor_sand_w3
+x 12
+y 18
+end
+arch pathway_edge10
+x 12
+y 18
+end
+arch grassd_5
+x 12
+y 19
+end
+arch grassd_4
+x 12
+y 20
+end
+arch grassd_8
+x 12
+y 21
+end
+arch grassd_8
+x 12
+y 22
+end
+arch grassd_4
+x 12
+y 23
+end
+arch fwall_fstone2
+x 12
+y 23
+end
+arch grassd_6
+x 13
+end
+arch fwall_fstone2
+x 13
+end
+arch grassd_7
+x 13
+y 1
+end
+arch grassd_3
+x 13
+y 2
+end
+arch plant_flower5
+x 13
+y 2
+end
+arch grassd_7
+x 13
+y 3
+end
+arch grassd_1
+x 13
+y 4
+end
+arch grassd_5
+x 13
+y 5
+end
+arch grassd_5
+x 13
+y 6
+end
+arch grassd_7
+x 13
+y 7
+end
+arch grassd_6
+x 13
+y 8
+end
+arch plant8
+x 13
+y 8
+end
+arch grassd_1
+x 13
+y 9
+end
+arch grassd_7
+x 13
+y 10
+end
+arch floor_sand_w3
+x 13
+y 11
+end
+arch pathway_edge14
+x 13
+y 11
+end
+arch floor_sand_w1
+x 13
+y 12
+end
+arch pathway_edge3
+x 13
+y 12
+end
+arch floor_sand_w3
+x 13
+y 13
+end
+arch floor_sand_w3
+x 13
+y 14
+end
+arch floor_sand_w3
+x 13
+y 15
+end
+arch floor_sand_w3
+x 13
+y 16
+end
+arch pathway_edge8
+x 13
+y 16
+end
+arch floor_sand_w3
+x 13
+y 17
+end
+arch pathway_edge4
+x 13
+y 17
+end
+arch floor_sand_w3
+x 13
+y 18
+end
+arch pathway_edge16
+x 13
+y 18
+end
+arch grassd_2
+x 13
+y 19
+end
+arch grassd_4
+x 13
+y 20
+end
+arch grassd_3
+x 13
+y 21
+end
+arch grassd_2
+x 13
+y 22
+end
+arch grassd_1
+x 13
+y 23
+end
+arch fwall_fstone2
+x 13
+y 23
+end
+arch grassd_3
+x 14
+end
+arch fwall_fstone2
+x 14
+end
+arch grassd_7
+x 14
+y 1
+end
+arch plant10
+x 14
+y 1
+end
+arch grassd_3
+x 14
+y 2
+end
+arch grassd_8
+x 14
+y 3
+end
+arch grassd_8
+x 14
+y 4
+end
+arch grassd_8
+x 14
+y 5
+end
+arch grassd_5
+x 14
+y 6
+end
+arch grassd_6
+x 14
+y 7
+end
+arch grassd_2
+x 14
+y 8
+end
+arch plant_flower5
+x 14
+y 8
+end
+arch grassd_2
+x 14
+y 9
+end
+arch plant9
+x 14
+y 9
+end
+arch grassd_8
+x 14
+y 10
+end
+arch grassd_8
+x 14
+y 11
+end
+arch floor_sand_w3
+x 14
+y 12
+end
+arch pathway_edge14
+x 14
+y 12
+end
+arch floor_sand_w3
+x 14
+y 13
+end
+arch pathway_edge4
+x 14
+y 13
+end
+arch lantern_magic.131
+direction 7
+x 14
+y 13
+end
+arch floor_sand_w3
+x 14
+y 14
+end
+arch pathway_edge4
+x 14
+y 14
+end
+arch floor_sand_w3
+x 14
+y 15
+end
+arch pathway_edge15
+x 14
+y 15
+end
+arch plant8
+x 14
+y 15
+end
+arch grassd_5
+x 14
+y 16
+end
+arch grassd_1
+x 14
+y 17
+end
+arch plant_flower7
+x 14
+y 17
+end
+arch grassd_2
+x 14
+y 18
+end
+arch grassd_2
+x 14
+y 19
+end
+arch grassd_7
+x 14
+y 20
+end
+arch plant_flower2
+x 14
+y 20
+end
+arch grassd_2
+x 14
+y 21
+end
+arch grassd_8
+x 14
+y 22
+end
+arch grassd_6
+x 14
+y 23
+end
+arch fwall_fstone2
+x 14
+y 23
+end
+arch grassd_6
+x 15
+end
+arch fwall_fstone2
+x 15
+end
+arch grassd_8
+x 15
+y 1
+end
+arch grassd_6
+x 15
+y 2
+end
+arch tree_big3
+x 15
+y 2
+end
+arch grassd_1
+x 15
+y 3
+end
+arch fence_01.133
+x 15
+y 3
+end
+arch grassd_3
+x 15
+y 4
+end
+arch fence_01.131
+x 15
+y 4
+end
+arch grassd_7
+x 15
+y 5
+end
+arch plant15
+x 15
+y 5
+end
+arch fence_01.131
+x 15
+y 5
+end
+arch grassd_2
+x 15
+y 6
+end
+arch plant_flower7
+x 15
+y 6
+end
+arch fence_01.131
+x 15
+y 6
+end
+arch grassd_5
+x 15
+y 7
+end
+arch fence_01.131
+x 15
+y 7
+end
+arch grassd_5
+x 15
+y 8
+end
+arch fence_01.131
+x 15
+y 8
+end
+arch grassd_7
+x 15
+y 9
+end
+arch fence_01.131
+x 15
+y 9
+end
+arch grassd_6
+x 15
+y 10
+end
+arch fence_01.132
+x 15
+y 10
+end
+arch grassd_1
+x 15
+y 11
+end
+arch grassd_2
+x 15
+y 12
+end
+arch plant16
+x 15
+y 12
+end
+arch fence_01.133
+x 15
+y 12
+end
+arch grassd_4
+x 15
+y 13
+end
+arch fence_01.131
+x 15
+y 13
+end
+arch grassd_5
+x 15
+y 14
+end
+arch fence_01.131
+x 15
+y 14
+end
+arch grassd_8
+x 15
+y 15
+end
+arch fence_01.131
+x 15
+y 15
+end
+arch grassd_6
+x 15
+y 16
+end
+arch fence_01.131
+x 15
+y 16
+end
+arch grassd_8
+x 15
+y 17
+end
+arch plant_flower2
+x 15
+y 17
+end
+arch fence_01.131
+x 15
+y 17
+end
+arch grassd_4
+x 15
+y 18
+end
+arch fence_01.131
+x 15
+y 18
+end
+arch grassd_1
+x 15
+y 19
+end
+arch fence_01.131
+x 15
+y 19
+end
+arch grassd_1
+x 15
+y 20
+end
+arch fence_01.132
+x 15
+y 20
+end
+arch grassd_4
+x 15
+y 21
+end
+arch grassd_4
+x 15
+y 22
+end
+arch grassd_5
+x 15
+y 23
+end
+arch fwall_fstone2
+x 15
+y 23
+end
+arch grassd_8
+x 16
+end
+arch fwall_fstone2
+x 16
+end
+arch grassd_1
+x 16
+y 1
+end
+arch grassd_7
+x 16
+y 2
+end
+arch grassd_7
+x 16
+y 3
+end
+arch spawn_point
+slaying chicken_group
+x 16
+y 3
+arch chicken_large
+type 83
+unaggressive 1
+friendly 1
+random_move 1
+item_race 2
+item_level 2
+end
+end
+arch grassd_4
+x 16
+y 4
+end
+arch plant10
+x 16
+y 4
+end
+arch spawn_point
+slaying chicken_group
+x 16
+y 4
+arch chicken_large
+type 83
+unaggressive 1
+friendly 1
+random_move 1
+item_race 2
+item_level 2
+end
+end
+arch grassd_6
+x 16
+y 5
+end
+arch grassd_2
+x 16
+y 6
+end
+arch grassd_5
+x 16
+y 7
+end
+arch plant5
+x 16
+y 7
+end
+arch plant8
+x 16
+y 7
+end
+arch grassd_5
+x 16
+y 8
+end
+arch grassd_5
+x 16
+y 9
+end
+arch plant10
+x 16
+y 9
+end
+arch grassd_5
+x 16
+y 10
+end
+arch grassd_4
+x 16
+y 11
+end
+arch grassd_5
+x 16
+y 12
+end
+arch spawn_point
+x 16
+y 12
+arch archer
+level 15
+type 83
+name Saethwr
+arch event_obj
+subtype 13
+race /planes/human_plane/castle/saethwr.lua
+end
+end
+end
+arch grassd_2
+x 16
+y 13
+end
+arch grassd_6
+x 16
+y 14
+end
+arch grassd_8
+x 16
+y 15
+end
+arch grassd_8
+x 16
+y 16
+end
+arch tree_big3
+x 16
+y 16
+end
+arch grassd_4
+x 16
+y 17
+end
+arch grassd_1
+x 16
+y 18
+end
+arch grassd_3
+x 16
+y 19
+end
+arch tree_big2
+x 16
+y 19
+end
+arch grassd_5
+x 16
+y 20
+end
+arch grassd_3
+x 16
+y 21
+end
+arch grassd_5
+x 16
+y 22
+end
+arch wall_fstone_round.108
+x 16
+y 22
+end
+arch grassd_4
+x 16
+y 23
+end
+arch fwall_fstone2
+x 16
+y 23
+end
+arch grassd_4
+x 17
+end
+arch fwall_fstone2
+x 17
+end
+arch grassd_3
+x 17
+y 1
+end
+arch plant_flower5
+x 17
+y 1
+end
+arch grassd_8
+x 17
+y 2
+end
+arch grassd_2
+x 17
+y 3
+end
+arch spawn_point
+slaying chicken_group
+x 17
+y 3
+arch chicken_large
+type 83
+unaggressive 1
+friendly 1
+random_move 1
+item_race 2
+item_level 2
+end
+end
+arch grassd_6
+x 17
+y 4
+end
+arch grassd_4
+x 17
+y 5
+end
+arch grassd_1
+x 17
+y 6
+end
+arch grassd_8
+x 17
+y 7
+end
+arch grassd_3
+x 17
+y 8
+end
+arch grassd_7
+x 17
+y 9
+end
+arch grassd_1
+x 17
+y 10
+end
+arch tree_apple
+x 17
+y 10
+end
+arch grassd_4
+x 17
+y 11
+end
+arch grassd_3
+x 17
+y 12
+end
+arch grassd_2
+x 17
+y 13
+end
+arch grassd_2
+x 17
+y 14
+end
+arch grassd_8
+x 17
+y 15
+end
+arch grassd_5
+x 17
+y 16
+end
+arch plant10
+x 17
+y 16
+end
+arch grassd_2
+x 17
+y 17
+end
+arch grassd_7
+x 17
+y 18
+end
+arch grassd_5
+x 17
+y 19
+end
+arch plant17
+x 17
+y 19
+end
+arch grassd_5
+x 17
+y 20
+end
+arch tree_big3
+x 17
+y 20
+end
+arch grassd_4
+x 17
+y 21
+end
+arch grassd_7
+x 17
+y 22
+end
+arch fwall_fstone2
+x 17
+y 22
+end
+arch grassd_1
+x 17
+y 23
+end
+arch fwall_fstone2
+x 17
+y 23
+end
+arch grassd_8
+x 18
+end
+arch fwall_fstone2
+x 18
+end
+arch grassd_4
+x 18
+y 1
+end
+arch plant_flower6
+x 18
+y 1
+end
+arch grassd_6
+x 18
+y 2
+end
+arch grassd_2
+x 18
+y 3
+end
+arch plant5
+x 18
+y 3
+end
+arch grassd_7
+x 18
+y 4
+end
+arch plant_mushroom3
+x 18
+y 4
+end
+arch grassd_4
+x 18
+y 5
+end
+arch grassd_7
+x 18
+y 6
+end
+arch grassd_2
+x 18
+y 7
+end
+arch tree_big
+x 18
+y 7
+end
+arch grassd_2
+x 18
+y 8
+end
+arch grassd_2
+x 18
+y 9
+end
+arch grassd_2
+x 18
+y 10
+end
+arch grassd_5
+x 18
+y 11
+end
+arch grassd_5
+x 18
+y 12
+end
+arch grassd_4
+x 18
+y 13
+end
+arch plant10
+x 18
+y 13
+end
+arch grassd_1
+x 18
+y 14
+end
+arch grassd_1
+x 18
+y 15
+end
+arch plant_flower1
+x 18
+y 15
+end
+arch grassd_4
+x 18
+y 16
+end
+arch grassd_5
+x 18
+y 17
+end
+arch grassd_7
+x 18
+y 18
+end
+arch grassd_8
+x 18
+y 19
+end
+arch plant_flower6
+x 18
+y 19
+end
+arch grassd_4
+x 18
+y 20
+end
+arch grassd_5
+x 18
+y 21
+end
+arch grassd_2
+x 18
+y 22
+end
+arch wall_fstone_round.102
+x 18
+y 22
+end
+arch grassd_1
+x 18
+y 23
+end
+arch fwall_fstone2
+x 18
+y 23
+end
+arch grassd_1
+x 19
+end
+arch fwall_fstone2
+x 19
+end
+arch grassd_6
+x 19
+y 1
+end
+arch plant8
+x 19
+y 1
+end
+arch grassd_7
+x 19
+y 2
+end
+arch grassd_3
+x 19
+y 3
+end
+arch grassd_8
+x 19
+y 4
+end
+arch grassd_4
+x 19
+y 5
+end
+arch grassd_2
+x 19
+y 6
+end
+arch grassd_4
+x 19
+y 7
+end
+arch grassd_3
+x 19
+y 8
+end
+arch plant10
+x 19
+y 8
+end
+arch grassd_3
+x 19
+y 9
+end
+arch plant5
+x 19
+y 9
+end
+arch grassd_5
+x 19
+y 10
+end
+arch grassd_8
+x 19
+y 11
+end
+arch grassd_7
+x 19
+y 12
+end
+arch grassd_4
+x 19
+y 13
+end
+arch grassd_2
+x 19
+y 14
+end
+arch grassd_8
+x 19
+y 15
+end
+arch grassd_8
+x 19
+y 16
+end
+arch tree_big3
+x 19
+y 16
+end
+arch grassd_6
+x 19
+y 17
+end
+arch grassd_8
+x 19
+y 18
+end
+arch grassd_6
+x 19
+y 19
+end
+arch plant_mushroom3
+x 19
+y 19
+end
+arch grassd_7
+x 19
+y 20
+end
+arch grassd_6
+x 19
+y 21
+end
+arch grassd_4
+x 19
+y 22
+end
+arch grassd_7
+x 19
+y 23
+end
+arch fwall_fstone2
+x 19
+y 23
+end
+arch grassd_7
+x 20
+end
+arch fwall_fstone2
+x 20
+end
+arch grassd_8
+x 20
+y 1
+end
+arch table_small1
+x 20
+y 1
+end
+arch grassd_2
+x 20
+y 2
+end
+arch plant16
+x 20
+y 2
+end
+arch grassd_2
+x 20
+y 3
+end
+arch grassd_8
+x 20
+y 4
+end
+arch plant17
+x 20
+y 4
+end
+arch grassd_4
+x 20
+y 5
+end
+arch grassd_8
+x 20
+y 6
+end
+arch plant17
+x 20
+y 6
+end
+arch grassd_6
+x 20
+y 7
+end
+arch grassd_3
+x 20
+y 8
+end
+arch grassd_6
+x 20
+y 9
+end
+arch grassd_1
+x 20
+y 10
+end
+arch grassd_2
+x 20
+y 11
+end
+arch plant_mushroom3
+x 20
+y 11
+end
+arch grassd_1
+x 20
+y 12
+end
+arch grassd_5
+x 20
+y 13
+end
+arch grassd_2
+x 20
+y 14
+end
+arch plant16
+x 20
+y 14
+end
+arch grassd_8
+x 20
+y 15
+end
+arch plant10
+x 20
+y 15
+end
+arch grassd_5
+x 20
+y 16
+end
+arch tree_big3
+x 20
+y 16
+end
+arch grassd_5
+x 20
+y 17
+end
+arch grassd_3
+x 20
+y 18
+end
+arch grassd_2
+x 20
+y 19
+end
+arch grassd_2
+x 20
+y 20
+end
+arch plant12
+x 20
+y 20
+end
+arch grassd_5
+x 20
+y 21
+end
+arch grassd_4
+x 20
+y 22
+end
+arch grassd_3
+x 20
+y 23
+end
+arch fwall_fstone2
+x 20
+y 23
+end
+arch grassd_3
+x 21
+end
+arch fwall_fstone2_w.151
+x 21
+end
+arch grassd_3
+x 21
+y 1
+end
+arch chair1_111
+x 21
+y 1
+end
+arch grassd_8
+x 21
+y 2
+end
+arch spawn_point
+x 21
+y 2
+arch guard_pole
+msg
+Be careful beyond here. There's a lot of wild deer and bears roaming the forest...
+endmsg
+name Penhwyad
+level 15
+speed -0.062
+weapon_speed 3.0
+maxhp 150
+wis 4
+resist_impact 30
+resist_slash 30
+resist_cleave 30
+resist_pierce 30
+type 83
+arch ai_generic
+msg
+# Obliterator's AI that is well-suited
+# for most melee mobs.
+processes:
+look_for_enemy_missiles
+look_for_other_mobs
+friendship
+choose_enemy
+
+moves:
+avoid_line_of_fire
+# stand_still
+sleep
+# run_away_from_enemy hp_threshold=6
+move_towards_enemy
+move_towards_enemy_last_known_pos
+search_for_lost_enemy
+move_towards_waypoint
+# move_randomly xlimit=3 ylimit=3
+move_towards_home
+
+actions:
+bow_attack_enemy
+spell_attack_enemy
+melee_attack_enemy
+endmsg
+name Obli's Generic AI
+end
+arch event_obj
+subtype 13
+race /planes/human_plane/castle/penhwyad.lua
+end
+end
+end
+arch grassd_5
+x 21
+y 3
+end
+arch grassd_4
+x 21
+y 4
+end
+arch grassd_2
+x 21
+y 5
+end
+arch grassd_2
+x 21
+y 6
+end
+arch grassd_3
+x 21
+y 7
+end
+arch grassd_2
+x 21
+y 8
+end
+arch plant8
+x 21
+y 8
+end
+arch grassd_4
+x 21
+y 9
+end
+arch grassd_2
+x 21
+y 10
+end
+arch plant_flower6
+x 21
+y 10
+end
+arch grassd_3
+x 21
+y 11
+end
+arch grassd_1
+x 21
+y 12
+end
+arch grassd_6
+x 21
+y 13
+end
+arch grassd_1
+x 21
+y 14
+end
+arch grassd_1
+x 21
+y 15
+end
+arch grassd_3
+x 21
+y 16
+end
+arch grassd_3
+x 21
+y 17
+end
+arch grassd_5
+x 21
+y 18
+end
+arch plant12
+x 21
+y 18
+end
+arch grassd_5
+x 21
+y 19
+end
+arch grassd_7
+x 21
+y 20
+end
+arch grassd_8
+x 21
+y 21
+end
+arch grassd_8
+x 21
+y 22
+end
+arch grassd_3
+x 21
+y 23
+end
+arch fwall_fstone2
+x 21
+y 23
+end
+arch grassd_6
+x 22
+end
+arch grassd_8
+x 22
+y 1
+end
+arch grassd_4
+x 22
+y 2
+end
+arch grassd_7
+x 22
+y 3
+end
+arch grassd_6
+x 22
+y 4
+end
+arch plant11
+x 22
+y 4
+end
+arch grassd_2
+x 22
+y 5
+end
+arch tree_big3
+x 22
+y 5
+end
+arch grassd_3
+x 22
+y 6
+end
+arch grassd_5
+x 22
+y 7
+end
+arch plant9
+x 22
+y 7
+end
+arch grassd_2
+x 22
+y 8
+end
+arch grassd_5
+x 22
+y 9
+end
+arch grassd_2
+x 22
+y 10
+end
+arch plant1
+x 22
+y 10
+end
+arch grassd_5
+x 22
+y 11
+end
+arch grassd_1
+x 22
+y 12
+end
+arch grassd_1
+x 22
+y 13
+end
+arch grassd_3
+x 22
+y 14
+end
+arch tree_big2
+x 22
+y 14
+end
+arch grassd_4
+x 22
+y 15
+end
+arch plant1
+x 22
+y 15
+end
+arch grassd_5
+x 22
+y 16
+end
+arch grassd_2
+x 22
+y 17
+end
+arch plant15
+x 22
+y 17
+end
+arch grassd_4
+x 22
+y 18
+end
+arch grassd_2
+x 22
+y 19
+end
+arch plant_mushroom3
+x 22
+y 19
+end
+arch grassd_3
+x 22
+y 20
+end
+arch grassd_8
+x 22
+y 21
+end
+arch grassd_8
+x 22
+y 22
+end
+arch grassd_1
+x 22
+y 23
+end
+arch fwall_fstone2
+x 22
+y 23
+end
+arch grassd_7
+x 23
+end
+arch grassd_1
+x 23
+y 1
+end
+arch grassd_8
+x 23
+y 2
+end
+arch grassd_2
+x 23
+y 3
+end
+arch plant_flower7
+x 23
+y 3
+end
+arch grassd_3
+x 23
+y 4
+end
+arch grassd_5
+x 23
+y 5
+end
+arch plant5
+x 23
+y 5
+end
+arch grassd_3
+x 23
+y 6
+end
+arch grassd_6
+x 23
+y 7
+end
+arch plant15
+x 23
+y 7
+end
+arch grassd_5
+x 23
+y 8
+end
+arch grassd_4
+x 23
+y 9
+end
+arch grassd_4
+x 23
+y 10
+end
+arch grassd_4
+x 23
+y 11
+end
+arch grassd_2
+x 23
+y 12
+end
+arch plant9
+x 23
+y 12
+end
+arch grassd_5
+x 23
+y 13
+end
+arch grassd_2
+x 23
+y 14
+end
+arch grassd_3
+x 23
+y 15
+end
+arch grassd_1
+x 23
+y 16
+end
+arch grassd_5
+x 23
+y 17
+end
+arch grassd_5
+x 23
+y 18
+end
+arch plant_flower1
+x 23
+y 18
+end
+arch grassd_6
+x 23
+y 19
+end
+arch plant9
+x 23
+y 19
+end
+arch grassd_5
+x 23
+y 20
+end
+arch grassd_6
+x 23
+y 21
+end
+arch grassd_1
+x 23
+y 22
+end
+arch grassd_7
+x 23
+y 23
+end
+arch fwall_fstone2
+x 23
+y 23
+end
