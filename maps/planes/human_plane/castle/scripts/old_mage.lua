@@ -15,7 +15,10 @@ for_sale =
 	{arch = "coat_mage"},
 	{arch = "gloves_cloth"},
 	{arch = "pants"},
-	{arch = "sandals_cloth"}
+	{arch = "sandals_cloth"},
+	{arch = "mithril_ring"},
+	{arch = "mithril_armour"},
+	{arch = "mithril_coat"}
 }
 
 local function topic_greeting()
