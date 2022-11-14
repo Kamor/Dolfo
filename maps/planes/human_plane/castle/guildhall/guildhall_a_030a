@@ -3,11 +3,11 @@ name Under Guild Hall
 msg
 Creator: Unknown Combat Dummy
 Date:    2005-11-28
-Modified: 2022-01-02 Karsten
+Modified: 2022-11-13 Karsten
 endmsg
 width 24
 height 24
-difficulty 1
+difficulty 3
 darkness 1
 tile_path_2 guildhall_a_040a
 background_music spokyspace.ogg
@@ -618,9 +618,11 @@ x 4
 y 21
 arch hobgoblin
 name Mahch
-type 83
 level 5
+exp 300
+maxhp 60
 wis 3
+type 83
 arch quest_trigger
 name Rusty Rod Retrieval
 subtype 3
@@ -819,18 +821,6 @@ end
 arch floor_ostone2
 x 6
 y 9
-end
-arch spawn_point
-x 6
-y 9
-arch woman_old
-name Ariane
-type 83
-arch event_obj
-subtype 13
-race /scripts/alchemist.lua
-end
-end
 end
 arch floor_ostone4
 x 6
@@ -1083,9 +1073,11 @@ last_grace 5
 x 7
 y 21
 arch goblin
-type 83
 level 4
+exp 250
+maxhp 55
 wis 2
+type 83
 end
 end
 arch earth_brown2
@@ -1336,9 +1328,11 @@ slaying bat nest
 x 9
 y 2
 arch brnbat
-type 83
-sleep 0
+level 2
+exp 150
+maxhp 45
 unaggressive 1
+type 83
 end
 end
 arch earth_brown3
@@ -1487,9 +1481,11 @@ last_grace 5
 x 9
 y 20
 arch goblin
-type 83
 level 4
+exp 250
+maxhp 55
 wis 2
+type 83
 end
 end
 arch earth_brown2
@@ -1527,9 +1523,11 @@ slaying bat nest
 x 10
 y 1
 arch brnbat
-type 83
-sleep 0
+level 2
+exp 150
+maxhp 45
 unaggressive 1
+type 83
 end
 end
 arch earth_brown1
@@ -1545,9 +1543,11 @@ slaying bat nest
 x 10
 y 2
 arch brnbat
-type 83
-sleep 0
+level 2
+exp 150
+maxhp 45
 unaggressive 1
+type 83
 end
 end
 arch earth_brown3
@@ -2039,9 +2039,11 @@ last_grace 5
 x 12
 y 16
 arch slug_giant
-type 83
 level 3
+exp 150
+maxhp 50
 wis 3
+type 83
 end
 end
 arch earth_brown2
@@ -2080,9 +2082,11 @@ arch spawn_point
 x 12
 y 21
 arch slug_giant
-type 83
 level 3
+exp 150
+maxhp 50
 wis 4
+type 83
 end
 end
 arch earth_brown3
@@ -2123,9 +2127,11 @@ arch spawn_point
 x 13
 y 2
 arch slug_giant
-type 83
-level 2
+level 3
+exp 100
+maxhp 50
 unaggressive 1
+type 83
 end
 end
 arch earth_brown3
@@ -3093,10 +3099,12 @@ arch spawn_point
 x 18
 y 13
 arch goblin
-type 83
-level 3
+level 4
+exp 200
 sleep 1
+maxhp 55
 wis 2
+type 83
 end
 end
 arch earth_brown2
@@ -3120,10 +3128,12 @@ x 18
 y 16
 arch pudding_black
 name shivering black pudding
-type 83
-level 6
-unaggressive 1
+level 5
+exp 300
+maxhp 60
 wis 1
+unaggressive 1
+type 83
 end
 end
 arch earth_brown3
@@ -3344,9 +3354,11 @@ arch spawn_point
 x 19
 y 21
 arch slug_giant
-type 83
 level 3
+exp 150
+maxhp 50
 wis 3
+type 83
 end
 end
 arch earth_brown1
@@ -3398,10 +3410,12 @@ arch spawn_point
 x 20
 y 3
 arch slug_giant
-type 83
-level 2
-unaggressive 1
+level 3
+exp 200
+maxhp 50
 wis 3
+unaggressive 1
+type 83
 end
 end
 arch earth_brown1
@@ -3533,9 +3547,11 @@ arch spawn_point
 x 20
 y 19
 arch slug_giant
-type 83
 level 3
+exp 160
+maxhp 50
 wis 3
+type 83
 end
 end
 arch earth_brown3
@@ -3588,10 +3604,12 @@ arch spawn_point
 x 21
 y 2
 arch slug_giant
-type 83
-level 2
-unaggressive 1
+level 3
+exp 200
+maxhp 50
 wis 3
+unaggressive 1
+type 83
 end
 end
 arch earth_brown3
