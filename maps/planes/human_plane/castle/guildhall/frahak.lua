@@ -1,7 +1,14 @@
--- Ogre Chief Frah'aks Letter Quest using template for a "item quest" script
+-- script needs plugin npc trainer
+-- /scripts/npc_trainer.lua
+-- npc trainer needs the new function to get access to the "level exp"
+-- if you don't have this you must deactivate skill trainer in here
+-- remove
+-- require("/scripts/npc_trainer.lua")
+-- tl = trainerAddTopics(tl)
+-- tl:AddServices(nil, topic_training)
 
-me = event.me  -- we need this global for included included npc_shop script
-pl = event.activator -- we need this global for included included npc_shop script
+me = event.me  -- we need this global trainer
+pl = event.activator -- we need this global for shop or trainer
 
 require("interface_builder")
 ib = InterfaceBuilder() -- we need this global ...
@@ -16,10 +23,7 @@ to_train =
 }
 
 require("quest_builder")
-
-local msg       = string.lower(event.message)
-local qb        = QuestBuilder()
---local skill     = game:GetSkillNr('find traps')
+local qb = QuestBuilder()
 
 local function questGoal(questnr)
     qb:AddQuestItem(questnr, 1, "quest_object", "letter.101", "Frah'aks Letter")
@@ -29,136 +33,200 @@ end
 
 local function questReward(questnr)
     pl:Sound(0, 0, 2, 0)
+		local skill = game:GetSkillNr('find traps')
     pl:AcquireSkill(skill, game.LEARN)
 end
 
 -- quest names must be unique
 qb:AddQuest("Ogre Chief Frah'aks Letter", game.QUEST_ITEM, nil, nil, nil,
             nil, 1, questGoal, questReward)
+						
+qb:AddQuest("Frah'aks Mushrooms", game.QUEST_KILLITEM)
+--qb:AddQuest("Kill Kobold Shaman", game.QUEST_ITEM)
 
-local questnr = qb:Build(pl)
-local qstat   = qb:GetStatus(1)
+local questnr = qb:Build(pl) -- qb:Build crashes when their are non quest added before
+-- same for GetStatus when it targets a non existing quest number
+-- looks like quest builder is a crash machine addquest without the functions leads to crashes when register quest
+pl:Write("questnr ".. questnr, game.COLOR_YELLOW)
 
 local function topicDefault()
-    if qstat < game.QSTAT_DONE and pl:FindSkill(skill) == nil then
-        if qstat == game.QSTAT_NO then
-            ib:SetHeader("st_001", me)
-            ib:SetTitle("Ogre Chief Frah'ak")
-            ib:AddMsg("\nYo shut up.\nYo grack zhal hihzuk alshzu...\nMe mighty ogre chief.\nMe ^warrior^ ,will destroy yo. They come.\nGuard and ^kobolds^ will die then.")          
-        else
-            ib:SetHeader("st_001", me)
-            ib:SetTitle("Ogre Chief Frah'aks Letter Quest solved?")
-            ib:AddMsg("You have the letter?")
-            ib:AddLink("Finish Ogre Chief Frah'aks Letter Quest", "checkq1")
+
+		if questnr==0 then
+		  ib:SetTitle("Yo Want More Teaching")
+      ib:AddMsg("\nAshahk! Yo want me teaching yo more trap skills?\nWill teach for money.\n")
+      ib:AddLink("Yeah, show me your skills.", "training")
+			return
+		end
+		
+		if questnr==1 then
+			local qstat = qb:GetStatus(questnr)
+			if qstat == game.QSTAT_NO then
+				ib:SetTitle("Ogre Chief Frah'ak")
+				ib:AddMsg("\nYo shut up.\nYo grack zhal hihzuk alshzu...\nMe mighty ogre chief.\nMe ^warrior^ ,will destroy yo. They come.\nGuard and ^kobolds^ will die then.")
+				ib:AddLink("Kobolds?", "quest")
+			else
+        ib:SetTitle("Ogre Chief Frah'aks Letter Quest solved?")
+        ib:AddMsg("You have the letter?")
+        ib:AddLink("Finish Ogre Chief Frah'aks Letter Quest", "quest")
+      end
+		end
+		
+		if questnr==2 then
+			local qstat = qb:GetStatus(questnr)
+					if qstat == game.QSTAT_NO then
+					ib:SetTitle("Frah'aks Mushrooms")
+					ib:AddMsg("\n\nDown there is shitty shaman.You kill him!\n\nDo this for mighty ogre chief Frah'ak. But first bring me some mushrooms. Frah'ak needs mushrooms. You help Frah'ak, me help you!")
+					ib:AddLink("Mushrooms?", "quest")					
+				else
+          ib:SetTitle("Frah'aks Mushrooms")
+          ib:AddMsg("You have mushrooms?")
+          ib:AddLink("Finish Frah'aks Mushrooms Quest", "quest")
         end
-    else
-        ib:SetHeader("st_005", me)
-        ib:SetTitle("Yo Want More Teaching")
-        ib:AddMsg("\nAshahk! Yo want me teaching yo more trap skills?\nWill teach for money.\n")
-        ib:AddLink("Yeah, show me your skills.", "training")
     end
 end
 
--- quest body (added to player quest obj for quest list)
-local function quest_icons1()
-    ib:AddIcon("Find Traps Skill", "skill.101", " ") 
+local function topicQuest()
+		if questnr==0 then
+			topicDefault()
+		end
+    ib:SetButton("Back", "hi")
+		
+		if questnr==1 then
+			local qstat = qb:GetStatus(questnr)
+		  if qstat == game.QSTAT_NO or qstat == game.QSTAT_ACTIVE  then
+				ib:SetTitle(qb:GetName(questnr))
+				ib:AddMsg("\nKobolds traitors!\nGive gold for note, kobolds don't bring note to ogres.\nMe tell you: Kill kobold chief!\nMe will teach you find traps skill!\nShow me note i will teach you.\nKobolds in hole next room. Secret entry in wall." )
+
+				ib:AddMsg("\n\nGet Frah'aks Letter.")
+				ib:SetDesc("Bring Frah'ak his note from kobolds", 0, 0, 0, 0)
+				-- todo alternate +exp reward
+				-- if pl:FindSkill(skill) == nil then
+				ib:AddIcon("Find Traps Skill", "skill.101", " ") 
+			end
+		
+			if qstat == game.QSTAT_NO then
+				ib:AddLink("Start the Ogre Chief Frah'aks Letter Quest", "accept quest")
+				ib:SetAccept(nil, "accept quest") 
+				ib:SetDecline(nil, "hi")
+			end
+		
+			if qstat == game.QSTAT_SOLVED then
+				ib:AddMsg("\nAshahk! Yo bring me note!\nKobold chief bad time now, ha?\nNow me will teach you!\n")
+				ib:SetDesc("here it is...", 0, 0, 0, 0)
+        ib:AddIcon("Find Traps Skill", "skill.101", " ")
+				ib:SetAccept(nil, "finish quest")
+				ib:SetDecline(nil, "hi")
+			end
+			-- todo this don't trigger here, we need this in topic kobolds
+			if qstat == game.QSTAT_DONE then
+				ib:AddMsg("\nHaha, you slaying kobolds was fun.\nFrah'ak laughing the hole day!\n")
+			end
+		end
+		
+		if questnr==2 then
+			local qstat = qb:GetStatus(questnr)
+			if qstat == game.QSTAT_NO or qstat == game.QSTAT_ACTIVE then
+			  ib:SetTitle("Frah'aks Mushrooms")
+			  ib:AddMsg("\nGo down, search cauldron with stinky kobold soup, go hidden hole, kobolds are sneaky!\n\nYou kill big mushrooms! Bring mushrooms to Frah'ak. Frah'aks gives you mighty amulet. Best amulet in world!")
+				ib:SetDesc("Best amulet in world! From mighty Frah'ak. Ogre chief!", 0, 0, 0, 0)
+				ib:AddIcon("Frah'aks Amulet", "amulet.101", "")
+      end
+			
+			if qstat == game.QSTAT_NO then
+				ib:AddLink("Start Frah'aks Mushrooms Quest", "accept quest")
+				ib:SetAccept(nil, "accept quest") 
+				ib:SetDecline(nil, "hi")
+			end
+			
+			if qstat == game.QSTAT_SOLVED then
+				ib:AddMsg("\nAshahk! Yo bring me mushrooms!\nKobold shaman bad time now, ha?\nNow me will give you mighty amulet!\n")
+				ib:SetDesc("here it is...", 0, 0, 0, 0)
+				ib:AddIcon("Frah'aks Amulet", "amulet.101", "")
+				ib:SetAccept(nil, "finish quest")
+				ib:SetDecline(nil, "hi")
+			end
+			if qstat == game.QSTAT_DONE then
+				-- todo this don't trigger here, we need this in topic mushrooms
+				ib:AddMsg("\nHaha, you slaying mushrooms was fun.\nFrah'ak laughing the hole day now from delicious mushrooms!\n")
+			end
+    end
+
 end
 
-local function quest_body1()
-    ib:SetMsg("Get Frah'aks Letter.")
-    ib:SetDesc("Bring Frah'ak his note from kobolds", 0, 0, 0, 0)
+local function topicAcceptQuest()
+		if questnr==0 then
+			topicDefault()
+		end
+
+		if questnr==1 then
+			local qstat = qb:GetStatus(questnr)
+			if qstat == game.QSTAT_NO then
+				qb:RegisterQuest(questnr, me, ib)
+			end
+		  topicQuest()
+		end
+		
+		if questnr==2 then
+			local qstat = qb:GetStatus(questnr)
+			if qstat == game.QSTAT_NO then
+				qb:RegisterQuest(questnr, me, ib)
+				local target = qb:AddQuestTarget(questnr, 2, 2, "fungus", "Giant Fungus")
+        target:AddQuestItem(2, "quest_object", "plant_mushroom1.101", "Mushroom")
+			end
+		  topicQuest()
+		end
 end
 
--- start: accept or decline the quest
-local function topStartQ1()
-    if qstat ~= game.QSTAT_NO then
-        topicDefault()
+local function topicFinishQuest()
+		if questnr==0 then
+			topicDefault()
+		end
+		
+		if questnr==1 then
+			local qstat = qb:GetStatus(questnr)
+			if qstat ~= game.QSTAT_SOLVED then
+        topicQuest()
         return
-    end
-    ib:SetHeader("st_003", me)
-    ib:SetTitle(qb:GetName(questnr))
-    quest_body1()
-    quest_icons1()
-    ib:SetAccept(nil, "acceptq1") 
-    ib:SetDecline(nil, "hi") 
-end
-
--- accepted: start the quest
-local function topAcceptQ1()
-    if qstat ~= game.QSTAT_NO then
-        topicDefault()
+			end
+		  qb:Finish(questnr)
+			ib:SetTitle("Quest Completed")
+			ib:SetMsg("Frah'ak teaches you an ancient skill.")	
+		end
+		
+		if questnr==2 then
+			local qstat = qb:GetStatus(questnr)
+			if qstat ~= game.QSTAT_SOLVED then
+        topicQuest()
         return
-    end
-    ib:SetHeader("st_003", me)
-    quest_body1()
-    quest_icons1()
-    qb:RegisterQuest(questnr, me, ib)
-end
-
--- try to finish: check the quest
-local function topCheckQ1()
-    if qstat == game.QSTAT_NO then
-        topicDefault()
-        return
-    end
-    ib:SetHeader("st_003", me)
-    ib:SetTitle("Ogre Chief Frah'aks Letter Quest")
-    --ib:SetMsg("The quest status is: ".. qstat .."\n\n")
-    if qstat ~= game.QSTAT_SOLVED then
-        ib:AddMsg("\nNah, bring Frah'ak note from ^kobolds^ first!\n")
-        ib:SetButton("Back", "hi") 
-    else
-        ib:AddMsg("\nAshahk! Yo bring me note!\nKobold chief bad time now, ha?\nNow me will teach you!\n")
-        ib:SetDesc("here it is...", 0, 0, 0, 0)
-        quest_icons1()
-        ib:SetAccept(nil, "finishq1") 
-        ib:SetDecline(nil, "hi") 
-    end
-end
-
--- done: finish quest and give reward
-local function topFinishQ1()
-    if qstat ~= game.QSTAT_SOLVED then
-        topicDefault()
-        return
-    end
-    qb:Finish(1)
-    
-    ib:SetTitle("Quest Completed")
-    ib:SetMsg("Frah'ak teaches you an ancient skill.")
-    ib:SetButton("Ok", "hi") 
+			end
+		  qb:Finish(questnr)
+			ib:SetTitle("Quest Completed")
+			ib:SetMsg("Frah'ak gives you an amulet.")
+			
+			local amulet = game:LoadObject("arch amulet_generic\nidentified 1\nname Frah'ak Amulet\nresist_weaponmagic 20\nitem_level 5\nend")
+      assert(amulet, "Could not create amulet!")
+      amulet:MakeEgo(game.EGOITEM_MODE_UNBOUND)
+      amulet:InsertInside(pl)
+		end
 end
 
 local function topWarrior()
-    ib:SetHeader("st_002", me)
     ib:SetTitle("Warrior")
     ib:AddMsg("\nMe big chief. Me ogre destroy you.\nStomp on. Dragon kakka." )
     ib:SetButton("Back", "Hi") 
 end
 
-local function topKobolds()
-    ib:SetHeader("st_002", me)
-    ib:SetTitle("Kolbolds")
-    ib:AddMsg("\nKobolds traitors!\nGive gold for note, kobolds don't bring note to ogres.\nMe tell you: Kill kobold chief!\nMe will teach you find traps skill!\nShow me note i will teach you.\nKobolds in hole next room. Secret entry in wall." )
-    ib:AddLink("Start the Ogre Chief Frah'aks Letter Quest", "startq1")
-    ib:SetButton("Back", "Hi")
-end
-
 require("/scripts/npc_trainer.lua")
-
 require("topic_list")
 tl = TopicList()
 -- tl:AddGreeting(nil, topicDefault)
 tl:SetDefault(topicDefault)
 tl:AddTopics("warrior", topWarrior)
-tl:AddTopics("kobolds", topKobolds)
+tl:AddTopics("kobolds", topicQuest)
 
-if qb:GetStatus(1) < game.QSTAT_DONE then
-    tl:AddTopics("startq1", topStartQ1) 
-    tl:AddTopics("acceptq1", topAcceptQ1) 
-    tl:AddTopics("checkq1", topCheckQ1) 
-    tl:AddTopics("finishq1", topFinishQ1) 
-end
+tl:AddTopics({"quest", "explain%s+quest"}, topicQuest)
+tl:AddTopics("accept quest", topicAcceptQuest)
+tl:AddTopics("finish quest", topicFinishQuest)
 
 tl = trainerAddTopics(tl)
 tl:AddServices(nil, topic_training)
