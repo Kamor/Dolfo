@@ -1,0 +1,105 @@
+// spell_effect.c
+int cast_change_attr(object_t *op, object_t *caster, object_t *target, int dir, int spell_type)
+{
+    object_t *tmp = target,
+           *this,
+           *next,
+           *force = NULL;
+    int     is_refresh = 0, msg_flag = 1;
+    int     atnr = 0, path = 0;        /* see protection spells */
+    int     i;
+
+    if (tmp == NULL)
+        return 0;
+
+    /* we ID the buff force with spell_type... if we find one, we have old effect.
+     * if not, we create a fresh force. */
+    FOREACH_OBJECT_IN_OBJECT(this, tmp, next)
+    {
+        if (this->type == FORCE)
+        {
+            if (this->weight_limit == spell_type)
+            {
+                force = this;    /* the old effect will be "refreshed" */
+                is_refresh = 1;
+                ndi(NDI_UNIQUE, 0, op, "You recast the spell while in effect.");
+            }
+            else if ((spell_type == SP_BLESS &&
+                 this->weight_limit == SP_HOLY_POSSESSION) ||
+                (spell_type == SP_HOLY_POSSESSION &&
+                 this->weight_limit == SP_BLESS))
+            {
+                /* both bless AND holy posession are not allowed! */
+                ndi(NDI_UNIQUE, 0, op, "No more blessings for you.");
+                return 0;
+            }
+        }
+    }
+
+    if (force == NULL)
+        force = get_archetype("force");
+    force->weight_limit = spell_type;  /* mark this force with the originating spell */
+    i = 0;   /* (-> protection spells) */
+
+		// todo savetychecks against level 0
+		int casting_level = casting_level(caster, spell_type); // casting_level=110
+		int buff=1+casting_level/10;
+		if (op->stats.Pow<buff) buff = op->stats.Pow;
+
+    switch (spell_type)
+    {
+        case SP_STRENGTH:
+          force->speed_left = -1;
+          if (tmp->type != PLAYER)
+          {
+              if (op->type == PLAYER)
+                  ndi(NDI_UNIQUE, 0, op, "You can't cast this kind of spell on your target.");
+              return 0;
+          }
+          else if (op->type == PLAYER && op != tmp)
+              ndi(NDI_UNIQUE, 0, tmp, "%s casts strength on you!", op->name ? op->name : "someone");
+
+
+          if (force->stats.Str < buff)
+          {
+              force->stats.Str=buff;
+							force->stats.Pow=-buff;
+              if (op->type == PLAYER && op != tmp)
+                  ndi(NDI_UNIQUE, 0, op, "%s get stronger.", tmp->name ? tmp->name : "someone");
+          }
+          else
+          {
+              msg_flag = 0;
+              ndi(NDI_UNIQUE, 0, tmp, "You don't grow stronger but the spell is refreshed.");
+              if (op->type == PLAYER && op != tmp)
+                  ndi(NDI_UNIQUE, 0, op, "%s doesn't grow stronger but the spell is refreshed.",
+                                       tmp->name ? tmp->name : "someone");
+          }
+
+          if (insert_spell_effect(spells[SP_STRENGTH].archname, target->map, target->x, target->y))
+              LOG(llevDebug, "insert_spell_effect() failed: spell:%d, obj:%s caster:%s target:%s\n", spell_type,
+                  STRING_OBJ_NAME(op), STRING_OBJ_NAME(caster), STRING_OBJ_NAME(target));
+
+          break;
+    }
+
+		force->speed_left = -0.1f*casting_level;
+    // force->speed_left = -1 - SP_level_strength_adjust(op, caster, spell_type) * 0.1f; // old formula
+    force = check_obj_stat_buffs(force, target);
+    SET_FLAG(force, FLAG_IS_USED_UP);
+
+    if (!is_refresh)
+    {
+        SET_FLAG(force, FLAG_APPLIED);
+        force = insert_ob_in_ob(force, tmp);
+    }
+    if (msg_flag)
+    {
+        if(tmp->type == PLAYER)
+            change_abil(tmp, force); /* Mostly to display any messages */
+        else
+            FIX_PLAYER(tmp ,"cast change attr - bug? bogus call - fix monster?"); /* fix monster? */
+    }
+
+    return 1;
+}
