@@ -3,7 +3,7 @@ name Guild Hall
 msg
 Creator: Daimonin Map Editor
 Date:    7/8/2004
-Modified: 2021-12-26 Karsten
+Modified: 2022-11-15 Karsten
 endmsg
 width 24
 height 24
@@ -15,8 +15,6 @@ tile_path_1 castle_0200
 tile_path_2 castle_030a
 tile_path_4 ../mountain_0502
 tile_path_5 castle_0300
-tile_path_6 castle_030b
-tile_path_7 ../forest_0702
 tile_path_8 castle_0100
 background_music ColeForeverPiano.ogg
 end
@@ -1381,6 +1379,19 @@ arch grassd_7
 x 10
 y 8
 end
+arch spawn_point
+x 10
+y 8
+arch traveller_parka
+name Merchant
+direction 2
+type 83
+arch event_obj
+subtype 13
+race guildhall/merchant.lua
+end
+end
+end
 arch floor_grit1
 x 10
 y 9
@@ -1508,6 +1519,11 @@ x 11
 y 6
 end
 arch grassd_5
+x 11
+y 7
+end
+arch wagon_big
+direction 2
 x 11
 y 7
 end
@@ -1951,7 +1967,7 @@ direction 7
 x 14
 y 9
 arch event_obj
-sub_type 10
+subtype 10
 race guildhall/lothar.lua
 end
 end
@@ -1989,7 +2005,7 @@ direction 7
 x 14
 y 12
 arch event_obj
-sub_type 10
+subtype 10
 race guildhall/lothar.lua
 end
 end
@@ -2517,7 +2533,7 @@ title the Gatekeeper
 level 10
 direction 7
 arch event_obj
-sub_type 13
+subtype 13
 race guildhall/lothar.lua
 end
 end
@@ -3064,12 +3080,11 @@ y 20
 arch smith
 name Gofannon
 type 83
-title the Smith
 face weapon_smith.141
 animation weapon_smith
 level 12
 arch event_obj
-sub_type 13
+subtype 13
 name lua
 race guildhall/gofannon.lua
 end
@@ -3451,7 +3466,7 @@ race guildhall jail cell 3 door
 wc 4
 grace 1
 arch event_obj
-sub_type 10
+subtype 10
 race guildhall/sahrel_taunt.lua
 end
 end
@@ -3498,7 +3513,7 @@ spell_attack_enemy
 endmsg
 end
 arch event_obj
-sub_type 13
+subtype 13
 race /dmbuster/jailer_talk.lua
 end
 end
