@@ -169,9 +169,9 @@ local function topicQuest()
 			local qstat = qb:GetStatus(questnr)
 			if qstat == game.QSTAT_NO or qstat == game.QSTAT_ACTIVE then
 			  ib:SetTitle("Kill Shaman Quest")
-			  ib:AddMsg("\nGo down. Kill shaman. You kill him!\n\nDo this for mighty ogre chief Frah'ak. And Frah'ka teach you Remove Traps skill!")
-				ib:AddMsg("\n\nGet x from shaman.")
-				ib:SetDesc("Bring Frah'ak x from shaman", 0, 0, 0, 0)
+			  ib:AddMsg("\nGo down. Kill shaman. You kill him! Bring me his tooth\n\nDo this for mighty ogre chief Frah'ak. And Frah'ka teach you Remove Traps skill!")
+				ib:AddMsg("\n\nGet tooth  from shaman.")
+				ib:SetDesc("Bring Frah'ak tooth from shaman", 0, 0, 0, 0)
 				-- todo alternate +exp reward
 				-- if pl:FindSkill(skill) == nil then
 				ib:AddIcon("Remove Traps Skill", "skill.101", " ") 
@@ -270,7 +270,7 @@ local function topicFinishQuest()
 			end
 		  qb:Finish(questnr)
 			pl:Sound(0, 0, 2, 0)
-			local skill = game:GetSkillNr('remove traps')
+			local skill = game:GetSkillNr('remove trap')
 			pl:AcquireSkill(skill, game.LEARN)
 			ib:SetTitle("Quest Completed")
 			ib:SetMsg("Frah'ak teaches you an ancient skill.")	
