@@ -42,12 +42,11 @@ qb:AddQuest("Ogre Chief Frah'aks Letter", game.QUEST_ITEM, nil, nil, nil,
             nil, 1, questGoal, questReward)
 						
 qb:AddQuest("Frah'aks Mushrooms", game.QUEST_KILLITEM)
---qb:AddQuest("Kill Kobold Shaman", game.QUEST_ITEM)
+qb:AddQuest("Kill Kobold Shaman", game.QUEST_KILLITEM)
 
 local questnr = qb:Build(pl) -- qb:Build crashes when their are non quest added before
 -- same for GetStatus when it targets a non existing quest number
 -- looks like quest builder is a crash machine addquest without the functions leads to crashes when register quest
-pl:Write("questnr ".. questnr, game.COLOR_YELLOW)
 
 local function topicDefault()
 
@@ -83,6 +82,21 @@ local function topicDefault()
           ib:AddLink("Finish Frah'aks Mushrooms Quest", "quest")
         end
     end
+		
+		if questnr==3 then
+			local qstat = qb:GetStatus(questnr)
+					if qstat == game.QSTAT_NO then
+					ib:SetTitle("Kill Kobold Shaman")
+					ib:AddMsg("\n\nDown there is shitty shaman.You kill him!\n\nDo this for mighty ogre chief Frah'ak. And Frah'ka teach you Remove Traps skill!")
+					ib:AddLink("Kill Shaman", "quest")					
+				else
+          ib:SetTitle("Kill Kobold Shaman")
+          ib:AddMsg("You have killed nasty shaman?")
+          ib:AddLink("Finish Frah'aks Shaman Quest", "quest")
+        end
+    end
+		
+		
 end
 
 local function topicQuest()
@@ -150,6 +164,34 @@ local function topicQuest()
 				ib:AddMsg("\nHaha, you slaying mushrooms was fun.\nFrah'ak laughing the hole day now from delicious mushrooms!\n")
 			end
     end
+		
+		if questnr==3 then
+			local qstat = qb:GetStatus(questnr)
+			if qstat == game.QSTAT_NO or qstat == game.QSTAT_ACTIVE then
+			  ib:SetTitle("Kill Shaman Quest")
+			  ib:AddMsg("\nGo down. Kill shaman. You kill him!\n\nDo this for mighty ogre chief Frah'ak. And Frah'ka teach you Remove Traps skill!")
+				ib:AddMsg("\n\nGet x from shaman.")
+				ib:SetDesc("Bring Frah'ak x from shaman", 0, 0, 0, 0)
+				-- todo alternate +exp reward
+				-- if pl:FindSkill(skill) == nil then
+				ib:AddIcon("Remove Traps Skill", "skill.101", " ") 
+      end
+			
+			if qstat == game.QSTAT_NO then
+				ib:AddLink("Start Kill Shaman quest for Frah'ak", "accept quest")
+				ib:SetAccept(nil, "accept quest") 
+				ib:SetDecline(nil, "hi")
+			end
+			
+			if qstat == game.QSTAT_SOLVED then
+				ib:AddMsg("\nAshahk! Yo bring me tooth from shaman!\nKobold shaman bad time now, ha?\nNow Frah'ka teach you Remove Traps skill!\n")
+				ib:SetDesc("here it is...", 0, 0, 0, 0)
+				ib:AddIcon("Remove Traps Skill", "skill.101", " ") 
+				ib:SetAccept(nil, "finish quest")
+				ib:SetDecline(nil, "hi")
+			end
+			
+		end	
 
 end
 
@@ -175,6 +217,17 @@ local function topicAcceptQuest()
 			end
 		  topicQuest()
 		end
+		
+		if questnr==3 then
+			local qstat = qb:GetStatus(questnr)
+			if qstat == game.QSTAT_NO then
+				qb:RegisterQuest(questnr, me, ib)
+				local target = qb:AddQuestTarget(questnr, 1, 1, "kobold_shaman", "Kobold Shaman")
+        target:AddQuestItem(1, "quest_object", "tooth.101", "Shaman tooth")
+			end
+		  topicQuest()
+		end
+		
 end
 
 local function topicFinishQuest()
@@ -208,6 +261,21 @@ local function topicFinishQuest()
       amulet:MakeEgo(game.EGOITEM_MODE_UNBOUND)
       amulet:InsertInside(pl)
 		end
+		
+		if questnr==3 then
+			local qstat = qb:GetStatus(questnr)
+			if qstat ~= game.QSTAT_SOLVED then
+        topicQuest()
+        return
+			end
+		  qb:Finish(questnr)
+			pl:Sound(0, 0, 2, 0)
+			local skill = game:GetSkillNr('remove traps')
+			pl:AcquireSkill(skill, game.LEARN)
+			ib:SetTitle("Quest Completed")
+			ib:SetMsg("Frah'ak teaches you an ancient skill.")	
+		end
+		
 end
 
 local function topWarrior()

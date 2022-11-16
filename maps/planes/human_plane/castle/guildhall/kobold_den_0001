@@ -3,7 +3,7 @@ name Kobold Den
 msg
 Creator: Daimonin Map Editor
 Date:    3/22/2004
-Modified: 2022-11-14 Karsten
+Modified: 2022-11-16 Karsten
 endmsg
 width 24
 height 24
@@ -2779,14 +2779,6 @@ end
 arch floor_sand_d4
 x 18
 y 12
-end
-arch floor_grit4a
-x 18
-y 13
-end
-arch spawn_point
-x 18
-y 13
 end
 arch floor_grit4a
 x 18
