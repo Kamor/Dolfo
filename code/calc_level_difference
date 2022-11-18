@@ -2,41 +2,41 @@
 // we need to return a float, where 1 is 100%
 float calc_level_difference(int who_lvl, int op_lvl)
 {
-    /* some sanity checks */
-    if (who_lvl<0 || who_lvl>200 || op_lvl<0 || op_lvl>200)
-    {
-        LOG(llevBug, "Calc_level:: Level out of range! (%d - %d)\n", who_lvl, op_lvl);
-        return 0.0f;
-    }
+	/* some sanity checks */
+	if (who_lvl<0 || who_lvl>200 || op_lvl<0 || op_lvl>200)
+	{
+		LOG(llevBug, "Calc_level:: Level out of range! (%d - %d)\n", who_lvl, op_lvl);
+		return 0.0f;
+	}
 
-		// float factor=1.0f-((float)(who_lvl-op_lvl))/10; // this is loosing/gaining 10% for each level, not the best formula
-		// float factor=1.0f-((float)(who_lvl-op_lvl))/100; // this is loosing/gaining 1% for each level, better, but perhaps boring?
+	// float factor=1.0f-((float)(who_lvl-op_lvl))/10; // this is loosing/gaining 10% for each level, not the best formula
+	// float factor=1.0f-((float)(who_lvl-op_lvl))/100; // this is loosing/gaining 1% for each level, better, but perhaps boring?
 
-		// calculate abs and sign
-		int lvl_relativ = who_lvl-op_lvl;
-		int lvl_absolut = abs(lvl_relativ);
-		int lvl_sign = (lvl_relativ > 0) - (lvl_relativ < 0);
-		// float factor=1.0f-(float)(lvl_sign*lvl_absolut)/100; // test if sign and abs is correct.
-		
-		// log(1)=0 where log(0) is not not defined (unlimited), so we adjust +1
-		// float lvl_abs_log = log(1+lvl_absolut); // so we have on level difference 0 log(1)=0 (2^0=1)
-		// logarithms is not a nice curve, lets try square root curve
-		
-		int percent = sqrt(lvl_absolut) * 10; // this could be adjusted, currently this means
-		// level difference leads to +/-x%
-		// 0 = 0%
-		// 1 = 10%
-		// 4 = 20%
-		// 9 = 30%
-		// 16 = 40%
-		// 25 = 50%
-		// 36 = 60%
-		// 49 = 70%
-		// 64 = 80%
-		// 81 = 90%
-		// 100 = 100% (this is means exp when player is +100 level over mob)
-		// 121 = 110% (where minus exp don't go under 0, when we check for it in return line)
-		
-		float factor=1.0f-lvl_sign*((float)percent)/100.0f;
-    return (factor >= 0) ? factor : 0.00f;
+	// calculate abs and sign
+	int lvl_relativ = who_lvl-op_lvl;
+	int lvl_absolut = abs(lvl_relativ);
+	int lvl_sign = (lvl_relativ > 0) - (lvl_relativ < 0);
+	// float factor=1.0f-(float)(lvl_sign*lvl_absolut)/100; // test if sign and abs is correct.
+
+	// log(1)=0 where log(0) is not not defined (unlimited), so we adjust +1
+	// float lvl_abs_log = log(1+lvl_absolut); // so we have on level difference 0 log(1)=0 (2^0=1)
+	// logarithms is not a nice curve, lets try square root curve
+
+	int percent = sqrt(lvl_absolut) * 10; // this could be adjusted, currently this means
+	// level difference leads to +/-x%
+	// 0 = 0%
+	// 1 = 10%
+	// 4 = 20%
+	// 9 = 30%
+	// 16 = 40%
+	// 25 = 50%
+	// 36 = 60%
+	// 49 = 70%
+	// 64 = 80%
+	// 81 = 90%
+	// 100 = 100% (this is means exp when player is +100 level over mob)
+	// 121 = 110% (where minus exp don't go under 0, when we check for it in return line)
+
+	float factor=1.0f-lvl_sign*((float)percent)/100.0f;
+	return (factor >= 0) ? factor : 0.00f;
 }
