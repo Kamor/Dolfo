@@ -1,0 +1,94 @@
+/* calc_skill_exp() - calculates amount of experience can be gained for
+ * successfull use of a skill.  Returns value of experience gain.
+ * If level is == -1, we get the used skill from (player) who.
+ */
+ 
+ // level -1 is special situation where logic get level from who
+ // level 0
+ 
+ // why we need return exp and pointer exp here? todo remove one?
+int calc_skill_exp(object_t *who, object_t *op, float mod, int level, int *real)
+{
+		ndi(NDI_UNIQUE | NDI_RED, 0, who, "function : calc_skill_exp");
+		ndi(NDI_UNIQUE | NDI_BLUE, 0, who, "level = %d", level);
+
+		// we handle this overwrite logic first, no need to calculate all below, when we use this direct formula
+	  if(real != NULL)
+    {
+        if(*real > 0)
+            return (int)((float)(*real)*mod);
+		}
+
+	// who is player, op is killed object
+	// also overwriting who_lvl is strange? level comes from agro_lvl outside and can be 0
+	// so we better only overwrite when it is not 0
+    int     who_lvl = level, op_lvl = 0;
+    int     op_exp = 0;
+    float   exp_mul, max_mul, tmp;
+
+    if (!who || who->type != PLAYER) /* no exp for non players... its senseless to do */
+    {
+        LOG(llevDebug, "DEBUG: calc_skill_exp() called with who != PLAYER or NULL (%s (%s)- %s)\n", STRING_OBJ_NAME(who),
+            !who ? "NULL" : "", STRING_OBJ_NAME(op));
+        return 0;
+    }
+
+    if(level == -1)
+        who_lvl = SK_level(who); /* thats the releated skill level */
+
+    if (!op) /* hm.... */
+    {
+        LOG(llevBug, "BUG: calc_skill_exp() called with op == NULL (%s - %s)\n", STRING_OBJ_NAME(who), STRING_OBJ_NAME(op));
+				return 0; // no need to adjust lvl and exp here when we return from function some lines later when op_exp = 0
+        // op_lvl = who->map->difficulty < 1 ? 1 : who->map->difficulty;
+        // op_exp = 0;
+    }
+    else if (op->type == RUNE)
+    {
+			  return 0; // same here
+        //op_exp = 0;
+        //op_lvl = op->level;
+    }
+    else /* all other items/living creatures */
+    {
+        op_exp = op->stats.exp; /* get base exp */
+        op_lvl = op->level;
+    }
+
+    if (op_lvl < 1 || op_exp < 1)
+        return 0; /* no exp for no level and no exp ;) */
+			
+		// ? logic misses a check for who_lvl=0	
+			
+
+		ndi(NDI_UNIQUE | NDI_BLUE, 0, who, "who player lvl %d", who_lvl);
+		ndi(NDI_UNIQUE | NDI_BLUE, 0, who, "op killed lvl %d", op_lvl);
+
+
+    /* we get first a global level difference multiplicator */
+    exp_mul = calc_level_difference(who_lvl, op_lvl);
+		ndi(NDI_UNIQUE | NDI_WHITE, 0, who, "factor %f", exp_mul);
+
+    op_exp = (int) (((float) op_exp * LevExp[op_lvl] * mod)* exp_mul);
+
+    if(real != NULL)
+    {
+			// what we do with real = -1 here? is this is logical error in old code, not seen because of all this exp nonsense?
+			// it put it in here and see what happens, also using -1 like a flag kills the possible to use real for negative exp
+				if(*real == 0 || *real == -1)
+            *real = op_exp;
+    }
+
+		// do we need this exp cap here? we have a protection on adjust level with cap flag, so this is redundant here
+		// i temporary deactivate this, 
+
+    /*LOG(llevNoLog,"real exp = %d\n",op_exp);*/
+    /*tmp = ((float) (exp_threshold[who_lvl + 1] - exp_threshold[who_lvl]));
+    if ((float) op_exp > tmp)
+    {
+        //LOG(llevNoLog,"exp to high(%d)! adjusted to: %d",op_exp, (int)tmp);
+        op_exp = (int)tmp;
+    }*/
+
+    return op_exp;
+}
