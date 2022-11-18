@@ -4,20 +4,20 @@
  */
  
  // level -1 is special situation where logic get level from who
- // level 0
+ // level 0 sending level 0 is strange - function only allows the overwrite logic here
  
  // why we need return exp and pointer exp here? todo remove one?
 int calc_skill_exp(object_t *who, object_t *op, float mod, int level, int *real)
 {
-		ndi(NDI_UNIQUE | NDI_RED, 0, who, "function : calc_skill_exp");
-		ndi(NDI_UNIQUE | NDI_BLUE, 0, who, "level = %d", level);
+	ndi(NDI_UNIQUE | NDI_RED, 0, who, "function : calc_skill_exp");
+	ndi(NDI_UNIQUE | NDI_BLUE, 0, who, "level = %d", level);
 
-		// we handle this overwrite logic first, no need to calculate all below, when we use this direct formula
-	  if(real != NULL)
-    {
+	// we handle this overwrite logic first, no need to calculate all below, when we use this direct formula
+	if(real != NULL)
+ 	{
         if(*real > 0)
             return (int)((float)(*real)*mod);
-		}
+  	}
 
 	// who is player, op is killed object
 	// also overwriting who_lvl is strange? level comes from agro_lvl outside and can be 0
@@ -67,7 +67,7 @@ int calc_skill_exp(object_t *who, object_t *op, float mod, int level, int *real)
 
     /* we get first a global level difference multiplicator */
     exp_mul = calc_level_difference(who_lvl, op_lvl);
-		ndi(NDI_UNIQUE | NDI_WHITE, 0, who, "factor %f", exp_mul);
+		ndi(NDI_UNIQUE | NDI_PURPLE, 0, who, "level difference factor %f", exp_mul);
 
     op_exp = (int) (((float) op_exp * LevExp[op_lvl] * mod)* exp_mul);
 
