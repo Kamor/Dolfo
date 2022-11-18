@@ -15,15 +15,14 @@ static inline int aggro_exp_single(object_t *victim, object_t *aggro, int base)
 		player_t *pl = CONTR(hitter); // ? is this a full player object
 
 		ndi(NDI_UNIQUE | NDI_RED, 0, pl->ob, "function : aggro_exp_single");
-		ndi(NDI_UNIQUE | NDI_GREEN, 0, pl->ob, "exp = %d", base);
+		ndi(NDI_UNIQUE | NDI_GREEN, 0, pl->ob, "base exp = %d", base);
 		ndi(NDI_UNIQUE | NDI_BLUE, 0, pl->ob, "aggro lvl %d", aggro->level); // agro is always 0, must be adjusted?
 
 		// check kill quests
     if(pl->quests_type_kill && pl->quests_type_kill->inv)
         check_kill_quest_event(hitter, victim);
 
-		//give_default_guild_exp(pl, base);	// lets test this shit to understand it better. only works when player has a guild
-		//return 2;
+
 
 		object_t *index,
 						 *next;
@@ -40,11 +39,11 @@ static inline int aggro_exp_single(object_t *victim, object_t *aggro, int base)
       if(aggro->level < pl->skill_ptr[index->last_heal]->level)
 			{
           aggro->level = pl->skill_ptr[index->last_heal]->level;
-				  ndi(NDI_UNIQUE | NDI_YELLOW, 0, pl->ob, "adjusting aggro level to %d", aggro->level);	
+				  ndi(NDI_UNIQUE | NDI_BLUE, 0, pl->ob, "adjusting aggro level to %d", aggro->level);	
 			}	
       total+=index->stats.hp; // inflicted damage with this skill
 		}
-		ndi(NDI_UNIQUE | NDI_WHITE, 0, pl->ob, "total skill damage %d", total);
+		ndi(NDI_UNIQUE | NDI_YELLOW, 0, pl->ob, "player total damage on enemy %d", total);
 
 		int given_exp = 0;
 		// savety check if total is 0, we don't need loop, also don't want division by zero errors
@@ -54,8 +53,9 @@ static inline int aggro_exp_single(object_t *victim, object_t *aggro, int base)
 			// todo really reduce this mess to one exp return value
 			// it makes no sense to call this function with real base exp -1
 			
-			int x = calc_skill_exp(pl->ob, victim, 1.0f, aggro->level, &base_exp);
-      ndi(NDI_UNIQUE | NDI_GREEN, 0, pl->ob, "exp %d", base_exp);
+			// no more need for this call, with new logic
+			// int x = calc_skill_exp(pl->ob, victim, 1.0f, aggro->level, &base_exp);
+      // ndi(NDI_UNIQUE | NDI_GREEN, 0, pl->ob, "exp for this player %d", base_exp);
 
 			// now we can calculate the % for EACH skill
      	FOREACH_OBJECT_IN_OBJECT(index, aggro, next)
@@ -66,15 +66,15 @@ static inline int aggro_exp_single(object_t *victim, object_t *aggro, int base)
 
 				int test=index->last_heal;
 				ndi(NDI_UNIQUE | NDI_WHITE, 0, pl->ob, "skill number %d", index->last_heal);
-        ndi(NDI_UNIQUE | NDI_WHITE, 0, pl->ob, "skill damage %d", index->stats.hp);
+        ndi(NDI_UNIQUE | NDI_YELLOW, 0, pl->ob, "skill damage %d", index->stats.hp);
         float factor = 1.0f / total * index->stats.hp;
-        ndi(NDI_UNIQUE | NDI_WHITE, 0, pl->ob, "factor %f", factor);
+        ndi(NDI_UNIQUE | NDI_WHITE, 0, pl->ob, "skill factor %f", factor);
 
 				// we can also call this function with factor here instead using factor in exp_adjust call
 				int exp = calc_skill_exp(pl->ob, victim, 1.0f, pl->skill_ptr[index->last_heal]->level, &exp);
 
 				exp=(int)(factor*exp);
-				ndi(NDI_UNIQUE | NDI_GREEN, 0, pl->ob, "exp %d", exp);
+				ndi(NDI_UNIQUE | NDI_GREEN, 0, pl->ob, "exp for this skill %d", exp);
 
 				// calculate base exp bonus (guilds). if there is one for this skill
 				exp = exp_from_base_skill(pl, exp, index->last_heal);
