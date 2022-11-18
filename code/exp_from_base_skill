@@ -10,26 +10,27 @@
 // function adjust exp, when player has a guildbonus for this skill
 int exp_from_base_skill(player_t *pl, int exp, int sk)
 {
-		ndi(NDI_UNIQUE | NDI_RED, 0, pl->ob, "function exp_from_base_skill");
-		ndi(NDI_UNIQUE | NDI_BLUE, 0, pl->ob, "exp = %d", exp);
-		ndi(NDI_UNIQUE | NDI_BLUE, 0, pl->ob, "sk = %d", sk);
+	ndi(NDI_UNIQUE | NDI_RED, 0, pl->ob, "function exp_from_base_skill");
+	ndi(NDI_UNIQUE | NDI_BLUE, 0, pl->ob, "exp = %d", exp);
+	ndi(NDI_UNIQUE | NDI_BLUE, 0, pl->ob, "sk = %d", sk);
 
-    int i;
-    float factor; // 1 = 100% // 1,5 = 150%
+	int i;
+	float factor; // 1 = 100% // 1,5 = 150%
 
-    for (i = 0; i <= 2; i++)
-    {
-	// "very nice" - skills[sk]->clone.magic is skill group from skills[sk]
-        if (pl->base_skill_group[i] == skills[sk]->clone.magic)
-        {
-            // Let's say a mob gives 250 exp. And the player's guild gives them a 50%
-            // exp boost in the skill they used. (250 * (50 / 100 + 1)) = 250 * 1.5.
-	    // base_skill_group_exp is additional percent bonus!
-	    ndi(NDI_UNIQUE | NDI_PURPLE, 0, pl->ob, "base_skill_group_exp [%d] = %d", i, pl->base_skill_group_exp[i]);
+	for (i = 0; i <= 2; i++)
+	{
+		// "very nice" - skills[sk]->clone.magic is skill group from skills[sk]
+		if (pl->base_skill_group[i] == skills[sk]->clone.magic)
+		{
+			// Let's say a mob gives 250 exp. And the player's guild gives them a 50%
+			// exp boost in the skill they used. (250 * (50 / 100 + 1)) = 250 * 1.5.
 
-            factor = (float)pl->base_skill_group_exp[i] / 100 + 1;
-            return (int)(exp * factor);
-        }
-    }
-    return exp; // No bonus.
+			// base_skill_group_exp is additional percent bonus!
+			ndi(NDI_UNIQUE | NDI_PURPLE, 0, pl->ob, "base_skill_group_exp [%d] = %d", i, pl->base_skill_group_exp[i]);
+
+			factor = (float)pl->base_skill_group_exp[i] / 100 + 1;
+			return (int)(exp * factor);
+		}
+	}
+	return exp; // No bonus.
 }
