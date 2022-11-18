@@ -1,0 +1,93 @@
+// ok we have a full history, so this means, monsters save all hits, so why restrict this to 3 skills only
+// we need to calc the max inflicted damage and can calc the % for each skill
+// currently we use 2 loops to count first the total damage, perhaps there is better logic?
+
+// todo we also want reduce all the functions and codeline to the limit we need
+// it's also unclean when in one function hitter is object_t where in other it means player_t
+
+// we have only one call for this function
+// ret = aggro_exp_single(victim, highest_hitter, -1);
+// so aggro is highest_hitter
+// where base could be used to send exp from outside? why we need this?
+static inline int aggro_exp_single(object_t *victim, object_t *aggro, int base)
+{
+		object_t *hitter = aggro->enemy;
+		player_t *pl = CONTR(hitter); // ? is this a full player object
+
+		ndi(NDI_UNIQUE | NDI_RED, 0, pl->ob, "function : aggro_exp_single");
+		ndi(NDI_UNIQUE | NDI_GREEN, 0, pl->ob, "exp = %d", base);
+		ndi(NDI_UNIQUE | NDI_BLUE, 0, pl->ob, "aggro lvl %d", aggro->level); // agro is always 0, must be adjusted?
+
+		// check kill quests
+    if(pl->quests_type_kill && pl->quests_type_kill->inv)
+        check_kill_quest_event(hitter, victim);
+
+		//give_default_guild_exp(pl, base);	// lets test this shit to understand it better. only works when player has a guild
+		//return 2;
+
+		object_t *index,
+						 *next;
+
+		// loop the full aggro object / exp_calc_obj
+		int total = 0; // we count full damage on enemy, lets see how this goes later when we have more hitters
+    FOREACH_OBJECT_IN_OBJECT(index, aggro, next)
+    {
+			// index->last heal is skill number
+      if(!pl->skill_ptr[index->last_heal]) // savety check, target got hit with a skill which doesn't exists, can this happen?
+        continue;
+				
+			// adjust the aggro->level to max the hitting skill level, todo using extern pointer this way is ugly
+      if(aggro->level < pl->skill_ptr[index->last_heal]->level)
+			{
+          aggro->level = pl->skill_ptr[index->last_heal]->level;
+				  ndi(NDI_UNIQUE | NDI_YELLOW, 0, pl->ob, "adjusting aggro level to %d", aggro->level);	
+			}	
+      total+=index->stats.hp; // inflicted damage with this skill
+		}
+		ndi(NDI_UNIQUE | NDI_WHITE, 0, pl->ob, "total skill damage %d", total);
+
+		int given_exp = 0;
+		// savety check if total is 0, we don't need loop, also don't want division by zero errors
+		if (total>0)
+    {
+			int base_exp=base;
+			// todo really reduce this mess to one exp return value
+			// it makes no sense to call this function with real base exp -1
+			
+			int x = calc_skill_exp(pl->ob, victim, 1.0f, aggro->level, &base_exp);
+      ndi(NDI_UNIQUE | NDI_GREEN, 0, pl->ob, "exp %d", base_exp);
+
+			// now we can calculate the % for EACH skill
+     	FOREACH_OBJECT_IN_OBJECT(index, aggro, next)
+      {
+				// savety check, target got hit with a skill which doesn't exists, can this happen?
+        if(!pl->skill_ptr[index->last_heal])
+          continue;
+
+				int test=index->last_heal;
+				ndi(NDI_UNIQUE | NDI_WHITE, 0, pl->ob, "skill number %d", index->last_heal);
+        ndi(NDI_UNIQUE | NDI_WHITE, 0, pl->ob, "skill damage %d", index->stats.hp);
+        float factor = 1.0f / total * index->stats.hp;
+        ndi(NDI_UNIQUE | NDI_WHITE, 0, pl->ob, "factor %f", factor);
+
+				// we can also call this function with factor here instead using factor in exp_adjust call
+				int exp = calc_skill_exp(pl->ob, victim, 1.0f, pl->skill_ptr[index->last_heal]->level, &exp);
+
+				exp=(int)(factor*exp);
+				ndi(NDI_UNIQUE | NDI_GREEN, 0, pl->ob, "exp %d", exp);
+
+				// calculate base exp bonus (guilds). if there is one for this skill
+				exp = exp_from_base_skill(pl, exp, index->last_heal);
+				ndi(NDI_UNIQUE | NDI_GREEN, 0, pl->ob, "exp %d", exp);
+
+				given_exp+=exp_adjust(pl, index->last_heal, (int)(exp), EXP_FLAG_CAP);
+      }
+    }
+
+		// if *all* possible skill exp has been zero because mob was to low - drop a message
+    if (given_exp==0)
+    {
+        ndi(NDI_UNIQUE | NDI_GREY, 0, pl->ob, "Your enemy was too low for exp.");
+    }
+		return given_exp;
+}
