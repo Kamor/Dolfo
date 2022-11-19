@@ -3,7 +3,7 @@ name Guild Hall - Abandoned Cellar
 msg
 Creator: Unislash
 Date:    2007-07-11
-Modified: 2022-11-13 Karsten
+Modified: 2022-11-19 Karsten
 endmsg
 width 24
 height 24
@@ -182,7 +182,7 @@ x 1
 y 18
 end
 arch spawn_point
-last_grace 4
+last_grace 2
 x 1
 y 18
 arch spider_widow
@@ -220,6 +220,8 @@ x 1
 y 20
 end
 arch dark2
+glow_radius -1
+last_sp -1
 x 1
 y 20
 end
@@ -247,11 +249,12 @@ x 2
 y 1
 arch ant_red
 name Ant Soldier
-type 83
+exp 90
 dam 36
 maxhp 47
 wis 3
 unaggressive 0
+type 83
 end
 end
 arch floor_earth1c
@@ -2249,11 +2252,12 @@ x 15
 y 6
 arch ant_red
 name Ant Soldier
-type 83
+exp 90
 dam 36
 maxhp 47
 wis 3
 unaggressive 0
+type 83
 end
 end
 arch floor_earth1e
