@@ -48,7 +48,6 @@ static inline int aggro_exp_single(object_t *victim, object_t *aggro, int base, 
 			if(!pl->skill_ptr[index->last_heal])
 				continue;
 
-			int test=index->last_heal;
 			ndi(NDI_UNIQUE | NDI_WHITE, 0, pl->ob, "skill number %d", index->last_heal);
 			ndi(NDI_UNIQUE | NDI_YELLOW, 0, pl->ob, "skill damage %d", index->stats.hp);
 			float factor = 1.0f / total_damage * index->stats.hp;
