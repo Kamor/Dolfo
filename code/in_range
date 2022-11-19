@@ -1,0 +1,54 @@
+// clone of in_group_exp_range, comparing only two objects.
+// so it's enough to compare a player if he is in range to target
+// don't need addionaly check if he is in range to groupmember with highest aggro
+static inline int in_range(object_t *victim, object_t *member)
+{
+  int i;
+  map_t *tmp_map, *map = member->map;
+
+  /* we do 2 tests: Is member on the map or a DIRECT attached map
+  * from victim or hitter? If not - no exp.
+  */
+
+  /* some sanity checks... */
+  if(QUERY_FLAG(victim,FLAG_REMOVED) )
+  {
+    LOG(llevDebug,"in_group_exp_range(): victim %s is removed!\n", STRING_OBJ_NAME(victim));
+    return 0;
+  }
+
+  if(QUERY_FLAG(member,FLAG_REMOVED) ) /* secure... */
+  {
+    LOG(llevDebug,"in_group_exp_range(): member %s is removed!\n", STRING_OBJ_NAME(member));
+    return 0;
+  }
+
+  /* quick check the easiest cases */
+  if (map == victim->map)
+  {
+#ifdef DEBUG_AGGRO
+    LOG(llevNoLog,"->%s on same map as victim\n", STRING_OBJ_NAME(member));
+#endif
+    return 1;
+  }
+
+
+  for (tmp_map = victim->map, i = 0; i < TILING_DIRECTION_NROF; i++)
+  {
+    if (tmp_map->tiling.tile_map[i] == map)
+    {
+#ifdef DEBUG_AGGRO
+      LOG(llevNoLog,"->%s on attached map from victim!\n", STRING_OBJ_NAME(member));
+#endif
+      return 1;
+    }
+  }
+
+#ifdef DEBUG_AGGRO
+  LOG(llevNoLog,"->%s is out of range!\n", STRING_OBJ_NAME(member));
+#endif
+
+  /* don't give this group member quest items from victim */
+  CONTR(member)->group_mask |= GROUP_BIT_NOQUEST;
+  return 0;
+}
