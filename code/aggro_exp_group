@@ -1,0 +1,51 @@
+/* calc exp for a group
+ * CONTR() will access here always players
+ */
+
+//	aggro history
+//	object_t *hitter = aggro->enemy; // object with the highest aggro
+// player_t *pl = CONTR(hitter); // player with the highest aggro
+// object_t *leader = pl->group_leader; // leader object of group
+// for(tmp=leader;tmp;tmp=CONTR(tmp)->group_next) // loop all group members
+
+// pl->exp_calc_obj // aggro history limited to this player
+
+static inline int aggro_exp_group(object_t *victim, object_t *aggro)
+{
+  object_t *leader = CONTR(aggro->enemy)->group_leader;
+	object_t *high = leader, *tmp;
+	int exp=0, t;
+	object_t *force;
+	int tmp_drain_level = 0, high_drain_level = 0;
+
+	// we don't need distance check anymore for exp, but we need this still for granting quest rewards to all close players todo
+
+	// TODO we need to count total damage on target, also from non group members
+	// but first make it "easier" and "only" count damage from all group members
+	int total_damage = 0; // we count full damage from our group on enemy
+	for(tmp=leader;tmp;tmp=CONTR(tmp)->group_next)
+	{
+		player_t *pl = CONTR(tmp);
+		object_t *index, *next;
+
+		FOREACH_OBJECT_IN_OBJECT(index, pl->exp_calc_obj, next) // we need the tag check?
+		{
+			if(!pl->skill_ptr[index->last_heal]) // savety check, target got hit with a skill which doesn't exists, can this happen?
+				continue;
+			total_damage+=index->stats.hp; // inflicted damage with this skill
+		}
+	}
+
+	// now loop again and call aggro_exp_single for each group member
+	for(tmp=leader;tmp;tmp=CONTR(tmp)->group_next)
+	{
+		player_t *pl = CONTR(tmp);
+		// aggro_exp_single(victim, aggro, -1, total_damage); // this gives only x times exp to the one group member with the agro
+
+		if(pl->exp_calc_tag == exp_calc_tag) // this check prevents from crash? or players on same maps do this?
+			aggro_exp_single(victim, pl->exp_calc_obj, exp, total_damage);
+		//else
+			// give_default_guild_exp(pl, (int)((float)exp * 0.75f));
+	}
+	return 1;
+}
