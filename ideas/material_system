@@ -1,0 +1,114 @@
+// This is a idea for a new material_system
+// It works with a real container in an item, where the materials are in, in relation to 100% condition.
+// quality comes now calculated out of this container
+// logic is missing the prototyp definitons and the lua definitions
+// also this is currently not tested
+
+// these functions need a new definition in object.h in struct object_t
+// object_t *material_inv; // material container // Pointer to the first material in the material_inventory
+
+object_t *create_material_object(int material_real, int condition)
+{
+	object_t *material_object;
+	material_object=get_object();
+	if (material_object == NULL) return NULL;
+	// todo savetychecks for invalid definitions?
+	material_object->material_real = material_real;
+	material_object->item_condition = condition;
+	return material_object;
+}
+
+// todo we have no error handling here
+void insert_material_object(object_t *material_object, object_t *in_object)
+{
+	insert_ob_in_ob(material_object, in_object);
+	adjust_materials(material_object, in_object);
+	return;
+}
+
+// errorhandling and did we need in_object? we can get this information from env (envelope)?
+void delete_material_object(object_t *material_object, object_t *in_object)
+{
+	remove_ob(material_object);
+	adjust_materials(material_object, in_object);
+	return;
+}
+
+int get_material_condition(object_t *in_object)
+{
+	if (in_object->material_inv==NULL) return -1; // error
+
+	object_t *material, *next;
+	int condition=0;
+	FOREACH_OBJECT_IN_OBJECT(material, in_object->material_inv, next)
+	{
+		condition+=material->item_condition;
+	}
+	return condition;
+}
+
+int get_material_quality(object_t *in_object)
+{
+	if (in_object->material_inv==NULL) return -1; // error
+
+	object_t *material, *next;
+	int condition=0;
+	int quality=0;
+	FOREACH_OBJECT_IN_OBJECT(material, in_object->material_inv, next)
+	{
+		int materialReal=material->material_real;
+		if (materialReal<0) return -1; // error -1 is definition for no real_material, but we launch error on all negatives
+
+		// nice joke to define MAX this way -> material_real_struct material_real[NROFMATERIALS * NROFMATERIALS_REAL + 1]
+		if (materialReal > NROFMATERIALS * NROFMATERIALS_REAL) return -1; // TODO TODO is it > or >= here or something with +1?
+  int quality_this = material_real[materialReal].quality;
+		int condition_this = material->item_condition;
+		if (condition_this<=0) // we don't need to calculcate for condition_this 0, we also don't want division by zero error
+		{
+			int condition_new=condition+condition_this;
+			quality+= (condition*quality+condition_this*quality_this)/condition_new;
+			condition=condition_new;
+		}
+		if (condition>100) return -1; // we don't allow this, someone made an error outside filling the material inv
+	}
+	return quality;
+
+
+	return 0;
+		// todo browse the object list and calc the quality
+		// we need to calc the max condition first, then we can calc quality from it
+}
+
+int adjust_materials(object_t *in_object)
+{
+	// adjust condition
+	int condition=get_material_condition(in_object);
+	if (condition<0)
+	{
+		in_object->item_condition=0; // do we adjust zero here? or let it untouched?
+		return 1; // error
+	}
+	else if(condition>100)
+	{
+		in_object->item_condition=100; // to we adjust max here? or let it untouched?
+		return 1; // error
+	}
+	in_object->item_condition=condition;	// we have a clean value to adjust
+
+	// adjust material
+	int quality=get_material_quality(in_object);
+
+	if (quality<0)
+	{
+		in_object->item_quality=0; // do we adjust zero here? or let it untouched?
+		return 1; // error
+	}
+	else if(quality>100)
+	{
+		in_object->item_quality=100; // to we adjust max here? or let it untouched?
+		return 1;  // error
+	}
+
+	in_object->item_quality=quality;	// we have a clean value to adjust
+	return 0;
+}
