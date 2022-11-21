@@ -62,3 +62,22 @@ else
     }
   }
 }
+
+// time.c function ActiveProcessUsedUp
+
+/* now we do something funny: WHEN the corpse is a (personal) bounty,
+ * we delete the bounty marker (->slaying) and reseting the counter.
+ * Now other people can access the corpse for stuff which are leaved
+ * here perhaps. */
+if (what->slaying)
+{
+ // we do this no more on empty corpses, empty corpses don't need to stay 4 more minutes in maps
+ if (what->inv)
+ {
+  SHSTR_FREE(what->slaying);
+  what->stats.food = what->arch->clone.stats.food;
+  remove_ob(what);                       /* another lame way to update view of players... */
+  insert_ob_in_map(what, what->map, NULL, INS_NO_WALK_ON);
+  return;
+ }
+}
