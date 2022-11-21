@@ -1,0 +1,157 @@
+/* Eneq(@csd.uu.se): Handle apply on containers.
+ * op is the player, sack is the container the player is opening or closing.
+ * return 1 if an object is apllied somehow or another, 0 if error/no apply
+ *
+ * Reminder - there are three states for any container - closed (non applied),
+ * applied (not open, but objects that match get tossed into it), and open
+ * (applied flag set, and op->container points to the open container)
+ * I added mutiple apply of one container with a player list. MT 07.02.2004 */
+static void ApplyContainer(object_t *op, object_t *sack)
+{
+    object_t *cont;
+
+    /* TODO: add support for cursed containers that can't be unreadied? */
+
+    if (op->type != PLAYER)
+    {
+        LOG(llevBug, "BUG: ApplyContainer: called from non player: <%s>!\n", STRING_OBJ_NAME(op));
+        return;
+    }
+
+    cont = CONTR(op)->container; /* cont is NULL or the container player already has opened */
+
+    if (sack == NULL || sack->type != CONTAINER || (cont && cont->type != CONTAINER))
+    {
+        LOG(llevBug, "BUG: ApplyContainer: object_t *sack = %s is not container (cont:<%s>)!\n", STRING_OBJ_NAME(sack),
+            STRING_OBJ_NAME(cont));
+        return;
+    }
+
+
+    /* close container? */
+    if (cont) /* if cont != sack || cont == sack - in both cases we close cont */
+    {
+        if (plugin_trigger_object_event(PLUGIN_EVENT_OBJECT_CLOSE, cont, op, NULL, NULL, 0, 0, 0))
+            return;
+
+        ndi(NDI_UNIQUE, 0, op, "You %s %s.",
+            (container_unlink(CONTR(op), cont)) ? "close" : "leave",
+            query_name(cont, op, ARTICLE_DEFINITE, 0));
+
+        if (cont == sack) /* we closing the one we applied */
+            return;
+    }
+
+    /* at this point we ready a container OR we open it! */
+
+    /* If the player is trying to open it (which he must be doing if we got here),
+     * and it is locked, check to see if player has the equipment to open it.
+     */
+
+    if (sack->slaying) /* it's locked or personalized*/
+    {
+        if (sack->subtype == SUBTYPE_CONTAINER_NORMAL)
+        {
+            object_t *key = door_find_key(op, sack);
+
+            if (!key)
+            {
+                ndi(NDI_UNIQUE, 0, op, "You don't have a key to unlock %s.",
+                    query_name(sack, op, ARTICLE_DEFINITE, 0));
+                return;
+            }
+
+            ndi(NDI_UNIQUE, 0, op, "You unlock %s with %s.",
+                query_name(sack, op, ARTICLE_DEFINITE, 0),
+                QUERY_SHORT_NAME(key, op));
+        }
+        else
+        {
+            /* only give player with right name access */
+            if (sack->subtype == SUBTYPE_CONTAINER_CORPSE_group &&
+                CONTR(op)->group_id != sack->stats.maxhp)
+            {
+                ndi(NDI_UNIQUE, 0, op, "Its not your groups bounty.");
+                return;
+            }
+            else if (sack->subtype == SUBTYPE_CONTAINER_CORPSE_player && sack->slaying != op->name)
+            {
+                ndi(NDI_UNIQUE, 0, op, "Its not your bounty.");
+                return;
+            }
+        }
+    }
+
+    /* By the time we get here, we have made sure any other container has been closed and
+     * if this is a locked container, the player they key to open it.
+     */
+
+    /* There are really two cases - the sack is either on the ground, or the sack is
+     * part of the players inventory.  If on the ground, we assume that the player is
+     * opening it, since if it was being closed, that would have been taken care of above.
+     * If it in the players inventory, we can READY the container.
+     */
+    if (sack->env != op) /* container is NOT in players inventory */
+    {
+        /* this is not possible - opening a container inside another container or a another player */
+        if (sack->env)
+        {
+            ndi(NDI_UNIQUE, 0, op, "You can't open %s.",
+                query_name(sack, op, ARTICLE_DEFINITE, 0));
+            return;
+        }
+
+        ndi(NDI_UNIQUE, 0, op, "You open %s.",
+            query_name(sack, op, ARTICLE_DEFINITE, 0));
+        SET_FLAG(sack, FLAG_BEEN_APPLIED);
+
+        /*if (sack->subtype & SUBTYPE_CONTAINER_CORPSE)
+        {
+            msp_t *msp = (sack->map) ? MSP_KNOWN(sack) : NULL;
+
+            if (msp &&
+                sack->glow_radius)
+            {
+                adjust_light_source(msp, -(sack->glow_radius));
+                sack->glow_radius = 0;
+            }
+        }*/
+
+        container_link(CONTR(op), sack);
+    }
+    else/* sack is in players inventory */
+    {
+        if (QUERY_FLAG(sack, FLAG_APPLIED)) /* readied sack becoming open */
+        {
+            ndi(NDI_UNIQUE, 0, op, "You open %s.",
+                query_name(sack, op, ARTICLE_DEFINITE, 0));
+            SET_FLAG(sack, FLAG_BEEN_APPLIED);
+            container_link(CONTR(op), sack);
+        }
+        else
+        {
+            object_t *tmp,
+                   *next;
+
+            /* We don't allow multiple applied containers of the same type (race) */
+            /* No need for recursive search, since only top-level containers may be applied */
+            FOREACH_OBJECT_IN_OBJECT(tmp, op, next)
+            {
+                if(QUERY_FLAG(tmp, FLAG_APPLIED) && tmp->type == CONTAINER &&
+                        tmp->race == sack->race && tmp != sack)
+                {
+                    CLEAR_FLAG(tmp, FLAG_APPLIED);
+                    ndi(NDI_UNIQUE, 0, op, "You unreadied %s.",
+                        query_name(tmp, op, ARTICLE_DEFINITE, 0));
+                    OBJECT_UPDATE_UPD(tmp, UPD_FLAGS);
+                }
+            }
+
+            ndi(NDI_UNIQUE, 0, op, "You readied %s.",
+                query_name(sack, op, ARTICLE_DEFINITE, 0));
+            SET_FLAG(sack, FLAG_APPLIED);
+            OBJECT_UPDATE_UPD(sack, UPD_FLAGS);
+            container_trap(op, sack);   /* search & explode a rune in the container */
+        }
+    }
+}
