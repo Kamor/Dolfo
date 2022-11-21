@@ -1,0 +1,64 @@
+// pickup all logic and faster despawn of empty corpses
+// item.c thing_pick_up
+// replacing
+// old logic
+/*else if (!(what = ThingPickUp(who, what, where, nrof, from, to)))
+{
+  return NULL;
+}*/
+// with
+
+// new pickup all logic and decay of corpse logic
+else
+{
+  if (what->inv)
+  {
+    // we only continue, if container is applied, so we don't need to check all again, if container is ours ...
+    if (QUERY_FLAG(what, FLAG_APPLIED))
+    {
+      if (pl)
+      {
+         SET_FLAG(who, FLAG_NO_FIX_PLAYER);
+      }
+
+      int success = 0;
+      object_t *this, *next;
+      FOREACH_OBJECT_IN_OBJECT(this, what, next)
+      {
+        uint32 nr = MAX(1, MIN(this->nrof, MAX_OBJ_NROF));
+        if (ThingPickUp(who, this, where, nr, from, to))
+        {
+          success++;
+        }
+      }
+
+      if (pl)
+      {
+        CLEAR_FLAG(who, FLAG_NO_FIX_PLAYER);
+      }
+
+      if (success>0) // when picked up items from container
+      {
+        ndi(NDI_UNIQUE, 0, who, "You pickup %d item(s) from %s.", success, what->name);
+        // we also do the reduced decay timer, when container is empty
+        if (!what->inv)
+        {
+          if (what->stats.food>3);
+          {
+            what->stats.food = 3; // 3 because there is a logic when player applied a corpse, corpse is reseting to food 3 to avoid that corpse vanish
+          }
+        }
+      }
+      return NULL;
+    }
+    object_t *env = what->env; // before what is moved, we memory the envelope, if there is one
+    if (!(what = ThingPickUp(who, what, where, nrof, from, to)))
+    {
+      return NULL;
+    }
+    if (env && !env->inv && env->stats.food>3)
+    {
+      env->stats.food = 3;
+    }
+  }
+}
