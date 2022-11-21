@@ -1,0 +1,28 @@
+build in a function in plugin_lua to get access to ExpThreshold array.
+
+declaration in daimonin_object.h
+static int  GameObject_GetExpThreshold(lua_State *L);
+
+declaration in daimonin_object.c
+{"GetExpThreshold", (lua_CFunction) GameObject_GetExpThreshold},
+
+function in daimonin_object.c
+/*****************************************************************************/
+/* Name   : GameObject_GetExpThreshold                                       */
+/* Lua    : object:GetExpThreshold()                                         */
+/*****************************************************************************/
+// get the ExpThreshold value for a specific level
+static int GameObject_GetExpThreshold(lua_State *L)
+{
+ lua_object *self;
+ int level;
+
+ get_lua_args(L, "Oi", &self, &level);
+ if (level<0 || level >110) // todo this should be servermaxlevel not hardcoded 110
+ {
+  return 0; // error
+ }
+
+lua_pushnumber(L, hooks->exp_threshold[level]);
+return 1;
+}
