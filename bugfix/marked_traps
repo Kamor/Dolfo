@@ -1,0 +1,3 @@
+rune.c function spring_trap
+remove line
+// if(trap->subtype != SUBTYPE_TRAP_NO_SHOW) trap_show(trap, env);
