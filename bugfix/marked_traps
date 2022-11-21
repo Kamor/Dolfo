@@ -1,3 +1,6 @@
-rune.c function spring_trap
-remove line
+// rune.c function spring_trap
+// remove lines
+// for (env = trap; env->env != NULL; env = env->env);
 // if(trap->subtype != SUBTYPE_TRAP_NO_SHOW) trap_show(trap, env);
+...
+// set_traped_flag(env);
