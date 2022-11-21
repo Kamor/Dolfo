@@ -20,11 +20,13 @@ else
       {
          SET_FLAG(who, FLAG_NO_FIX_PLAYER);
       }
-
+      
+      int counter = 0;
       int success = 0;
       object_t *this, *next;
       FOREACH_OBJECT_IN_OBJECT(this, what, next)
       {
+        counter++;
         uint32 nr = MAX(1, MIN(this->nrof, MAX_OBJ_NROF));
         if (ThingPickUp(who, this, where, nr, from, to))
         {
@@ -39,27 +41,29 @@ else
 
       if (success>0) // when picked up items from container
       {
-        ndi(NDI_UNIQUE, 0, who, "You pickup %d item(s) from %s.", success, what->name);
+        ndi(NDI_UNIQUE, 0, who, "You pick up %d from %d item(s) out of the %s.", success, counter, what->name);
         // we also do the reduced decay timer, when container is empty
-        if (!what->inv)
+        if (!what->inv && what->stats.food>3)
         {
-          if (what->stats.food>3);
-          {
-            what->stats.food = 3; // 3 because there is a logic when player applied a corpse, corpse is reseting to food 3 to avoid that corpse vanish
-          }
+          what->stats.food = 3; // 3 because there is a logic when player applied a corpse, corpse is reseting to food 3 to avoid that corpse vanish
         }
+        return NULL;
       }
-      return NULL;
+      if (counter>0) //when somehow, we couldn't pickup items
+      {
+        ndi(NDI_UNIQUE, 0, who, "You can't pick up the items from %s.", what->name);
+        return NULL;
+      }
     }
-    object_t *env = what->env; // before what is moved, we memory the envelope, if there is one
-    if (!(what = ThingPickUp(who, what, where, nrof, from, to)))
-    {
-      return NULL;
-    }
-    if (env && !env->inv && env->stats.food>3)
-    {
-      env->stats.food = 3;
-    }
+  }
+  object_t *env = what->env; // before what is moved, we memory the envelope, if there is one
+  if (!(what = ThingPickUp(who, what, where, nrof, from, to)))
+  {
+    return NULL;
+  }
+  if (env && !env->inv && env->stats.food>3)
+  {
+    env->stats.food = 3;
   }
 }
 
