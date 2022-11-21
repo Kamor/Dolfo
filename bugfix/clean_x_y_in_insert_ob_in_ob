@@ -1,0 +1,4 @@
+// in object.c function object_t *insert_ob_in_ob
+
+// remove old map x/y pos, there is no other way then set these to 0
+op->x = op->y = 0;
