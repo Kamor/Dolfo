@@ -1,0 +1,2 @@
+// aggro.c function aggro_exp_single
+e3 = calc_skill_exp(hitter, victim, 0.15f, pl->skill_ptr[s3]->level, &exp);
