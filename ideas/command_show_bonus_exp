@@ -1,0 +1,20 @@
+commands.c
+{"bonus", command_show_bonus_exp, 0.0f, 0, NULL}, /* shows exp bonus*/
+
+sproto.h
+void command_show_bonus_exp(object_t *op);
+
+c_misc.c
+// this is not the best logic, global_exp_bonus factor is float where 1.00f means +100% bonus
+// where base skill group exp is adjusted in +x%
+void command_show_bonus_exp(object_t *op) //player_t *pl)
+{
+  player_t *pl = CONTR(op);
+
+  ndi(NDI_UNIQUE | NDI_PURPLE, 0, pl->ob, "server bonus exp = %f", global_exp_bonus);
+  for (int i = 0; i <= 2; i++)
+  {
+    ndi(NDI_UNIQUE | NDI_PURPLE, 0, pl->ob, "base skill group exp [%d] = %d", i, pl->base_skill_group_exp[i]);
+  }
+	return COMMANDS_RTN_VAL_OK;
+}
