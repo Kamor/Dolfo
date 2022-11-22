@@ -130,7 +130,6 @@ static int GameObject_SetSkill(lua_State *L)
             }
 
             // this is dirty to say, when we level skillgroup, auto level highest skill in there
-            // this command is only useful for gm's
             skill = pl->highest_skill[nr];
             break;
 
@@ -165,7 +164,13 @@ static int GameObject_SetSkill(lua_State *L)
             skill->last_eat == DIRECT)
             {
               /* Scripts can change a max of 1 level, up or down. */
+              // this don't work, when gm command using this function to adjust levels?
               level = MAX(-1, MIN(level, 1));
+              // this level adjustment is also ignored by the exp_threshold logic below
+
+              // level = MAX(110, MIN(level, 1));
+
+              // this is still a mess, asyncron brain shit form multiply minds.
 
              /* Exp loss is limited to 1 point below the threshold for
               * the current level, and gain to the threshold for the
@@ -186,8 +191,9 @@ static int GameObject_SetSkill(lua_State *L)
                 exp = MAX(lo, MIN(exp, hi));
               }
 
-              exp = hooks->exp_adjust(pl, nr, exp, 0 ); // EXP_FLAG_CAP we can't cap this here
-              // we want a clean level up/(down), not a capped 1/4 level up
+              exp = hooks->exp_adjust(pl, nr, exp, EXP_FLAG_NO_BONUS);
+              // EXP_FLAG_CAP we can't cap this here, we want a clean level up/(down), not a capped 1/4 level up
+              // EXP_FLAG_NO_BONUS and we don't want bonus here
               level = skill->level; // update level info for lua return parameters
             }
             else
