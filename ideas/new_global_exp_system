@@ -25,7 +25,7 @@ sproto.h /* c_wiz.c */
 int command_set_global_exp(object_t *op, char *params);
 
 c_wiz.c
-int command_adjust_global_exp(object_t *op, char *params)
+int command_set_global_exp(object_t *op, char *params)
 {
     if (!params)
     {
