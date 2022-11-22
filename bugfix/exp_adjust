@@ -1,0 +1,277 @@
+/* exp_adjust() adjusts pl->skill_ptr[nr], if non-NULL, by exp. It also works
+ * out if this causes level change. Adjustments are propagated through
+ * skillgroup and main, as necessary. Such level increase may increase hinds.
+ * Player notification is handled by script.
+ *
+ * mask may include:
+ *   EXP_FLAG_CAP       cap exp gain on indirect skills
+ *   EXP_FLAG_NOSCRIPT  do not run player script
+ *   EXP_FLAG_NO_BONUS
+ *
+ * The cap, which should be used except for gmaster commands, limits an
+ * indirect skill to gaining no more than 25% of the current level's worth of
+ * exp or losing the same amount or enough to reduce to the levwl's threshold,
+ * whichever is lesser. Direct skills will neither gain nor lose more than 1
+ * level. */
+sint32 exp_adjust(player_t *pl, sint16 nr, sint32 exp, uint8 mask)
+{
+    object_t *skill;
+    sint32    bexp;
+    object_t *drain;
+    sint32    sexp;
+    sint8     slev;
+    object_t *hi;
+    object_t *skillgroup;
+    sint32    gexp;
+    sint8     glev;
+    sint32    mexp;
+    sint8     dlev;
+    sint8     mlev;
+    uint8     hind;
+
+    if (exp == 0)
+    {
+        return 0;
+    }
+
+    /* Sanity. */
+    if (!pl ||
+        nr < 0 ||
+        nr >= NROFSKILLS)
+    {
+        LOG(llevBug, "BUG:: exp_adjust(): Sanity!\n");
+        return 0;
+    }
+
+    /* Find the object for the numbered skill of player. If this is NULL,
+     * player has no such skill, so nothing to do. */
+    if (!(skill = pl->skill_ptr[nr]))
+    {
+#ifdef DEBUG_EXP
+        LOG(llevDebug, "DEBUG:: exp_adjust(): %s does not have skill %d!\n",
+            pl->quick_name, nr);
+#endif
+        return 0;
+    }
+
+    /* Skill must be able to gain/lose exp (as appropriate). */
+    if (skill->last_eat == NONLEVELING ||
+        (exp > 0 &&
+            skill->stats.exp >= EXP_MAXEXP) ||
+        (exp < 0 &&
+            skill->stats.exp <= 0))
+    {
+#ifdef DEBUG_EXP
+        LOG(llevDebug, "DEBUG:: exp_adjust(): %s is trying to %s exp in %s but cannot (last_eat %d, stats.exp %d)!\n",
+            pl->quick_name, (exp > 0) ? "gain" : "lose",
+            STRING_OBJ_NAME(skill), skill->last_eat, skill->stats.exp);
+#endif
+        return 0;
+    }
+
+    /* Calculate bonus exp, bexp, and skill exp, sexp. */
+    // it makes no sense to write different adjustments logic for DIRECT and INDIRECT
+    // when both are adjusted by exp (this function has only exp parameter to adjust from outside
+    // so why make it complicate here? when it can be easy!
+    if (skill->last_eat == INDIRECT || skill->last_eat == DIRECT)
+    {
+        if (exp > 0)
+        {
+            if (mask & EXP_FLAG_NO_BONUS)
+            {
+              bexp=0;
+            }
+            else
+            {
+              bexp = (pl->exp_bonus) ? (sint32)(((float)exp / 100.0f) * pl->exp_bonus) : 0;
+              bexp = global_exp_bonus ? (sint32)(exp * global_exp_bonus) : bexp;
+            }
+            sexp = ((mask & EXP_FLAG_CAP)) ? MIN(exp + bexp, EXP_ADJUST_CAP(skill)) : exp + bexp;
+        }
+        else // if (exp < 0)
+        {
+            bexp = 0;
+            sexp = ((mask & EXP_FLAG_CAP)) ? MAX(-(skill->stats.exp - exp_threshold[skill->level]), MAX(exp, -EXP_ADJUST_CAP(skill))) : exp;
+        }
+    }
+
+    /* Adjust the skill's actual exp by sexp and tweak both values if too
+     * much has been gsined/lost. */
+    skill->stats.exp += sexp;
+
+    if (skill->stats.exp < 0)
+    {
+        sexp -= skill->stats.exp;
+        skill->stats.exp = 0;
+    }
+    else if (skill->stats.exp > EXP_MAXEXP)
+    {
+        sexp -= (skill->stats.exp - EXP_MAXEXP);
+        skill->stats.exp = EXP_MAXEXP;
+    }
+
+    slev = 0;
+
+    if (sexp > 0)
+    {
+        while (skill->level < MAXLEVEL &&
+            skill->stats.exp >= exp_threshold[skill->level + 1])
+        {
+            skill->level++;
+            slev++;
+        }
+    }
+    else // if (sexp < 0)
+    {
+        while (skill->level > 1 &&
+            skill->stats.exp < exp_threshold[skill->level])
+        {
+            skill->level--;
+            slev--;
+        }
+
+        /* If level loss has occurred, give the player a break and reset
+         * ->item_level, meaning he can gain script experience again. */
+        if (slev < 0)
+        {
+            skill->item_level = 0;
+        }
+    }
+
+    /* set the exp of the exp. object to our best skill of this group */
+    for (hi = NULL, nr = 0; nr < NROFSKILLS; nr++)
+    {
+        object_t *this = pl->skill_ptr[nr];
+
+        if (this &&
+            this->magic == skill->magic &&
+            (!hi ||
+                this->stats.exp > hi->stats.exp))
+        {
+            hi = this;
+        }
+    }
+
+    skillgroup = pl->skillgroup_ptr[skill->magic];
+    gexp = hi->stats.exp - skillgroup->stats.exp;
+    glev = hi->level - skillgroup->level;
+    skillgroup->stats.exp = hi->stats.exp;
+    skillgroup->level = hi->level;
+    pl->highest_skill[skill->magic] = hi;
+
+    /* last action: set our player exp to highest group */
+    for (hi = NULL, nr = 0; nr < NROFSKILLGROUPS_ACTIVE; nr++)
+    {
+        object_t *this = pl->skillgroup_ptr[nr];
+
+        if (!hi ||
+            this->stats.exp > hi->stats.exp)
+        {
+            hi = this;
+        }
+    }
+
+    mexp = hi->stats.exp - pl->ob->stats.exp;
+    dlev = ((drain = present_arch_in_ob(archetype_global._drain, pl->ob))) ? drain->level : 0;
+    mlev = hi->level - pl->ob->level - dlev;
+    pl->ob->stats.exp = hi->stats.exp;
+    pl->ob->level = hi->level - dlev;
+
+    hind = 0;
+
+    if (glev > 0)
+    {
+        if (skillgroup->subtype == SKILLGROUP_MAGIC)
+        {
+            sint16 maxsp = pl->ob->arch->clone.stats.maxsp;
+
+            // WHAT IS THIS FUCK
+            // why we need different handling here?
+            // why is the adjustment of grace, mana increase handled in exp.c?
+            // and where is the rest of this adjustment for hp ???
+            if (skillgroup->level <= EXP_NOOBLEV)
+            {
+                pl->levsp[skillgroup->level] = (sint8)maxsp;
+            }
+            else if (skillgroup->level <= EXP_VLLEV)
+            {
+                pl->levsp[skillgroup->level] = (sint8)RANDOM_ROLL(1, maxsp);
+            }
+            else
+            {
+                pl->levsp[skillgroup->level] = (sint8)RANDOM_ROLL(maxsp / 2, maxsp);
+            }
+
+            hind = 1;
+        }
+        else if (skillgroup->subtype == SKILLGROUP_WISDOM)
+        {
+            sint16 maxgrace = pl->ob->arch->clone.stats.maxgrace;
+
+            if (skillgroup->level <= EXP_NOOBLEV)
+            {
+                pl->levgrace[skillgroup->level] = (sint8)maxgrace;
+            }
+            else if (skillgroup->level <= EXP_VLLEV)
+            {
+                pl->levgrace[skillgroup->level] = (sint8)RANDOM_ROLL(1, maxgrace);
+            }
+            else
+            {
+                pl->levgrace[skillgroup->level] = (sint8)RANDOM_ROLL(maxgrace / 2, maxgrace);
+            }
+
+            hind = 1;
+        }
+    }
+
+    if (mlev > dlev)
+    {
+        sint8  rlev = pl->ob->level + dlev;
+        sint32 maxhp = pl->ob->arch->clone.stats.maxhp;
+
+        if (rlev <= EXP_NOOBLEV)
+        {
+            pl->levhp[rlev] = (sint8)maxhp;
+        }
+        else if (rlev <= EXP_VLLEV)
+        {
+            pl->levhp[rlev] = (sint8)RANDOM_ROLL(1, maxhp);
+        }
+        else
+        {
+            pl->levhp[rlev] = (sint8)RANDOM_ROLL(maxhp / 2, maxhp);
+        }
+
+        hind = 1;
+    }
+
+    /* Run the player script. */
+    if (!(mask & EXP_FLAG_NOSCRIPT))
+    {
+        char buf[MEDIUM_BUF];
+
+        sprintf(buf, "%d %d %d %d %d %d %d %d", bexp, dlev, sexp, slev, gexp, glev, mexp, mlev);
+        (void)plugin_trigger_player_event(shstr_cons.plugin_name, shstr_cons.plugin_script_player_exp,
+            buf, pl->ob, skill, skillgroup, NULL, 0, 0);
+    }
+
+    /* TODO: Old code. Remove soon. */
+    /* reset the player skillgroup to NULL */
+    /* I let this in but because we use single skill exp and skill nr now,
+     * this broken skillgroup concept can be removed */
+    if (pl->ob->skillgroup)
+        pl->ob->skillgroup = NULL;
+
+    /* Only need to go through this when we increase level such that we get a
+     * hind bonus). */
+    if (hind == 1)
+    {
+        FIX_PLAYER(pl->ob, "exp_adjust");
+    }
+
+    pl->update_skills = 1; /* we will sure change skill exp, mark for update */
+
+    /* Return the actual exp added to our skill. */
+    return sexp;
+}
