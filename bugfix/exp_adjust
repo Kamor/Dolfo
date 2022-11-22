@@ -83,8 +83,15 @@ sint32 exp_adjust(player_t *pl, sint16 nr, sint32 exp, uint8 mask)
             }
             else
             {
-              bexp = (pl->exp_bonus) ? (sint32)(((float)exp / 100.0f) * pl->exp_bonus) : 0;
-              bexp = global_exp_bonus ? (sint32)(exp * global_exp_bonus) : bexp;
+              // improve pl->exp_bonus, that it can be used for other things, like the exp amulet
+              bexp = (pl->exp_bonus) ? (sint32)(((float)bexp / 100.0f) * pl->exp_bonus) : 0;
+              // bonuses from amulet and global bonuses are added, not multiplicated
+              // this would lead to 10% amulet * 10% global bonus to 100%
+              // also i currently use 110% for +10% and 90% for -10%
+              // so multiplicate this amulet bonus with -% would not be good.
+
+              bexp += global_exp_bonus*exp-exp; // this allows also adjust global_exp_malus down to 0 exp events
+              // bexp = global_exp_bonus<0 ? 100 + (sint32)(exp * global_exp_bonus) : bexp;
             }
             sexp = ((mask & EXP_FLAG_CAP)) ? MIN(exp + bexp, EXP_ADJUST_CAP(skill)) : exp + bexp;
         }
