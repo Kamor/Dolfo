@@ -2,18 +2,78 @@
 // because new public trunk has now a limited bonus exp logic, i need to rebuild my logics here, also my old logics were not the best.
 
 global.h
-added a global_exp_adjust, this is for code change only and can adjust server exp. (fast level servers, hard grind servers, season servers, local servers)
-changed global_exp_bonus interpretation from +100*x% to *x%
-EXTERN float                    global_exp_adjust; // server EXP adjust factor
-EXTERN float                    global_exp_bonus;  // server EXP bonus factor for all players
+added a global_exp_factor, this is for code change only and can adjust server exp. (fast level servers, hard grind servers, season servers, local servers)
+changed global_exp_factor name and interpretation from +100*x% to *x%
+EXTERN float                    server_exp_factor; // server EXP adjust factor
+EXTERN float                    global_exp_factor; // server EXP bonus/malus factor for all players
 
 main.c
-global_exp_adjust = 2.0f; // 100% more exp (double exp) when server starts
-global_exp_bonus = 1.0f;  // 0% bonus when server starts
-// todo build in a timerlogic and a server crash/restart save logic to keep bonus
+server_exp_factor = 2.0f; // 100% more exp (double exp) when server starts
+global_exp_factor = 1.0f; // 0% bonus when server starts
+// todo build in a timerlogic and a server crash/restart save logic to keep setted global_exp_factor
 
 exp.c
 https://github.com/Kamor/Dolfo/blob/main/bugfix/exp_adjust
 
-command_set_bonus_exp
-todo
+changed command /bonus to /setglobalexp
+changed function command_bonus to command_set_global_exp
+
+command.c GM
+{"setglobalexp",   command_set_global_exp,  0.0f, 1, CHANNEL_NAME_GM},
+
+sproto.h /* c_wiz.c */
+int command_set_global_exp(object_t *op, char *params);
+
+c_wiz.c
+int command_adjust_global_exp(object_t *op, char *params)
+{
+    if (!params)
+    {
+      ndi(NDI_UNIQUE, 0, op, "Adjust 0-1000 with 0=NO exp, 50=half exp, 100=normal exp, 200=double exp, 300=triple exp");
+      return COMMANDS_RTN_VAL_OK;
+    }
+
+    int global_exp_percent_factor = 0;
+    sscanf(params, "%d", &global_exp_percent_factor);
+    if (global_exp_percent_factor<0 || global_exp_percent_factor > 1000)
+    {
+      ndi(NDI_UNIQUE, 0, op, "Adjust 0-1000 with 0=NO exp, 50=half exp, 100=normal exp, 200=double exp, 300=triple exp");
+      return COMMANDS_RTN_VAL_SYNTAX;
+    }
+
+    global_exp_factor = global_exp_percent_factor / 100.0f;
+
+    return COMMANDS_RTN_VAL_OK;
+}
+
+added /exp command for player
+command.c
+{"exp",           command_exp,            0.0f, 1, NULL}, /* shows exp bonus/malus*/
+
+sproto.h /* c_misc.c */ 
+void                        command_exp(object_t *op, char *params);
+
+c_misc.c
+void command_exp(object_t *op, char *params)
+{
+    if (!op)
+    {
+        return COMMANDS_RTN_VAL_ERROR;
+    }
+
+    if (params)
+    {
+        return COMMANDS_RTN_VAL_ERROR;
+    }
+
+  player_t *pl = CONTR(op);
+
+  ndi(NDI_UNIQUE | NDI_PURPLE, 0, pl->ob, "server exp is on %d %%", (int)(server_exp_factor*100));
+  ndi(NDI_UNIQUE | NDI_PURPLE, 0, pl->ob, "global exp is on %d %%", (int)(global_exp_factor*100));
+  for (int i = 0; i <= 2; i++)
+  {
+    ndi(NDI_UNIQUE | NDI_PURPLE, 0, pl->ob, "base skill group exp [%d] = +%d %%", i, pl->base_skill_group_exp[i]);
+  }
+
+	return COMMANDS_RTN_VAL_OK; // todo return bug, command output an error here?
+}
