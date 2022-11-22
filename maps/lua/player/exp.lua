@@ -32,7 +32,7 @@ local ds = DataStore("110_list")
 -- player.level already has dlev subtracted.
 -------------------
 local _, _, bexp, dlev, sexp, slev, gexp, glev, mexp, mlev = string.find(event.options,
-    "(%d+) (%d+) (%-?%d+) (%-?%d+) (%-?%d+) (%-?%d+) (%-?%d+) (%-?%d+)")
+    "(-?%d+) (%d+) (%-?%d+) (%-?%d+) (%-?%d+) (%-?%d+) (%-?%d+) (%-?%d+)")
 bexp = tonumber(bexp)
 dlev = tonumber(dlev)
 sexp = tonumber(sexp)
@@ -54,7 +54,11 @@ local message
 if skill.last_eat == game.INDIRECT then
     message = "~"..tostring(math.abs(sexp)).."~ " 
     if bexp > 0 then
-        message = message.."(+"..tostring(bexp)..") "
+        message = message.."("..tostring(sexp-bexp).."+"..tostring(bexp)..") "
+				else
+						if bexp < 0 then
+							 message = message.."(" ..tostring(sexp-bexp)..tostring(bexp)..") "	
+						end		
     end
     message = message.."experience " 
 else
