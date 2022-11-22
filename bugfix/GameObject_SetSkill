@@ -164,13 +164,9 @@ static int GameObject_SetSkill(lua_State *L)
             skill->last_eat == DIRECT)
             {
               /* Scripts can change a max of 1 level, up or down. */
-              // this don't work, when gm command using this function to adjust levels?
               level = MAX(-1, MIN(level, 1));
-              // this level adjustment is also ignored by the exp_threshold logic below
-
-              // level = MAX(110, MIN(level, 1));
-
-              // this is still a mess, asyncron brain shit form multiply minds.
+              // this level adjustment is also ignored by the exp_threshold logic below, so TODO clean this later, currently its functional for +/-1 level
+              // this is still a mess, asyncron brain shit from multiply minds.
 
              /* Exp loss is limited to 1 point below the threshold for
               * the current level, and gain to the threshold for the
