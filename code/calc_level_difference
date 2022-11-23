@@ -37,6 +37,7 @@ float calc_level_difference(int who_lvl, int op_lvl)
 	// 100 = 100% (this is means exp when player is +100 level over mob)
 	// 121 = 110% (where minus exp don't go under 0, when we check for it in return line)
 
+	// if we don't use sign, we get less exp for higher monsters instead more
 	float factor=1.0f-lvl_sign*((float)percent)/100.0f;
 	return (factor >= 0) ? factor : 0.00f;
 }
