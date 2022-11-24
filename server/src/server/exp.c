@@ -62,6 +62,17 @@ static float LevExp[MAXMOBLEVEL + 1] =
     375.20f, 375.26f,                            // 126-127
 };
 
+// not used, todo build a exp gen function setting stats.exp without overwritten by fix_monster
+// think like we need to target the base arch object?
+int exp_level_adjust(object_t *op)
+{
+  if (op->level>1)
+  {
+    return (op->stats.exp*LevExp[op->level]);
+  }
+  return op->stats.exp;
+}
+
 /* new_levels[n] is the exp threshold for a player to be level n. */
 /* around level 11 you need 38+(2*(your_level-11)) yellow
  * mobs with a base exp of 125 to level up.
@@ -694,7 +705,8 @@ float calc_level_difference(int who_lvl, int op_lvl)
 
 	// if we don't use sign, we get less exp for higher monsters instead more
 	float factor=1.0f-lvl_sign*((float)percent)/100.0f;
-	return (factor >= 0) ? factor : 0.00f;}
+	return (factor >= 0) ? factor : 0.00f;
+}
 
 /* calc_skill_exp() - calculates amount of experience can be gained for
  * successfull use of a skill.  Returns value of experience gain.
@@ -751,8 +763,14 @@ int calc_skill_exp(object_t *who, object_t *op, float mod, int level, int *real)
     }
     else /* all other items/living creatures */
     {
-        op_exp = op->stats.exp; /* get base exp */ // this comes from map or arches, must be somewhere in monstergen
-        op_lvl = op->level;
+        op_exp = op->stats.exp; // get base exp // this comes from map or arches
+        op_lvl = op->level; // same here, but lvl is also adjusted by fix_monster when drained
+
+        // adjust exp by level and by server_exp_factor
+        // this is not best place here, normaly should be done on spawn or on create spawn
+        // also we have logic error here, when fix_monster reduces monster levels when drained
+        if (op_lvl>1) op_exp*=LevExp[op_lvl];
+        op_exp*=server_exp_factor;
     }
 
     if (op_lvl < 1 || op_exp < 1)
@@ -762,10 +780,11 @@ int calc_skill_exp(object_t *who, object_t *op, float mod, int level, int *real)
 	  ndi(NDI_UNIQUE | NDI_BLUE, 0, who, "who player lvl %d", who_lvl);
 	  ndi(NDI_UNIQUE | NDI_BLUE, 0, who, "op killed lvl %d", op_lvl);
 	  ndi(NDI_UNIQUE | NDI_BLUE, 0, who, "op->stats.exp %d", op->stats.exp);
+	  ndi(NDI_UNIQUE | NDI_BLUE, 0, who, "exp level and server adjust %d", op_exp);
 
     /* we get first a global level difference mulitplicator */
     exp_mul = calc_level_difference(who_lvl, op_lvl);
-    op_exp = (int) (((float) op_exp * LevExp[op_lvl] * mod)* exp_mul);
+    op_exp = (int) (((float) op_exp * mod)* exp_mul); // * LevExp[op_lvl]
     // this is the "high" dynamic i searched, it's simply multiplicate the level with LevExp[op_lvl]
     // to adjust monster exp in relation to monster level
 
