@@ -37,7 +37,7 @@ void                        apply_light(object_t *who, object_t *op);
 int                         attack_ob(object_t *op, object_t *hitter, object_t *hit_obj);
 int                         damage_ob(object_t *op, int dam, object_t *hitter, attack_envmode_t env_attack);
 sint32                      hit_map(object_t *hitter, msp_t *msp);
-object_t                     *hit_with_arrow(object_t *op, object_t *victim);
+object_t                   *hit_with_arrow(object_t *op, object_t *victim);
 void                        snare_player(object_t *op, object_t *hitter, int dam);
 void                        poison_player(object_t *op, object_t *hitter, float dam);
 void                        slow_player(object_t *op, object_t *hitter, int dam);
@@ -119,7 +119,6 @@ int                         command_think(object_t *op, char *params);
 int                         command_me(object_t *op, char *params);
 /* c_misc.c */
 int                         command_motd(object_t *op, char *params);
-int                         command_bug(object_t *op, char *params);
 void                        malloc_info(object_t *op);
 int                         command_who(object_t *op, char *params);
 int                         command_malloc(object_t *op, char *params);
@@ -137,12 +136,12 @@ int                         command_setmaplight(object_t *op, char *params);
 int                         command_dumpmap(object_t *op, char *params);
 int                         command_dumpallmaps(object_t *op, char *params);
 #endif
-void                        bug_report(char *reportstring);
 int                         command_resting(object_t *op, char *params);
 int                         command_help(object_t *op, char *params);
 int                         command_privacy(object_t *op, char *params);
-char                        *get_subdir(const char *name);
+char                       *get_subdir(const char *name);
 int                         command_stuck(object_t *op, char *params);
+void                        command_exp(object_t *op, char *params);
 /* c_move.c */
 int                         command_push_object (object_t *op, char *params);
 int                         command_turn_right (object_t *op, char *params);
@@ -155,7 +154,7 @@ void                        generate_ext_title(player_t *pl);
 /* c_object.c */
 int                         command_uskill(object_t *pl, char *params);
 int                         command_rskill(object_t *pl, char *params);
-object_t                     *find_marked_object(object_t *op);
+object_t                   *find_marked_object(object_t *op);
 char                       *examine_monster(object_t *op, object_t *tmp, char *buf, int flag);
 char                       *examine(object_t *op, object_t *tmp, int flag);
 /* c_party.c */
@@ -163,8 +162,6 @@ char                       *examine(object_t *op, object_t *tmp, int flag);
 float                       fire_magic_tool(object_t *owner, object_t *op, int dir);
 int                         command_cast_spell(object_t *op, char *params);
 /* c_wiz.c */
-int                         command_bonus(object_t *op, char *params);
-
 int                         command_connections(object_t *op, char *params);
 int                         command_kick(object_t *op, char *params);
 int                         command_reboot(object_t *op, char *params);
@@ -206,6 +203,7 @@ int                         command_invisibility(object_t *op, char *params);
 int                         command_dm_dev(object_t *op, char *params);
 int                         command_dm_light(object_t *op, char *params);
 int                         command_password(object_t *op, char *params);
+int                         command_set_global_exp(object_t *op, char *params);
 /* commands.c */
 void                        init_commands(void);
 /* container.c */
@@ -215,14 +213,14 @@ int                         container_trap(object_t *const op, object_t *const c
 /* disease.c */
 int                         move_disease(object_t *disease);
 int                         remove_symptoms(object_t *disease);
-object_t                     *find_symptom(object_t *disease);
+object_t                   *find_symptom(object_t *disease);
 int                         check_infection(object_t *disease);
 int                         infect_object(object_t *victim, object_t *disease, int force);
 int                         do_symptoms(object_t *disease);
 int                         grant_immunity(object_t *disease);
 int                         move_symptom(object_t *symptom);
 int                         check_physically_infect(object_t *victim, object_t *hitter);
-object_t                     *find_disease(object_t *victim);
+object_t                   *find_disease(object_t *victim);
 int                         cure_disease(object_t *sufferer, object_t *caster);
 int                         reduce_symptoms(object_t *sufferer, int reduction);
 /* egitem.c */
@@ -239,8 +237,6 @@ int                         compare_gmaster_mode(int t, int p);
 void                        write_gmaster_file(void);
 void                        update_gmaster_file(void);
 void                        free_gmaster_list(void);
-int                         command_setserverexp(object_t *op, char *params);
-int                         command_setplayerexp(object_t *op, char *params);
 /* gods.c */
 /* init.c */
 char                       *version_string(void);
@@ -262,13 +258,11 @@ addme_login_msg             player_load(NewSocket *ns, const char *name);
 addme_login_msg             player_create(NewSocket *ns,player_t **pl_ret,char *name,int race,int gender,int skill_nr);
 void                        player_addme_failed(NewSocket *ns, int error_msg);
 /* main.c */
-char                       *crypt_string(char *str);
 int                         get_new_instance_num(void);
 void                        process_players1(map_t *map);
 void                        process_players2(map_t *map);
 void                        clean_tmp_files(int flag);
 void                        cleanup_without_exit(void);
-void                        leave(player_t *pl, int draw_exit);
 void                        dequeue_path_requests(void);
 void                        do_specials(void);
 void                        shutdown_agent(int timer, int ret, player_t *pl, char *reason);
@@ -286,54 +280,18 @@ void                        gui_npc(object_t *who, uint8 mode, const char *text)
 void                        spawn_point(object_t *op);
 void                        make_mob_homeless(object_t *mob);
 void                        adjust_monster(object_t *monster);
-objectlink_t                 *add_linked_spawn(object_t *spawn);
+objectlink_t                *add_linked_spawn(object_t *spawn);
 void                        remove_linked_spawn_list(map_t *map);
 void                        send_link_spawn_signal(object_t *spawn, object_t *target, int signal);
 /* move.c */
 /* pets.c */
 /* player.c */
 /* plugins.c */
-object_t                     *get_event_object(object_t *op, int event_nr);
-int                         trigger_object_plugin_event(int event_type,
-                object_t *const me, object_t *const activator, object_t *const other,
-                const char *msg, int *parm1, int *parm2, int *parm3, int flags, char *file);
-int                         find_plugin_command(const char *cmd, object_t *op, CommArray_s *ret);
-void                        displayPluginsList(object_t *op);
-int                         findPlugin(const char *id);
-void                        initPlugins(void);
-void                        removeOnePlugin(const char *id);
-void                        initOnePlugin(const char *pluginfile);
-void                        removePlugins(void);
-CFParm                     *CFWCmdRSkill(CFParm *PParm);
-CFParm                     *CFWBecomeFollower(CFParm *PParm);
-CFParm                     *CFWFindPlayer(CFParm *PParm);
-CFParm                     *CFWManualApply(CFParm *PParm);
-CFParm                     *CFWCheckSpellKnown(CFParm *PParm);
-CFParm                     *CFWDoLearnSpell(CFParm *PParm);
-CFParm                     *CFWAddExp(CFParm *PParm);
-CFParm                     *CFWDetermineGod(CFParm *PParm);
-CFParm                     *CFWFindGod(CFParm *PParm);
-CFParm                     *CFWDumpObject(CFParm *PParm);
-CFParm                     *CFWLoadObject(CFParm *PParm);
-CFParm                     *CFWSendCustomCommand(CFParm *PParm);
-CFParm                     *CFWCommunicate(CFParm *PParm);
-CFParm                     *CFWFindMarkedObject(CFParm *PParm);
-CFParm                     *CFWTeleportObject(CFParm *PParm);
-CFParm                     *RegisterGlobalEvent(CFParm *PParm);
-CFParm                     *UnregisterGlobalEvent(CFParm *PParm);
-void                        GlobalEvent(CFParm *PParm);
-CFParm                     *CFWCreateObject(CFParm *PParm);
-CFParm                     *CFMapSave(CFParm *PParm);
-CFParm                     *CFMapDelete(CFParm *PParm);
-CFParm                     *CFInterface(CFParm *PParm);
-void                        send_plugin_custom_message(object_t *pl, char *buf);
 /* rune.c */
-int                         write_rune(object_t *op, int dir, int inspell, int level, char *runename);
 void                        rune_attack(object_t *op, object_t *victim);
 void                        set_traped_flag(object_t *op);
 void                        spring_trap(object_t *trap, object_t *victim);
-int                         dispel_rune(object_t *op, int dir, int risk);
-int                         trap_see(object_t *op, object_t *trap, int level);
+int                         trap_find(object_t *op, object_t *trap, int level);
 int                         trap_show(object_t *trap, object_t *where);
 int                         trap_disarm(object_t *disarmer, object_t *trap, int risk);
 void                        trap_adjust(object_t *trap, int difficulty);
@@ -347,7 +305,7 @@ uint8                       shop_checkout(object_t *op, object_t *this);
 void                        shop_return_unpaid(object_t *who, msp_t *msp);
 int                         get_money_from_string(char *text, struct moneyblock_t *money);
 int                         enumerate_coins(sint64 value, struct moneyblock_t *money);
-object_t                     *create_financial_loot(moneyblock_t *money, object_t *who, uint8 mode);
+object_t                   *create_financial_loot(moneyblock_t *money, object_t *who, uint8 mode);
 /* skills.c */
 int                         attack_melee_weapon(object_t *op, int dir, char *string);
 int                         attack_hth(object_t *pl, int dir, char *string);
@@ -355,27 +313,24 @@ int                         skill_attack(object_t *tmp, object_t *pl, int dir, c
 int                         do_skill_attack(object_t *tmp, object_t *op, char *string);
 int                         SK_level(object_t *op);
 int                         find_traps(object_t *pl, int level);
-int                         remove_trap(object_t *op, int dir, int level);
+int                         disarm_traps(object_t *op, int dir, int level);
 int                         rage(object_t *op, int dir, int level);
 /* skill_util.c */
 void                        init_skills(void);
-void                        link_player_skills(player_t *pl);
 void                        validate_skills(player_t *pl);
 int                         do_skill(object_t *op, int dir, char *string);
 void                        dump_skills(void);
 int                         lookup_skill_by_name(char *name);
 int                         check_skill_to_apply(object_t *who, object_t *item);
 int                         learn_skill(object_t *pl, int skillnr);
-int                            unlearn_skill(object_t *op, int skillnr);
+int                         unlearn_skill(object_t *op, int skillnr);
 int                         use_skill(object_t *op, char *string);
 sint8                       change_skill(object_t *who, sint16 nr);
 void                        set_action_time(object_t *op, float ticks);
 int                         check_skill_action_time(object_t *op, object_t *skill);
 /* spell_effect.c */
-void                        prayer_failure(object_t *op, int failure, int power);
 void                        cast_mana_storm(object_t *op, int lvl);
 void                        cast_magic_storm(object_t *op, object_t *tmp, int lvl);
-int                         recharge(object_t *op);
 int                         probe(object_t *op);
 int                         cast_invisible(object_t *op, object_t *caster, int spell_type);
 int                         perceive_self(object_t *op);
@@ -383,8 +338,7 @@ int                         cast_heal(object_t *op, int level, object_t *target,
 int                         cast_hallowed_ground(object_t *op, int level, int spell_type);
 int                         spring_hallowed_ground(object_t *op, object_t *trap);
 int                         cast_change_attr(object_t *op, object_t *caster, object_t *target, int dir, int spell_type);
-int                         remove_curse(object_t *op, object_t *target, int type, SpellTypeFrom src);
-object_t                     *cure_what_ails_you(object_t *op, uint8 st1);
+object_t                    *cure_what_ails_you(object_t *op, uint8 st1);
 int                         fire_arch(object_t *op, object_t *caster, sint16 x, sint16 y, int dir, archetype_t *at, int type, int level, int magic);
 void                        check_fired_arch(object_t *op);
 void                        move_fired_arch(object_t *op);
@@ -404,7 +358,6 @@ int                         cast_cone(object_t *op, object_t *caster, int dir, i
 void                        check_cone_push(object_t *op);
 void                        cone_drop(object_t *op);
 void                        move_cone(object_t *op);
-void                        explosion(object_t *op);
 void                        forklightning(object_t *op, object_t *tmp);
 int                         reflwall(msp_t *msp, object_t *sp_op);
 void                        move_bolt(object_t *op);
@@ -413,12 +366,11 @@ void                        drain_rod_charge(object_t *rod);
 void                        fix_rod_speed(object_t *rod);
 int                         find_target_for_spell(object_t *op, object_t *item, object_t **target, int dir, uint32 flags);
 int                         can_see_monsterP(map_t *m, int x, int y, int dir);
-int                         SP_level_dam_adjust(object_t *op, object_t *caster, int spell_type);
 int                         SP_level_strength_adjust(object_t *op, object_t *caster, int spell_type);
 int                         SP_level_spellpoint_cost(object_t *op, object_t *caster, int spell_type);
-int                         look_up_spell_by_name(object_t *op, const char *spname);
-void                        shuffle_attack(object_t *op, int change_face);
 int                         SP_lvl_dam_adjust(int level, int spell_type, int base_dam);
+void                        SP_stat_adjust(object_t *caster, int spell, float *value);
+int                         look_up_spell_by_name(object_t *op, const char *spname);
 /* stats.c */
 void                        stats_event(stats_event_type type, ...);
 /* time.c */
