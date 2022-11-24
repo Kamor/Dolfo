@@ -386,7 +386,7 @@ int trap_disarm(object_t *op, object_t *trap, int level)
 
 			int id_trap = QUERY_FLAG(trap, FLAG_IDENTIFIED);
 
-			int chance = max(min(id_trap?50:0 + op->stats.Dex + level - trap->level, 100),0);
+			int chance = max(min((id_trap?50:0) + op->stats.Dex + level - trap->level, 100),0);
 			int roll = RANDOM_ROLL(0, 99);
 			ndi(NDI_UNIQUE, 0, op, "disarm trap : roll %d < chance %d)?", roll, chance);
 
