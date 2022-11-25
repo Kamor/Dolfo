@@ -508,7 +508,7 @@ static object_t *ThingPickUp(object_t *who, object_t *what, object_t *where, uin
 
         /* Check that where has enough space for what. */
         /* TODO: If nrof > 1 perhaps split what to fit? */
-        else if (where->weight_limit < where->carrying + weight)
+        if (where->weight_limit < where->carrying + weight)
         {
             if (pl)
             {
@@ -551,8 +551,7 @@ static object_t *ThingPickUp(object_t *who, object_t *what, object_t *where, uin
 
     /* what can have a PICKUP script on it which, if it returns true, aborts
      * the actual pick up. */
-    if (trigger_object_plugin_event(EVENT_PICKUP, what, who, where, NULL,
-            (int *)&nrof, NULL, NULL, SCRIPT_FIX_ALL, NULL))
+    if (plugin_trigger_object_event(PLUGIN_EVENT_OBJECT_PICKUP, what, who, where, NULL, nrof, 0, 0))
     {
         return NULL;
     }
@@ -560,8 +559,7 @@ static object_t *ThingPickUp(object_t *who, object_t *what, object_t *where, uin
     /* where can also have a PICKUP script on it which, if it returns true,
      * aborts the actual pick up. */
     if (where &&
-        trigger_object_plugin_event(EVENT_PICKUP, where, who, what, NULL,
-            (int *)&nrof, NULL, NULL, SCRIPT_FIX_ALL, NULL))
+        plugin_trigger_object_event(PLUGIN_EVENT_OBJECT_PICKUP, where, who, what, NULL, nrof, 0, 0))
     {
         return NULL;
     }
@@ -1248,15 +1246,16 @@ char * describe_item(const object_t *const op)
                   }
                   else
                   {
+                    // percent food?
                     if (op->subtype==1)
                     {
-                          sprintf(strchr(retbuf, '\0'), "(health per second for %d seconds: hp %+d%%, mana %+d%%, grace %+d%%)",
-                          op->last_eat, op->stats.hp, op->stats.sp, op->stats.grace);
+                      sprintf(strchr(retbuf, '\0'), "(health per second for %d seconds: hp %+d%%, mana %+d%%, grace %+d%%)",
+                      op->last_eat, op->stats.hp, op->stats.sp, op->stats.grace);
                     }
                     else
                     {
-                         sprintf(strchr(retbuf, '\0'), "(health per second for %d seconds: hp %+d, mana %+d, grace %+d)",
-                          op->last_eat, op->stats.hp, op->stats.sp, op->stats.grace);
+                      sprintf(strchr(retbuf, '\0'), "(health per second for %d seconds: hp %+d, mana %+d, grace %+d)",
+                      op->last_eat, op->stats.hp, op->stats.sp, op->stats.grace);
                     }
                   }
               }
@@ -1570,6 +1569,20 @@ object_t *thing_pick_up(object_t *who, object_t *what, object_t *where, uint32 n
         return NULL;
     }
 
+    if (what->map)
+    {
+        msp_t *msp = MSP_KNOWN(what);
+        object_t *shop;
+        MSP_GET_SYS_OBJ(msp, SHOP_FLOOR, shop);
+
+        // If the shop floor is identified, identify any items atop it.
+        if (shop && QUERY_FLAG(shop, FLAG_IDENTIFIED) && QUERY_FLAG(what, FLAG_UNPAID))
+        {
+            THING_IDENTIFY(what);
+        }
+
+    }
+
     /* When what is loot we go through a special process. */
     if (what->type == LOOT)
     {
@@ -1655,10 +1668,71 @@ object_t *thing_pick_up(object_t *who, object_t *what, object_t *where, uint32 n
     }
     /* When what is not loot, try to pick it up -- see ThingPickUp(). If this fails,
      * just return NULL. */
-    else if (!(what = ThingPickUp(who, what, where, nrof, from, to)))
+
+    // new pickup all logic and decay of corpse logic
+    else
+    {
+      if (what->inv)
+      {
+        // we only continue, if container is applied, so we don't need to check all again, if container is ours ...
+        if (QUERY_FLAG(what, FLAG_APPLIED))
+        {
+          if (pl)
+          {
+            SET_FLAG(who, FLAG_NO_FIX_PLAYER);
+          }
+
+          int counter = 0;
+          int success = 0;
+          object_t *this, *next;
+          FOREACH_OBJECT_IN_OBJECT(this, what, next)
+          {
+            counter++;
+            uint32 nr = MAX(1, MIN(this->nrof, MAX_OBJ_NROF));
+            if (ThingPickUp(who, this, where, nr, from, to))
+            {
+              success++;
+            }
+          }
+
+          if (pl)
+          {
+            CLEAR_FLAG(who, FLAG_NO_FIX_PLAYER);
+          }
+
+          if (success>0) // when picked up items from container
+          {
+            ndi(NDI_UNIQUE, 0, who, "You pick up %d from %d item(s) out of the %s.", success, counter, what->name);
+            // we also do the reduced decay timer, when container is empty
+            if (!what->inv && what->stats.food>3)
+            {
+              what->stats.food = 3; // 3 because there is a logic when player applied a corpse, corpse is reseting to food 3 to avoid that corpse vanish
+            }
+            return NULL;
+          }
+          if (counter>0) //when somehow, we couldn't pickup items
+          {
+            ndi(NDI_UNIQUE, 0, who, "You can't pick up the items from %s.", what->name);
+            return NULL;
+          }
+        }
+      }
+      object_t *env = what->env; // before what is moved, we memory the envelope, if there is one
+      if (!(what = ThingPickUp(who, what, where, nrof, from, to)))
+      {
+        return NULL;
+      }
+      if (env && !env->inv && env->stats.food>3)
+      {
+        env->stats.food = 3;
+      }
+    }
+
+    // old logic
+    /*else if (!(what = ThingPickUp(who, what, where, nrof, from, to)))
     {
         return NULL;
-    }
+    }*/
 
     /* Give players an appropriate message to tell them what they've done. */
     /* TODO: Currently the client plays a pick up sound whenever a pick up is
@@ -1805,8 +1879,7 @@ object_t *thing_drop_to_floor(object_t *who, object_t *what, uint32 nrof)
 
     /* what can have a DROP script on it which, if it returns true, aborts the
      * actual drop. */
-    if (trigger_object_plugin_event(EVENT_DROP, what, who, NULL, NULL,
-            (int *)&nrof, NULL, NULL, SCRIPT_FIX_ALL, NULL))
+    if (plugin_trigger_object_event(PLUGIN_EVENT_OBJECT_DROP, what, who, NULL, NULL, nrof, 0, 0))
     {
         return NULL;
     }
