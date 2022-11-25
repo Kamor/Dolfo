@@ -2397,6 +2397,8 @@ y 4
 arch quest_trigger
 name Lost Booze
 subtype 3
+last_heal 1
+one_drop 0
 end
 end
 arch floor_wood2_d2
