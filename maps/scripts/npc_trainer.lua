@@ -80,7 +80,6 @@ function topic_training() -- we need this global
 			end
 		end
 	end
-	ib:SetLHSButton("Back" , "Training")
 end
 
 local function topic_learn(index)
