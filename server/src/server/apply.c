@@ -1312,9 +1312,9 @@ static void ApplyFood(object_t *op, object_t *tmp)
     // subtype 1 on type 6 (food) means it's percent food
     if(tmp->subtype==1)
     {
-      force->stats.hp = (int)(float)(op->stats.maxhp/100*tmp->stats.hp);
-      force->stats.sp = (int)(float)(op->stats.maxsp/100*tmp->stats.sp);
-      force->stats.grace = (int)(float)(op->stats.maxgrace/100*tmp->stats.grace);
+      force->stats.hp = (int)(0.01f*op->stats.maxhp*tmp->stats.hp);
+      force->stats.sp = (int)(0.01f*op->stats.maxsp*tmp->stats.sp);
+      force->stats.grace = (int)(0.01f*op->stats.maxgrace*tmp->stats.grace);
     }
     else
     {
