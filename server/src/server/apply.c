@@ -39,6 +39,7 @@ static void ApplyFood(object_t *op, object_t *tmp);
 static void ApplyPoison(object_t *op, object_t *tmp);
 static void ApplyLightRefill(object_t *who, object_t *op);
 static void ApplyPowerCrystal(object_t *op, object_t *crystal);
+static void ApplyAnvil(object_t *op, object_t *anv);
 
 static void ApplyPotion(object_t *op, object_t *tmp)
 {
@@ -51,8 +52,7 @@ static void ApplyPotion(object_t *op, object_t *tmp)
         return;
     }
 
-    if(trigger_object_plugin_event(EVENT_APPLY, tmp, op, NULL,
-                NULL, NULL, NULL, NULL, SCRIPT_FIX_ACTIVATOR, NULL))
+    if (plugin_trigger_object_event(PLUGIN_EVENT_OBJECT_APPLY, tmp, op, NULL, NULL, 0, 0, 0))
         return;
 
     if (op->type == PLAYER)
@@ -142,6 +142,8 @@ static void ApplyPotion(object_t *op, object_t *tmp)
             force->stats.Wis = MIN(tmp->stats.Wis, tmp->stats.Wis * bonus);
             force->stats.Pow = MIN(tmp->stats.Pow, tmp->stats.Pow * bonus);
             force->stats.Cha = MIN(tmp->stats.Cha, tmp->stats.Cha * bonus);
+
+            force = check_obj_stat_buffs(force, op);
 
             /* kick the force in, and apply it to player */
             force->speed_left = -1;
@@ -414,8 +416,7 @@ static void ApplyContainer(object_t *op, object_t *sack)
     /* close container? */
     if (cont) /* if cont != sack || cont == sack - in both cases we close cont */
     {
-        if(trigger_object_plugin_event(EVENT_CLOSE, cont, op, NULL,
-                NULL, NULL, NULL, NULL, SCRIPT_FIX_ALL, NULL))
+        if (plugin_trigger_object_event(PLUGIN_EVENT_OBJECT_CLOSE, cont, op, NULL, NULL, 0, 0, 0))
             return;
 
         ndi(NDI_UNIQUE, 0, op, "You %s %s.",
@@ -488,6 +489,19 @@ static void ApplyContainer(object_t *op, object_t *sack)
         ndi(NDI_UNIQUE, 0, op, "You open %s.",
             query_name(sack, op, ARTICLE_DEFINITE, 0));
         SET_FLAG(sack, FLAG_BEEN_APPLIED);
+
+        /*if (sack->subtype & SUBTYPE_CONTAINER_CORPSE)
+        {
+            msp_t *msp = (sack->map) ? MSP_KNOWN(sack) : NULL;
+
+            if (msp &&
+                sack->glow_radius)
+            {
+                adjust_light_source(msp, -(sack->glow_radius));
+                sack->glow_radius = 0;
+            }
+        }*/
+
         container_link(CONTR(op), sack);
     }
     else/* sack is in players inventory */
@@ -567,8 +581,7 @@ static void ApplyShopMat(object_t *shop_mat, object_t *op)
     msp_t *msp;
 
     /* Event trigger and quick exit */
-    if (trigger_object_plugin_event(EVENT_TRIGGER, shop_mat, op, NULL, NULL,
-        NULL, NULL, NULL, SCRIPT_FIX_NOTHING, NULL))
+    if (plugin_trigger_object_event(PLUGIN_EVENT_OBJECT_TRIGGER, shop_mat, op, NULL, NULL, 0, 0, 0))
     {
         return;
     }
@@ -674,18 +687,14 @@ static void ApplySign(object_t *op, object_t *sign)
 
     /* Signs should trigger APPLY events, and magic mouths should trigger TRIGGER events,
      * so we trigger both to be sure... */
-    if(trigger_object_plugin_event(
-                EVENT_APPLY, sign, op, NULL,
-                NULL, NULL, NULL, NULL, SCRIPT_FIX_ACTIVATOR, NULL))
+    if (plugin_trigger_object_event(PLUGIN_EVENT_OBJECT_APPLY, sign, op, NULL, NULL, 0, 0, 0))
         return;
-    if(trigger_object_plugin_event(
-                EVENT_TRIGGER, sign, op, NULL,
-                NULL, NULL, NULL, NULL, SCRIPT_FIX_ACTIVATOR, NULL))
+    if (plugin_trigger_object_event(PLUGIN_EVENT_OBJECT_TRIGGER, sign, op, NULL, NULL, 0, 0, 0))
         return;
 
     /* sign */
     if (sign->race)
-        sscanf(sign->race, "%d", &raceval);
+        (void)sscanf(sign->race, "%d", &raceval);
     if (!QUERY_FLAG(sign, FLAG_SYS_OBJECT))
     {
         if (!sign->msg)
@@ -853,9 +862,7 @@ void move_apply(object_t *const trap_obj, object_t *const victim, object_t *cons
           /* should be walk_on/fly_on only */
           if (victim->direction)
           {
-              if(trigger_object_plugin_event(EVENT_TRIGGER,
-                          trap, victim, originator,
-                          NULL, NULL, NULL, NULL, SCRIPT_FIX_NOTHING, NULL))
+              if (plugin_trigger_object_event(PLUGIN_EVENT_OBJECT_TRIGGER, trap, victim, originator, NULL, 0, 0, 0))
                   goto leave;
 
               OBJECT_TURN(victim, RANDOM_ROLL(1, 8));
@@ -865,9 +872,7 @@ void move_apply(object_t *const trap_obj, object_t *const victim, object_t *cons
         case DIRECTOR:
           if (victim->direction)
           {
-              if(trigger_object_plugin_event(EVENT_TRIGGER,
-                          trap, victim, originator,
-                          NULL, NULL, NULL, NULL, SCRIPT_FIX_NOTHING, NULL))
+              if (plugin_trigger_object_event(PLUGIN_EVENT_OBJECT_TRIGGER, trap, victim, originator, NULL, 0, 0, 0))
                   goto leave;
 
               if (QUERY_FLAG(victim, FLAG_IS_MISSILE))
@@ -891,9 +896,11 @@ void move_apply(object_t *const trap_obj, object_t *const victim, object_t *cons
            * Victim then is his own enemy and will start to kill herself (this is
            * removed) but we have not synced victim and his missile. To avoid senseless
            * action, we avoid hits here */
-          if (trap->owner != victim)
-              hit_with_arrow(trap, victim);
-          goto leave;
+            if (trap->owner != victim && (victim->type == PLAYER || victim->type == MONSTER))
+            {
+                hit_with_arrow(trap, victim);
+            }
+            goto leave;
 
         case CONE:
         case LIGHTNING: /* bolt */
@@ -983,8 +990,7 @@ void move_apply(object_t *const trap_obj, object_t *const victim, object_t *cons
         case CONTAINER:
           if (pl)
           {
-              if(!trigger_object_plugin_event(EVENT_TRIGGER, trap, victim, NULL,
-                          NULL, NULL, NULL, NULL, SCRIPT_FIX_NOTHING, NULL))
+              if (!plugin_trigger_object_event(PLUGIN_EVENT_OBJECT_TRIGGER, trap, victim, NULL, NULL, 0, 0, 0))
                   ApplyContainer(victim, trap);
           }
           goto leave;
@@ -1038,9 +1044,7 @@ static void ApplyBook(object_t *op, object_t *tmp)
         query_name(tmp, op, ARTICLE_DEFINITE, 0));
 
     /* Non-zero return value from script means stop here */
-    if(trigger_object_plugin_event(
-                EVENT_APPLY, tmp, op, NULL,
-                NULL, NULL, NULL, NULL, SCRIPT_FIX_ALL, NULL))
+    if (plugin_trigger_object_event(PLUGIN_EVENT_OBJECT_APPLY, tmp, op, NULL, NULL, 0, 0, 0))
         return;
 
     if (tmp->msg == NULL)
@@ -1105,8 +1109,7 @@ static void ApplySpellbook(object_t *op, object_t *tmp)
         return;
     }
 
-    if(trigger_object_plugin_event(EVENT_APPLY, tmp, op, NULL,
-                NULL, NULL, NULL, NULL, SCRIPT_FIX_ACTIVATOR, NULL))
+    if (plugin_trigger_object_event(PLUGIN_EVENT_OBJECT_APPLY, tmp, op, NULL, NULL, 0, 0, 0))
         return;
 
     ndi(NDI_UNIQUE, 0, op, "The spellbook contains the spell %s (lvl %d).",
@@ -1141,10 +1144,6 @@ static void ApplySpellbook(object_t *op, object_t *tmp)
     {
         ndi(NDI_UNIQUE, 0, op, "You succeed in learning the spell!");
         do_learn_spell(op, tmp->stats.sp);
-
-        /* xp gain to literacy for spell learning */
-        if (!QUERY_FLAG(tmp, FLAG_NO_DROP))
-            add_exp(op, calc_skill_exp(op, tmp, 1.0f,-1, NULL), op->chosen_skill->stats.sp, 1);
     }
     else
     {
@@ -1191,8 +1190,7 @@ static void ApplyScroll(object_t *op, object_t *tmp)
 
     }
 
-    if(trigger_object_plugin_event(EVENT_APPLY, tmp, op, NULL,
-                NULL, NULL, NULL, NULL, SCRIPT_FIX_ACTIVATOR, NULL))
+    if (plugin_trigger_object_event(PLUGIN_EVENT_OBJECT_APPLY, tmp, op, NULL, NULL, 0, 0, 0))
         return;
 
     THING_IDENTIFY(tmp);
@@ -1207,9 +1205,7 @@ static void ApplyTreasure(object_t *op, object_t *tmp)
     object_t                 *treas;
     tag_t tmp_tag = tmp->   count, op_tag = op->count;
 
-    if(trigger_object_plugin_event(
-                EVENT_APPLY, tmp, op, NULL,
-                NULL, NULL, NULL, NULL, SCRIPT_FIX_ACTIVATOR, NULL))
+    if (plugin_trigger_object_event(PLUGIN_EVENT_OBJECT_APPLY, tmp, op, NULL, NULL, 0, 0, 0))
         return;
     /*  Nice side effect of new treasure creation method is that the treasure
         for the chest is done when the chest is created, and put into the chest
@@ -1270,9 +1266,16 @@ static void ApplyTreasure(object_t *op, object_t *tmp)
  * effects comes in ticks for x seconds. */
 static void ApplyFood(object_t *op, object_t *tmp)
 {
+    // cap food, only one meal allowed
+    if (QUERY_FLAG(op, FLAG_EATING))
+    {
+      ndi(NDI_UNIQUE| NDI_NAVY, 0, op, "Wait till you finished your current meal!");
+      return;
+    }
+
     object_t *force;
 
-    if (trigger_object_plugin_event(EVENT_APPLY, tmp, op, NULL, NULL, NULL, NULL, NULL, SCRIPT_FIX_ACTIVATOR, NULL))
+    if (plugin_trigger_object_event(PLUGIN_EVENT_OBJECT_APPLY, tmp, op, NULL, NULL, 0, 0, 0))
     {
         return;
     }
@@ -1298,13 +1301,6 @@ static void ApplyFood(object_t *op, object_t *tmp)
         return;
     }
 
-    // cap food, only one meal allowed
-    if (QUERY_FLAG(op, FLAG_EATING))
-    {
-      ndi(NDI_UNIQUE| NDI_NAVY, 0, op, "Wait till you finished your current meal!");
-      return;
-    }
-
     force->type = TYPE_FOOD_FORCE;
     SET_FLAG(force, FLAG_IS_USED_UP); /* or it will auto destroyed with first tick */
     SET_FLAG(force, FLAG_NO_SAVE);
@@ -1316,9 +1312,9 @@ static void ApplyFood(object_t *op, object_t *tmp)
     // subtype 1 on type 6 (food) means it's percent food
     if(tmp->subtype==1)
     {
-      force->stats.hp = (int)op->stats.maxhp/(double)100*tmp->stats.hp;
-      force->stats.sp = (int)op->stats.maxsp/(double)100*tmp->stats.sp;
-      force->stats.grace = (int)op->stats.maxgrace/(double)100*tmp->stats.grace;
+      force->stats.hp = (int)(float)(op->stats.maxhp/100*tmp->stats.hp);
+      force->stats.sp = (int)(float)(op->stats.maxsp/100*tmp->stats.sp);
+      force->stats.grace = (int)(float)(op->stats.maxgrace/100*tmp->stats.grace);
     }
     else
     {
@@ -1327,7 +1323,9 @@ static void ApplyFood(object_t *op, object_t *tmp)
       force->stats.grace = tmp->stats.grace;
     }
 
-
+    force->stats.hp = tmp->stats.hp;
+    force->stats.sp = tmp->stats.sp;
+    force->stats.grace = tmp->stats.grace;
     force->speed = 0.125f;
 
     /* applying the food will put as in "rest mode" - but instead of rest regeneration we
@@ -1350,9 +1348,7 @@ static void ApplyFood(object_t *op, object_t *tmp)
 
 static void ApplyPoison(object_t *op, object_t *tmp)
 {
-    if(trigger_object_plugin_event(
-                EVENT_APPLY, tmp, op, NULL,
-                NULL, NULL, NULL, NULL, SCRIPT_FIX_ACTIVATOR, NULL))
+    if (plugin_trigger_object_event(PLUGIN_EVENT_OBJECT_APPLY, tmp, op, NULL, NULL, 0, 0, 0))
         return;
 
     if (op->type == PLAYER)
@@ -1372,7 +1368,7 @@ static void ApplyPoison(object_t *op, object_t *tmp)
 
 static void ApplySavebed(player_t *pl, object_t *bed)
 {
-    if (trigger_object_plugin_event(EVENT_APPLY, bed, pl->ob, NULL, NULL, NULL, NULL, NULL, SCRIPT_FIX_ACTIVATOR, NULL))
+    if (plugin_trigger_object_event(PLUGIN_EVENT_OBJECT_APPLY, bed, pl->ob, NULL, NULL, 0, 0, 0))
     {
         return;
     }
@@ -1471,7 +1467,7 @@ int apply_object(object_t *who, object_t *what, int aflag)
 
         if (change_skill(who, SK_DIVINE_PRAYERS))
         {
-            if (trigger_object_plugin_event(EVENT_APPLY, what, who, NULL, NULL, &aflag, NULL, NULL, SCRIPT_FIX_ACTIVATOR, NULL))
+            if (plugin_trigger_object_event(PLUGIN_EVENT_OBJECT_APPLY, what, who, NULL, NULL, 0, 0, 0))
             {
                  r = 1;
                  break;
@@ -1484,7 +1480,7 @@ int apply_object(object_t *who, object_t *what, int aflag)
         break;
 
         case CF_HANDLE:
-        if (trigger_object_plugin_event(EVENT_APPLY, what, who, NULL, NULL, &aflag, NULL, NULL, SCRIPT_FIX_ACTIVATOR, NULL))
+        if (plugin_trigger_object_event(PLUGIN_EVENT_OBJECT_APPLY, what, who, NULL, NULL, 0, 0, 0))
         {
              r = 1;
              break;
@@ -1500,7 +1496,7 @@ int apply_object(object_t *who, object_t *what, int aflag)
         break;
 
         case TRIGGER:
-        if(trigger_object_plugin_event(EVENT_APPLY, what, who, NULL, NULL, &aflag, NULL, NULL, SCRIPT_FIX_ACTIVATOR, NULL))
+        if (plugin_trigger_object_event(PLUGIN_EVENT_OBJECT_APPLY, what, who, NULL, NULL, 0, 0, 0))
         {
              r = 1;
              break;
@@ -1526,7 +1522,7 @@ int apply_object(object_t *who, object_t *what, int aflag)
             r = 1;
             break;
         }
-        else if (trigger_object_plugin_event(EVENT_APPLY, what, who, NULL, NULL, &aflag, NULL, NULL, SCRIPT_FIX_ACTIVATOR, NULL))
+        else if (plugin_trigger_object_event(PLUGIN_EVENT_OBJECT_APPLY, what, who, NULL, NULL, 0, 0, 0))
         {
             r = 1;
             break;
@@ -1557,7 +1553,7 @@ int apply_object(object_t *who, object_t *what, int aflag)
         break;
 
         case POTION:
-        if (trigger_object_plugin_event(EVENT_APPLY, what, who, NULL, NULL, &aflag, NULL, NULL, SCRIPT_FIX_ACTIVATOR, NULL))
+        if (plugin_trigger_object_event(PLUGIN_EVENT_OBJECT_APPLY, what, who, NULL, NULL, 0, 0, 0))
         {
              r = 1; /* 1 = do not write an error message to the player */
              break;
@@ -1588,7 +1584,7 @@ int apply_object(object_t *who, object_t *what, int aflag)
         break;
 
         case CONTAINER:
-        if (trigger_object_plugin_event(EVENT_APPLY, what, who, NULL, NULL, &aflag, NULL, NULL, SCRIPT_FIX_ACTIVATOR, NULL))
+        if (plugin_trigger_object_event(PLUGIN_EVENT_OBJECT_APPLY, what, who, NULL, NULL, 0, 0, 0))
         {
             r = 1;
             break;
@@ -1682,8 +1678,13 @@ int apply_object(object_t *who, object_t *what, int aflag)
         r = 1;
         break;
 
+        case ANVIL:
+            ApplyAnvil(who, what);
+            r = 16;
+            break;
+
         default: /* Now we can put scripts even on NON-applyable items */
-        if (trigger_object_plugin_event(EVENT_APPLY, what, who, NULL, NULL, NULL, NULL, NULL, SCRIPT_FIX_ACTIVATOR, NULL))
+        if (plugin_trigger_object_event(PLUGIN_EVENT_OBJECT_APPLY, what, who, NULL, NULL, 0, 0, 0))
         {
            r = 1;
            break;
@@ -1788,9 +1789,7 @@ int apply_equipment(object_t *who, object_t *what, int aflags)
 
         /* This is actually an (UN)APPLY event. Scripters should check
          * the applied flag */
-        if(trigger_object_plugin_event(
-                    EVENT_APPLY, what, who, NULL,
-                    NULL, NULL, NULL, NULL, SCRIPT_FIX_ACTIVATOR, NULL))
+        if (plugin_trigger_object_event(PLUGIN_EVENT_OBJECT_APPLY, what, who, NULL, NULL, 0, 0, 0))
             return 1;
 
         CLEAR_FLAG(what, FLAG_APPLIED);
@@ -1937,7 +1936,7 @@ int apply_equipment(object_t *who, object_t *what, int aflags)
                    tmp->type == WAND ||
                    tmp->type == BOW ||
                    (tmp->type == ARROW &&
-                    what->subtype > 127))) ||
+                    (what->type != ARROW || what->subtype <= 127)))) ||
                   tmp->type == what->type) &&
                 apply_equipment(who, tmp, AP_UNAPPLY) != 0)
             {
@@ -2068,9 +2067,7 @@ int apply_equipment(object_t *who, object_t *what, int aflags)
 
     /* Now we should be done with 99% of all tests. Generate the event
      * and then go on with side effects */
-    if(trigger_object_plugin_event(
-                EVENT_APPLY, what, who, NULL,
-                NULL, NULL, NULL, NULL, SCRIPT_FIX_ACTIVATOR, NULL))
+    if (plugin_trigger_object_event(PLUGIN_EVENT_OBJECT_APPLY, what, who, NULL, NULL, 0, 0, 0))
         return 1; /* 1 = do not write an error message to the player */
 
     if (what->nrof > 1 && what->type != ARROW)
@@ -2232,8 +2229,7 @@ static void ApplyLightRefill(object_t *who, object_t *op)
         return;
     }
 
-    if(trigger_object_plugin_event(EVENT_APPLY, op, who, NULL,
-                NULL, NULL, NULL, NULL, SCRIPT_FIX_ACTIVATOR, NULL))
+    if (plugin_trigger_object_event(PLUGIN_EVENT_OBJECT_APPLY, op, who, NULL, NULL, 0, 0, 0))
         return;
 
     /* ok, all is legal - now we refill the light source = settings item->food
@@ -2458,7 +2454,7 @@ void apply_light(object_t *who, object_t *op)
         if (QUERY_FLAG(op, FLAG_PERM_DAMNED))
             SET_FLAG(op, FLAG_DAMNED);
 
-        if (trigger_object_plugin_event(EVENT_APPLY, op, who, NULL, NULL, NULL, NULL, NULL, SCRIPT_FIX_ACTIVATOR,  NULL))
+        if (plugin_trigger_object_event(PLUGIN_EVENT_OBJECT_APPLY, op, who, NULL, NULL, 0, 0, 0))
         {
             OBJECT_UPDATE_UPD(who, UPD_FLAGS);
             return;
@@ -2514,8 +2510,7 @@ void apply_light(object_t *who, object_t *op)
                 }
             }
 
-            if(trigger_object_plugin_event(EVENT_APPLY, op, who, NULL,
-                        NULL, NULL, NULL, NULL, SCRIPT_FIX_ACTIVATOR, NULL))
+            if (plugin_trigger_object_event(PLUGIN_EVENT_OBJECT_APPLY, op, who, NULL, NULL, 0, 0, 0))
                 return;
 
             if (op->env && op->env->type == PLAYER)
@@ -2558,7 +2553,7 @@ void apply_light(object_t *who, object_t *op)
                         if (QUERY_FLAG(tmp, FLAG_PERM_DAMNED))
                             SET_FLAG(tmp, FLAG_DAMNED);
 
-                        if (trigger_object_plugin_event(EVENT_APPLY, op, who, NULL, NULL, NULL, NULL, NULL, SCRIPT_FIX_ACTIVATOR, NULL))
+                        if (plugin_trigger_object_event(PLUGIN_EVENT_OBJECT_APPLY, op, who, NULL, NULL, 0, 0, 0))
                         {
                             OBJECT_UPDATE_UPD(who, UPD_FLAGS);
                             return;
@@ -2593,7 +2588,7 @@ void apply_light(object_t *who, object_t *op)
                 if (QUERY_FLAG(op, FLAG_PERM_DAMNED))
                     SET_FLAG(op, FLAG_DAMNED);
 
-                if (trigger_object_plugin_event(EVENT_APPLY, op, who, NULL, NULL, NULL, NULL, NULL, SCRIPT_FIX_ACTIVATOR, NULL))
+                if (plugin_trigger_object_event(PLUGIN_EVENT_OBJECT_APPLY, op, who, NULL, NULL, 0, 0, 0))
                 {
                     OBJECT_UPDATE_UPD(who, UPD_FLAGS);
                     return;
@@ -2638,4 +2633,99 @@ static void ApplyPowerCrystal(object_t *op, object_t *crystal)
     crystal->speed = (float) crystal->stats.sp / (float) crystal->stats.maxsp;
     update_ob_speed(crystal);
     OBJECT_UPDATE_UPD(crystal, UPD_ANIMSPEED);
+}
+
+static void ApplyAnvil(object_t *op, object_t *anv)
+{
+    object_t *nug;
+    object_t *item = NULL;
+    object_t *this, *next;
+    msp_t *msp;
+    char *anv_name;
+    char *item_name;
+#if 0
+    char *nug_name;
+#endif
+    uint8 repair_amt;
+    uint8 orig_quality;
+    char *amount;
+
+    if (op->type != PLAYER)
+    {
+        return;
+    }
+
+    anv_name = query_name(anv, op, ARTICLE_DEFINITE, 0);
+
+    if (anv->env)
+    {
+        ndi(NDI_UNIQUE, 0, op, "You can't use %s while it's in your inventory.", anv_name);
+        return;
+    }
+
+    msp = MSP_KNOWN(anv);
+
+    FOREACH_OBJECT_IN_MSP(this, msp, next)
+    {
+        if ((IS_ARMOR(this) || IS_WEAPON(this) || IS_ARROW(this) || IS_DEVICE(this)) &&
+            this->item_condition < 100)
+        {
+            item = this;
+            orig_quality = item->item_quality;
+            break;
+        }
+    }
+
+    if (!item)
+    {
+        ndi(NDI_UNIQUE, 0, op, "You need to place a damaged item on %s to repair it.", anv_name);
+        return;
+    }
+
+    item_name = query_name(item, op, ARTICLE_POSSESSIVE, 0);
+
+    if ((nug = find_marked_object(op)) == NULL)
+    {
+        ndi(NDI_UNIQUE, 0, op, "You need to ~M~ark a material with which to repair %s.", item_name);
+        return;
+    }
+
+#if 0
+    nug_name = query_name(nug, op, ARTICLE_POSSESSIVE, 0);
+
+    // Check the repair object is in the same material group as the item
+    if ((nug->material_real - 1) / 64 != (item->material_real - 1) / 64)
+    {
+        ndi(NDI_UNIQUE, 0, op, "%s is not the right material to repair %s.", nug_name, item_name);
+        return;
+    }
+#endif
+
+    repair_amt = RANDOM_ROLL((uint8)(0.5 * nug->item_quality), nug->item_quality);
+    material_repair_item(item, repair_amt);
+
+    // Negative food means infinite anvil. If food goes down to 0, destroy the anvil.
+    if (anv->stats.food > 0 && --anv->stats.food == 0)
+    {
+        ndi(NDI_UNIQUE, 0, op, "%s shatters as it repairs its last item.", query_name(anv, op, ARTICLE_DEFINITE, 0));
+        remove_ob(anv);
+    }
+
+    if (item->item_condition == 100)
+    {
+        amount = "fully";
+    }
+    else
+    {
+        amount = "partially";
+    }
+
+    decrease_ob_nr(nug, 1);
+    ndi(NDI_UNIQUE, 0, op, "You %s repaired %s.", amount, item_name);
+
+    // material_repair_item has a chance to permanently damage an item if its condition falls too low.
+    if (orig_quality != item->item_quality)
+    {
+        ndi(NDI_UNIQUE, 0, op, "But no matter how hard you try, %s doesn't feel quite like it used to.", item_name);
+    }
 }
