@@ -1322,10 +1322,6 @@ static void ApplyFood(object_t *op, object_t *tmp)
       force->stats.sp = tmp->stats.sp;
       force->stats.grace = tmp->stats.grace;
     }
-
-    force->stats.hp = tmp->stats.hp;
-    force->stats.sp = tmp->stats.sp;
-    force->stats.grace = tmp->stats.grace;
     force->speed = 0.125f;
 
     /* applying the food will put as in "rest mode" - but instead of rest regeneration we
