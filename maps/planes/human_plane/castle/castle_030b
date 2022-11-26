@@ -2,7 +2,7 @@ arch map
 name Guildhall Testarea
 msg
 Created:  2004-06-30 Daimonin Map Editor
-Modified: 2022-11-26 Karsten
+Modified: 2022-11-27 Karsten
 endmsg
 width 24
 height 24
@@ -890,7 +890,6 @@ y 14
 end
 arch chest_4.111
 name food chest
-slaying Find Fanrir's Lunch
 x 8
 y 14
 arch trap_bear_trap
@@ -909,7 +908,6 @@ y 15
 end
 arch chest_4.111
 name food chest
-slaying Find Fanrir's Lunch
 x 8
 y 15
 arch rune_slow
@@ -922,7 +920,6 @@ y 16
 end
 arch chest_4.111
 name food chest
-slaying Find Fanrir's Lunch
 x 8
 y 16
 arch rune_confusion
@@ -935,7 +932,6 @@ y 17
 end
 arch chest_4.111
 name food chest
-slaying Find Fanrir's Lunch
 x 8
 y 17
 arch rune_paralyze
@@ -2400,7 +2396,6 @@ y 3
 end
 arch chest_4.111
 name food chest
-slaying Find Fanrir's Lunch
 x 21
 y 3
 arch quest_trigger
