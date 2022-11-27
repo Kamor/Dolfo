@@ -70,10 +70,10 @@ static int MobACWC[MAXMOBLEVEL + 1] =
     35, 36, 36, 37, 37, 38, 38, 39, 39, 40, // 61-70
     40, 41, 41, 42, 42, 43, 43, 44, 44, 45, // 71-80
     45, 46, 46, 47, 47, 48, 48, 49, 49, 50, // 81-90
-    50, 51, 51, 52, 52, 53, 53, 54, 54, 55, // 91-100
-    55, 56, 56, 57, 57, 58, 58, 59, 60, 60, // 101-110
-    61, 61, 62, 62, 63, 63, 64, 64, 65, 66, // 111-120
-    67, 67, 68, 68, 69, 70, 70              // 121-127
+    51, 52, 53, 54, 55, 56, 57, 58, 59, 60, // 91-100
+    61, 62, 63, 64, 65, 66, 67, 68, 69, 70, // 101-110
+    71, 72, 73, 74, 75, 76, 77, 78, 79, 80, // 111-120
+    81, 82, 83, 84, 85, 86, 87              // 121-127
 };
 
 /* when we carry more as this of our weight_limit, we get encumbered. */
@@ -932,6 +932,12 @@ void fix_player(object_t *op)
     float               f;
     msp_t               *msp;
     uint32              opflags[NUM_FLAGS_32];
+    sint32 maxhp;
+    sint32 hp;
+    sint16 maxsp;
+    sint16 sp;
+    sint16 maxgrace;
+    sint16 grace;
 
     /*LOG(llevDebug,"FIX_PLAYER called (%s} %s\n", STRING_OBJ_NAME(op), QUERY_FLAG(op, FLAG_NO_FIX_PLAYER)?"IGNORED":"");*/
     if (QUERY_FLAG(op, FLAG_NO_FIX_PLAYER))
@@ -1008,8 +1014,9 @@ void fix_player(object_t *op)
     validate_skills(pl);
     pl->guild_force = pl->selected_weapon = pl->skill_weapon = NULL;
     pl->quest_one_drop = pl->quests_done = pl->quests_type_kill = pl->quests_type_normal = NULL;
-    pl->wc_bonus = pl->dam_bonus = pl->spell_fumble = pl->exp_bonus_amulet = pl->encumbrance = 0;
+    pl->wc_bonus = pl->dam_bonus = pl->spell_fumble = pl->exp_bonus = pl->encumbrance = 0;
     pl->set_skill_weapon = pl->set_skill_archery = NO_SKILL_READY;
+    pl->reserved_hp = pl->reserved_sp = pl->reserved_grace = 0;
     /* the default skill groups for non guild players */
     /* FIXME: We should just read the guild_force arch defaults here. */
     /* As this is a default, only give 50% of the exp that you would actually
@@ -1400,7 +1407,7 @@ void fix_player(object_t *op)
                     if(!set_player_equipment(pl, tmp, PLAYER_EQUIP_AMULET))
                         continue;
                   if(tmp->last_grace)
-                      pl->exp_bonus_amulet += tmp->last_grace;
+                      pl->exp_bonus += tmp->last_grace;
                   goto fix_player_no_armour;
 
                 case BRACERS:
@@ -1579,12 +1586,21 @@ void fix_player(object_t *op)
                             ac += (tmp->stats.ac + tmp->magic);
                         if (tmp->weapon_speed)
                             weapon_speed_mod += tmp->weapon_speed;
-                        if (tmp->stats.maxhp && tmp->type != TYPE_AGE_FORCE)
-                            op->stats.maxhp += tmp->stats.maxhp;
-                        if (tmp->stats.maxsp && tmp->type != TYPE_AGE_FORCE)
-                            op->stats.maxsp += tmp->stats.maxsp;
-                        if (tmp->stats.maxgrace && tmp->type != TYPE_AGE_FORCE)
-                            op->stats.maxgrace += tmp->stats.maxgrace;
+                        if (tmp->subtype == SUBTYPE_FORCE_RESERVATION)
+                        {
+                            pl->reserved_hp += tmp->stats.hp;
+                            pl->reserved_sp += tmp->stats.sp;
+                            pl->reserved_grace += tmp->stats.grace;
+                        }
+                        else
+                        {
+                            if (tmp->stats.maxhp && tmp->type != TYPE_AGE_FORCE)
+                                op->stats.maxhp += tmp->stats.maxhp;
+                            if (tmp->stats.maxsp && tmp->type != TYPE_AGE_FORCE)
+                                op->stats.maxsp += tmp->stats.maxsp;
+                            if (tmp->stats.maxgrace && tmp->type != TYPE_AGE_FORCE)
+                                op->stats.maxgrace += tmp->stats.maxgrace;
+                        }
                     }
                     goto fix_player_jump_resi;
 
@@ -1765,6 +1781,7 @@ void fix_player(object_t *op)
 
             /* the damage bonus of rings and stuff are added AFTER dmg adjustment! */
             f = (float) (pl->equipment[PLAYER_EQUIP_BOW]->item_condition) / 100.0f;
+            //f = (float)(pl->equipment[PLAYER_EQUIP_BOW]->item_quality) / 100.0f;
             pl->dist_dps = (int)((float)pl->dist_dps * f)+ pl->dam_bonus;
             if(pl->dist_dps < 0)
                 pl->dist_dps = 0;
@@ -1859,6 +1876,8 @@ void fix_player(object_t *op)
     else /* weapon in hand */
     {
         f = (float) (pl->equipment[PLAYER_EQUIP_WEAPON1]->item_condition) / 100.0f;
+        //f *= (float)(pl->equipment[PLAYER_EQUIP_WEAPON1]->item_quality) / 100.0f;
+
         /* ouch - weapon without the skill applied... */
         if (!pl->skill_ptr[pl->set_skill_weapon])
         {
@@ -1902,7 +1921,7 @@ void fix_player(object_t *op)
      * give us a sorted adding.
      * But the most important point is that we calc *here* and only here the equipment
      * quality modifier for players.
-     * Note, that for bows/arrows the calculation is done "one the fly" when the
+     * Note, that for bows/arrows the calculation is done "on the fly" when the
      * throw/fire object is created!
      */
     for (j = 0; j < PLAYER_EQUIP_MAX; j++)
@@ -1910,6 +1929,7 @@ void fix_player(object_t *op)
         if (pl->equipment[j])
         {
             tmp = pl->equipment[j];
+            //f = (float) tmp->item_quality / 100.0f * (float) tmp->item_condition / 100.0f;
             f = (float) tmp->item_condition / 100.0f;
 
             /* calculate resistance and attacks */
@@ -1994,6 +2014,8 @@ void fix_player(object_t *op)
      * -- _people_ 20160601
      */
     pl->weight_limit = op->weight_limit + 5000 * op->stats.Str - 10;
+    pl->gen_sp += MAX(op->stats.Int - 15, 0) / 2;
+    pl->gen_grace += MAX(op->stats.Cha - 15, 0) / 2;
 
     /* we calculate this: we get weight_limit - ENCUMBRANCE_LIMIT %. Thats around 35% of the
     * value ATM. Thats our base. Then we check how much of this last 35% we really carry. Thats
@@ -2019,68 +2041,67 @@ void fix_player(object_t *op)
     if(skill_level_max <1)
         skill_level_max=1;
     op->level = skill_level_max;
-    op->stats.maxhp += op->arch->clone.stats.maxhp + op->arch->clone.stats.maxhp; /* *3 is base */
 
-    for (i = 1; i <= op->level; i++)
-        op->stats.maxhp += pl->levhp[i];
+    /* These are base values for level 1s. */
+    maxhp = op->arch->clone.stats.maxhp * 3;
+    maxsp = op->arch->clone.stats.maxsp * 2 + 15;
+    maxgrace = op->arch->clone.stats.maxgrace * 2 + 15;
 
-    skill_level_drain = pl->skillgroup_ptr[SKILLGROUP_MAGIC]->level;
-    if(skill_level_drain > skill_level_max)
-        skill_level_drain = skill_level_max;
-    for (i = 1; i <= skill_level_drain; i++)
-        op->stats.maxsp += pl->levsp[i];
+    /* For each level up to our (drained) main we gain hp.
+     * For each level up to our magic skillgroup we gain mana.
+     * For each level up to our wisdom skillgroup we gain grace.
+     * Why start at 2? Simplicity. levhp[n], etc is only written by
+     * exp_adjust() on levelup and as levels start at 1, [1] is
+     * never written. Instead this is the base value above. */
+    for (i = 2; i <= pl->ob->level; i++)
+    {
+        maxhp += pl->levhp[i];
 
-    skill_level_drain = pl->skillgroup_ptr[SKILLGROUP_WISDOM]->level;
-    if(skill_level_drain > skill_level_max)
-        skill_level_drain = skill_level_max;
-    for (i = 1; i <= skill_level_drain; i++)
-        op->stats.maxgrace += pl->levgrace[i];
+        if (i <= pl->skillgroup_ptr[SKILLGROUP_MAGIC]->level)
+        {
+            maxsp += pl->levsp[i];
+        }
+
+        if (i <= pl->skillgroup_ptr[SKILLGROUP_WISDOM]->level)
+        {
+            maxgrace += pl->levgrace[i];
+        }
+    }
 
     /* now adjust with the % of the stats mali/boni. */
-    op->stats.maxhp = (int) ((float) op->stats.maxhp * stat_bonus[op->stats.Con]) + max_boni_hp;
-    op->stats.maxsp = (int) ((float) op->stats.maxsp * stat_bonus[op->stats.Pow]) + max_boni_sp;
-    op->stats.maxgrace = (int) ((float) op->stats.maxgrace * stat_bonus[op->stats.Wis]) + max_boni_grace;
-
-    if (op->stats.maxhp < 1)
-        op->stats.maxhp = 1;
-    if (op->stats.maxsp < 1)
-        op->stats.maxsp = 1;
-    if (op->stats.maxgrace < 1)
-        op->stats.maxgrace = 1;
+    maxhp = (sint32)((float)maxhp * stat_bonus[op->stats.Con]) + max_boni_hp;
+    maxhp -= pl->reserved_hp;
+    if (maxhp < 1)
+        maxhp = 1;
+    maxsp = (sint16)((float)maxsp * stat_bonus[op->stats.Pow]) + max_boni_sp;
+    maxsp -= pl->reserved_sp;
+    if (maxsp < 1)
+        maxsp = 1;
+    maxgrace = (sint16)((float)maxgrace * stat_bonus[op->stats.Wis]) + max_boni_grace;
+    maxgrace -= pl->reserved_grace;
+    if (maxgrace < 1)
+        maxgrace = 1;
 
     /* now we calculate the regeneration points we get every reg heart beat */
-    pl->reg_hp_num = (int) ((float)op->stats.maxhp* (float)pl->gen_hp / 1000.0f);
-    if(pl->reg_hp_num < 1)
+    pl->reg_hp_num = (int)((float)maxhp * (float)pl->gen_hp / 1000.0f);
+    if (pl->reg_hp_num < 1)
         pl->reg_hp_num = 1;
-    pl->reg_sp_num = (int) ((float)op->stats.maxsp * (float)pl->gen_sp / 1000.0f);
-    if(pl->reg_sp_num < 1)
+    pl->reg_sp_num = (int)((float)maxsp * (float)pl->gen_sp / 1000.0f);
+    if (pl->reg_sp_num < 1)
         pl->reg_sp_num = 1;
-    pl->reg_grace_num = (int) ((float)op->stats.maxgrace * (float)pl->gen_grace / 1000.0f);
-    if(pl->reg_grace_num < 1)
+    pl->reg_grace_num = (int)((float)maxgrace * (float)pl->gen_grace / 1000.0f);
+    if (pl->reg_grace_num < 1)
         pl->reg_grace_num = 1;
 
-    // LOG(llevDebug, "fix_player: REG(%s): hp:%d sp:%d grace:%d\n", STRING_OBJ_NAME(op),pl->reg_hp_num,pl->reg_sp_num,pl->reg_grace_num);
-
-    /* when this is set, this object comes fresh in game.
-     * we must adjust now hp,sp and grace with the max values.
-     * if hp/sp/grace == -1, then set it to max value.
-     * if it != 0, then leave it.
-     * in this form, we can put "hurt or wounded" objects to map.
-     */
-    if (op->stats.hp == -1)
-        op->stats.hp = op->stats.maxhp;
-    if (op->stats.sp == -1)
-        op->stats.sp = op->stats.maxsp;
-    if (op->stats.grace == -1)
-        op->stats.grace = op->stats.maxgrace;
-
-    /* cap the pools to <=max */
-    if (op->stats.hp > op->stats.maxhp)
-        op->stats.hp = op->stats.maxhp;
-    if (op->stats.sp > op->stats.maxsp)
-        op->stats.sp = op->stats.maxsp;
-    if (op->stats.grace > op->stats.maxgrace)
-        op->stats.grace = op->stats.maxgrace;
+    hp = op->stats.hp;
+    op->stats.maxhp = maxhp;
+    op->stats.hp = (hp >= 0 && hp <= maxhp) ? hp : maxhp;
+    sp = op->stats.sp;
+    op->stats.maxsp = maxsp;
+    op->stats.sp = (sp >= 0 && sp <= maxsp) ? sp : maxsp;
+    grace = op->stats.grace;
+    op->stats.maxgrace = maxgrace;
+    op->stats.grace = (grace >= 0 && grace <= maxgrace) ? grace : maxgrace;
 
     /* Calculate the spell fumble here because it is affected by int.
         read the above by temp_fumble to learn more.
@@ -2240,7 +2261,6 @@ void fix_monster(object_t *op)
     sint16    adjthacm;
     int wc_mali=0, ac_mali=0, snare_penalty=0, slow_penalty=0;
     object_t *base, *tmp, *next, *spawn_info=NULL, *bow=NULL, *wc_tmp;
-    float   tmp_add;
 
     if (op->head) /* don't adjust tails or player - only single objects or heads */
         return;
@@ -2272,7 +2292,7 @@ void fix_monster(object_t *op)
     FOREACH_OBJECT_IN_OBJECT(tmp, op, next)
     {
         /* handle forces */
-        if(tmp->type == FORCE)
+        if(tmp->type == FORCE && QUERY_FLAG(tmp, FLAG_APPLIED))
         {
             if(tmp->subtype == SUBTYPE_FORCE_FEAR)
             {
@@ -2340,7 +2360,7 @@ void fix_monster(object_t *op)
     }
 
     /* pre adjust */
-    op->stats.maxhp = (base->stats.maxhp * (op->level + 3) + (op->level / 2) * base->stats.maxhp) / 10;
+    op->stats.maxhp = (base->stats.maxhp * (op->level + 2) + (sint32)((float)(op->level) / 1.25f) * base->stats.maxhp) / 10 - 7;
     if(op->stats.maxhp <= 0)
         op->stats.maxhp = 1;
     op->stats.maxsp = base->stats.maxsp * (op->level + 1);
@@ -2453,33 +2473,8 @@ void fix_monster(object_t *op)
     }
 
     /* post adjust */
-    if ((tmp_add = LEVEL_DAMAGE(op->level / 3) - 0.75f) < 0)
-        tmp_add = 0;
-    op->stats.dam = (sint16)(((float)op->stats.dam *
-        ((LEVEL_DAMAGE(op->level) + tmp_add) *
-        (0.925f + 0.05f * ((float)op->level * 0.1f)))) * 0.1f);
+    op->stats.dam = (sint16)(op->stats.dam / 1800.0f * op->level * op->level) + 3;
 
-    /* this will add an special decrease in power to mobs from level 1 to 5 */
-    if(op->level <= 5)
-    {
-        /* this should range from 0.8xx to near 1.0 */
-        float d = 1.0f - ( (0.35f/5.0f) * (float)(6-op->level));
-
-        op->stats.dam = (int) ((float)op->stats.dam * d);
-        if(op->stats.dam < 1)
-            op->stats.dam = 1;
-
-        op->stats.maxhp = (int) ((float)op->stats.maxhp * d);
-        if(op->stats.maxhp < 1)
-            op->stats.maxhp = 1;
-
-        /* cap the pools to <=max */
-        if (op->stats.hp > op->stats.maxhp)
-            op->stats.hp = op->stats.maxhp;
-
-
-
-    }
     /* Set up AI in op->custom_attrset */
     if (!MOB_DATA(op))
     {

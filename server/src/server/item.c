@@ -1111,8 +1111,11 @@ char * describe_item(const object_t *const op)
                           * to dam AND wc - for dam it will be handled as 0.1 additional damage.
                           * For this items this is only the "base DPS"
                           */
+                          //if(op->type == WEAPON || op->type == ARROW || op->type == BOW)
+                          //    dps = (dps * (op->item_quality / 100.0f)) + op->magic;
+
                           if(op->type == WEAPON || op->type == ARROW || op->type == BOW)
-                              dps = (dps * (op->item_quality / 100.0f)) + op->magic;
+                              dps = dps + op->magic;
 
                           if(!dps_swing) /* not a bow or arrow then use weapon_speed as swing speed */
                               dps_swing = op->weapon_speed;
@@ -2006,3 +2009,21 @@ object_t *thing_drop_to_floor(object_t *who, object_t *what, uint32 nrof)
 
     return what;
 }
+
+// this is an experimental step to calculate condition in value and weight
+// we try first without sanity checks, lets ignore quality first
+// it would be better to calculate this only on condition changes and then calculate this on whole object
+// but for this, we always need the neutral item informations
+// so we need always 2 object definitions, max and current or we need always calc in realtime, whats better?
+int item_value(object_t *item)
+{
+  return 100.0f/item->item_condition*item->value;
+}
+int item_weight(object_t *item)
+{
+  return item->weight;
+  // what we do, when we have no item c
+
+  // return 100.0f/item->item_condition*item->weight;
+}
+
