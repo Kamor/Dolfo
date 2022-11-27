@@ -3,7 +3,7 @@ name Guild Hall
 msg
 Creator: Daimonin Map Editor
 Date:    7/16/2004
-Modified: 2022-01-05 Karsten
+Modified: 2022-11-21 Karsten
 endmsg
 width 24
 height 24
@@ -60,7 +60,10 @@ end
 arch wall_flagstone1b.111
 y 8
 end
-arch grassd_2
+arch floor_sand_w3
+y 9
+end
+arch plant8
 y 9
 end
 arch wmask_wanted
@@ -70,16 +73,16 @@ endmsg
 name proclamation
 y 9
 end
-arch floor_flagm1
+arch pathway_edge9
+y 9
+end
+arch floor_sand_w1
 y 10
 end
-arch grassd_m10
-y 10
-end
-arch floor_flagm1
+arch floor_sand_w3
 y 11
 end
-arch floor_flagm1
+arch floor_sand_w3
 y 12
 end
 arch statue_hero_b
@@ -88,7 +91,7 @@ end
 arch light1
 y 12
 end
-arch floor_flagm1
+arch floor_sand_w3
 y 13
 end
 arch statue_hero_c
@@ -97,13 +100,13 @@ end
 arch light1
 y 13
 end
-arch floor_flagm1
+arch floor_sand_w1
 y 14
 end
-arch grassd_m7
-y 14
+arch floor_sand_w3
+y 15
 end
-arch grassd_7
+arch pathway_edge16
 y 15
 end
 arch plant_mushroom3
@@ -189,7 +192,7 @@ arch wall_flagstone1b.111
 x 1
 y 8
 end
-arch grassd_2
+arch floor_sand_w3
 x 1
 y 9
 end
@@ -201,43 +204,39 @@ name proclamation
 x 1
 y 9
 end
-arch floor_flagm1
+arch pathway_edge9
+x 1
+y 9
+end
+arch floor_sand_w4
 x 1
 y 10
 end
-arch grassd_m10
-x 1
-y 10
-end
-arch floor_flagm1
+arch floor_sand_w4
 x 1
 y 11
 end
-arch grassd_m11
-x 1
-y 11
-end
-arch floor_flagm1
+arch floor_sand_w3
 x 1
 y 12
 end
-arch grassd_m8
+arch pathway_edge
 x 1
 y 12
 end
-arch floor_flagm1
+arch floor_sand_w3
 x 1
 y 13
 end
-arch grassd_m8
+arch pathway_edge8
 x 1
 y 13
 end
-arch floor_flagm1
+arch floor_sand_w3
 x 1
 y 14
 end
-arch grassd_m5
+arch pathway_edge15
 x 1
 y 14
 end
@@ -332,35 +331,27 @@ arch floor_sblack2
 x 2
 y 8
 end
-arch floor_flagm1
+arch floor_sand_w3
 x 2
 y 9
 end
-arch grass_fullmask1
+arch pathway_edge2
 x 2
 y 9
 end
-arch floor_flagm1
+arch floor_sand_w1
 x 2
 y 10
 end
-arch grassd_m13
-x 2
-y 10
-end
-arch floor_flagm1
+arch floor_sand_w3
 x 2
 y 11
 end
-arch grassd_m7
-x 2
-y 11
-end
-arch grassd_7
+arch floor_sand_w3
 x 2
 y 12
 end
-arch plant_flower1
+arch pathway_edge10
 x 2
 y 12
 end
@@ -453,10 +444,6 @@ face grate_door1.131
 x 3
 y 4
 end
-arch light1
-x 3
-y 4
-end
 arch floor_sblack1
 x 3
 y 5
@@ -498,11 +485,11 @@ arch wall_flagstone1.141
 x 3
 y 8
 end
-arch grassd_7
+arch floor_sand_w3
 x 3
 y 9
 end
-arch lantern2_magic.131
+arch pathway_edge14
 x 3
 y 9
 end
@@ -514,23 +501,23 @@ name proclamation
 x 3
 y 9
 end
-arch floor_flagm1
+arch lantern2_magic.131
+x 3
+y 9
+end
+arch floor_sand_w3
 x 3
 y 10
 end
-arch grassd_m10
-x 3
-y 10
-end
-arch floor_flagm1
+arch floor_sand_w3
 x 3
 y 11
 end
-arch grassd_m7
+arch floor_sand_w3
 x 3
-y 11
+y 12
 end
-arch grassd_2
+arch pathway_edge6
 x 3
 y 12
 end
@@ -650,11 +637,11 @@ level 8
 surrendered 1
 stand_still 1
 arch event_obj
-sub_type 6
+subtype 6
 race guildhall/frahak_spits.lua
 end
 arch event_obj
-sub_type 13
+subtype 13
 race guildhall/frahak.lua
 end
 end
@@ -667,7 +654,11 @@ arch wall_flagstone1.111
 x 4
 y 8
 end
-arch grassd_5
+arch floor_sand_w3
+x 4
+y 9
+end
+arch pathway_edge13
 x 4
 y 9
 end
@@ -681,6 +672,10 @@ direction 5
 x 4
 y 9
 end
+arch plant6
+x 4
+y 9
+end
 arch wmask_wanted
 msg
 Cell 4 -- NO VACANCY
@@ -691,28 +686,28 @@ name proclamation
 x 4
 y 9
 end
-arch floor_flagm1
+arch floor_sand_w3
 x 4
 y 10
 end
-arch grassd_m10
-x 4
-y 10
-end
-arch floor_flagm1
+arch floor_sand_w3
 x 4
 y 11
 end
-arch grassd_m7
+arch floor_sand_w3
 x 4
-y 11
+y 12
 end
-arch grassd_3
+arch pathway_edge10
 x 4
 y 12
 end
 arch lantern_magic.131
 direction 3
+x 4
+y 12
+end
+arch plant8
 x 4
 y 12
 end
@@ -724,23 +719,35 @@ arch grassd_6
 x 4
 y 14
 end
-arch grassd_3
+arch floor_sand_w3
 x 4
 y 15
 end
-arch plant1
+arch pathway_edge13
 x 4
 y 15
 end
-arch grassd_8
+arch floor_sand_w3
 x 4
 y 16
 end
-arch grassd_5
+arch pathway_edge11
+x 4
+y 16
+end
+arch floor_sand_w3
 x 4
 y 17
 end
-arch grassd_2
+arch pathway_edge7
+x 4
+y 17
+end
+arch floor_sand_w3
+x 4
+y 18
+end
+arch pathway_edge18
 x 4
 y 18
 end
@@ -866,79 +873,71 @@ arch wall_flagstone1_w.111
 x 5
 y 8
 end
-arch grassd_5
+arch floor_sand_w3
 x 5
 y 9
 end
-arch floor_flagm1
+arch pathway_edge9
+x 5
+y 9
+end
+arch plant_big1
+x 5
+y 9
+end
+arch floor_sand_w3
 x 5
 y 10
 end
-arch grassd_m10
-x 5
-y 10
-end
-arch floor_flagm1
+arch floor_sand_w1
 x 5
 y 11
 end
-arch grassd_m14
-x 5
-y 11
-end
-arch floor_flagm1
+arch floor_sand_w3
 x 5
 y 12
 end
-arch grassd_m9
+arch pathway_edge1
 x 5
 y 12
 end
-arch floor_flagm1
+arch floor_sand_w3
 x 5
 y 13
 end
-arch grassd_m9
+arch pathway_edge11
 x 5
 y 13
 end
-arch floor_flagm1
+arch floor_sand_w3
 x 5
 y 14
 end
-arch grassd_m9
+arch pathway_edge7
 x 5
 y 14
 end
-arch floor_flagm1
+arch floor_sand_w4
 x 5
 y 15
 end
-arch grassd_m9
+arch pathway_edge2
 x 5
 y 15
 end
-arch floor_flagm1
+arch floor_sand_w3
 x 5
 y 16
 end
-arch grassd_m9
-x 5
-y 16
-end
-arch floor_flagm1
+arch floor_sand_w1
 x 5
 y 17
 end
-arch grassd_m9
-x 5
-y 17
-end
-arch floor_flagm1
+arch floor_sand_w3
 x 5
 y 18
 end
-arch grassd_m3
+arch pathway_edge6
 x 5
 y 18
 end
@@ -1029,79 +1028,71 @@ arch wall_flagstone1b.141
 x 6
 y 8
 end
-arch grassd_3
+arch floor_sand_w3
 x 6
 y 9
 end
-arch floor_flagm1
+arch pathway_edge14
+x 6
+y 9
+end
+arch plant7
+x 6
+y 9
+end
+arch floor_sand_w3
 x 6
 y 10
 end
-arch grassd_m6
+arch pathway_edge4
 x 6
 y 10
 end
-arch floor_flagm1
+arch floor_sand_w3
 x 6
 y 11
 end
-arch grassd_m8
+arch pathway_edge8
 x 6
 y 11
 end
-arch floor_flagm1
+arch floor_sand_w3
 x 6
 y 12
 end
-arch grassd_m8
+arch pathway_edge4
 x 6
 y 12
 end
-arch floor_flagm1
+arch floor_sand_w3
 x 6
 y 13
 end
-arch grassd_m8
+arch pathway_edge8
 x 6
 y 13
 end
-arch floor_flagm1
+arch floor_sand_w1
 x 6
 y 14
 end
-arch grassd_m8
-x 6
-y 14
-end
-arch floor_flagm1
+arch floor_sand_w4
 x 6
 y 15
 end
-arch grassd_m8
-x 6
-y 15
-end
-arch floor_flagm1
+arch floor_sand_w3
 x 6
 y 16
 end
-arch grassd_m8
-x 6
-y 16
-end
-arch floor_flagm1
+arch floor_sand_w3
 x 6
 y 17
 end
-arch grassd_m12
-x 6
-y 17
-end
-arch floor_flagm1
+arch floor_sand_w3
 x 6
 y 18
 end
-arch grassd_m7
+arch pathway_edge10
 x 6
 y 18
 end
@@ -1136,7 +1127,7 @@ end
 arch water_still
 x 7
 end
-arch earth_m17
+arch water_edge12
 x 7
 end
 arch grassd_1
@@ -1207,7 +1198,11 @@ arch grassd_2
 x 7
 y 13
 end
-arch grassd_2
+arch floor_sand_w3
+x 7
+y 14
+end
+arch pathway_edge14
 x 7
 y 14
 end
@@ -1215,31 +1210,31 @@ arch plant_flower5
 x 7
 y 14
 end
-arch grassd_2
+arch floor_sand_w3
 x 7
 y 15
 end
-arch grassd_3
+arch pathway_edge4
+x 7
+y 15
+end
+arch floor_sand_w3
 x 7
 y 16
 end
-arch plant17
+arch pathway_edge3
 x 7
 y 16
 end
-arch floor_flagm1
+arch floor_sand_w1
 x 7
 y 17
 end
-arch grassd_m10
-x 7
-y 17
-end
-arch floor_flagm1
+arch floor_sand_w3
 x 7
 y 18
 end
-arch grassd_m7
+arch pathway_edge10
 x 7
 y 18
 end
@@ -1278,14 +1273,14 @@ end
 arch water_still
 x 8
 end
-arch earth_m6
+arch water_edge1
 x 8
 end
 arch water_still
 x 8
 y 1
 end
-arch earth_m17
+arch water_edge12
 x 8
 y 1
 end
@@ -1309,7 +1304,7 @@ arch grassd_7
 x 8
 y 5
 end
-arch wall_stone_8
+arch wall_stone_round_8
 x 8
 y 5
 end
@@ -1321,16 +1316,12 @@ arch grassd_2
 x 8
 y 6
 end
-arch wall_stone_3
+arch wall_stone_round1_3
 x 8
 y 6
 end
 arch wmask_bflag_fire1_1
 direction 7
-x 8
-y 6
-end
-arch light2
 x 8
 y 6
 end
@@ -1417,27 +1408,27 @@ arch grassd_1
 x 8
 y 15
 end
-arch wall_stone_3
+arch wall_stone_round2_3
 x 8
 y 15
 end
-arch grassd_4
+arch floor_sand_w3
 x 8
 y 16
 end
-arch floor_flagm1
+arch pathway_edge9
+x 8
+y 16
+end
+arch floor_sand_w1
 x 8
 y 17
 end
-arch grassd_m10
-x 8
-y 17
-end
-arch floor_flagm1
+arch floor_sand_w3
 x 8
 y 18
 end
-arch grassd_m7
+arch pathway_edge6
 x 8
 y 18
 end
@@ -1484,7 +1475,7 @@ arch water_still
 x 9
 y 1
 end
-arch earth_m6
+arch water_edge1
 x 9
 y 1
 end
@@ -1492,7 +1483,7 @@ arch water_still
 x 9
 y 2
 end
-arch earth_m17
+arch water_edge12
 x 9
 y 2
 end
@@ -1516,11 +1507,11 @@ arch grassd_5
 x 9
 y 5
 end
-arch wall_stone_4
+arch wall_stone_round4
 x 9
 y 5
 end
-arch floor_wood2_l1
+arch floor_flagstone1d
 x 9
 y 6
 end
@@ -1528,7 +1519,7 @@ arch table_poker2
 x 9
 y 6
 end
-arch floor_wood2_l1
+arch floor_flagstone1d
 x 9
 y 7
 end
@@ -1537,19 +1528,11 @@ name stool
 x 9
 y 7
 end
-arch light2
-x 9
-y 7
-end
-arch floor_wood2_l1
+arch floor_flagstone1d
 x 9
 y 8
 end
-arch floor_wood2_l1
-x 9
-y 9
-end
-arch light1
+arch floor_flagstone1d
 x 9
 y 9
 end
@@ -1560,11 +1543,11 @@ sp 7
 x 9
 y 9
 end
-arch floor_wood2_l1
+arch floor_flagstone1d
 x 9
 y 10
 end
-arch floor_wood2_l1
+arch floor_flagstone1d
 x 9
 y 11
 end
@@ -1573,11 +1556,7 @@ direction 7
 x 9
 y 11
 end
-arch light2
-x 9
-y 11
-end
-arch floor_wood2_l1
+arch floor_flagstone1d
 x 9
 y 12
 end
@@ -1585,7 +1564,7 @@ arch wall_stone_1
 x 9
 y 12
 end
-arch floor_wood2_l1
+arch floor_flagstone1d
 x 9
 y 13
 end
@@ -1601,35 +1580,35 @@ direction 7
 x 9
 y 13
 end
-arch floor_wood2_l1
+arch floor_flagstone1d
 x 9
 y 14
 end
-arch floor_wood2_l1
+arch grassd_5
 x 9
 y 15
 end
-arch wall_stone_1
+arch wall_stone_round3_1
 x 9
 y 15
 end
-arch grassd_8
+arch floor_sand_w3
 x 9
 y 16
 end
-arch floor_flagm1
+arch pathway_edge5
+x 9
+y 16
+end
+arch floor_sand_w3
 x 9
 y 17
 end
-arch grassd_m10
-x 9
-y 17
-end
-arch floor_flagm1
+arch floor_sand_w3
 x 9
 y 18
 end
-arch grassd_m7
+arch pathway_edge16
 x 9
 y 18
 end
@@ -1672,15 +1651,11 @@ arch water_still
 x 10
 y 1
 end
-arch earth_m5
-x 10
-y 1
-end
 arch water_still
 x 10
 y 2
 end
-arch earth_m20
+arch water_edge15
 x 10
 y 2
 end
@@ -1708,7 +1683,7 @@ arch wall_stone_1
 x 10
 y 5
 end
-arch floor_wood2_l1
+arch floor_flagstone1d
 x 10
 y 6
 end
@@ -1756,27 +1731,27 @@ amask book_dai_vol1
 no_pick 1
 end
 end
-arch floor_wood2_l1
+arch floor_flagstone1d
 x 10
 y 7
 end
-arch floor_wood2_l1
+arch floor_flagstone1d
 x 10
 y 8
 end
-arch floor_wood2_l1
+arch floor_flagstone1d
 x 10
 y 9
 end
-arch floor_wood2_l1
+arch floor_flagstone1d
 x 10
 y 10
 end
-arch floor_wood2_l1
+arch floor_flagstone1d
 x 10
 y 11
 end
-arch floor_wood2_l1
+arch floor_flagstone1d
 x 10
 y 12
 end
@@ -1788,19 +1763,15 @@ arch wmask_bflag_fire1_1
 x 10
 y 12
 end
-arch floor_wood2_l1
+arch floor_flagstone1d
 x 10
 y 13
 end
-arch floor_wood2_l1
+arch floor_flagstone1d
 x 10
 y 14
 end
-arch light2
-x 10
-y 14
-end
-arch floor_wood2_l1
+arch floor_flagstone1d
 x 10
 y 15
 end
@@ -1808,23 +1779,23 @@ arch wall_stone_w.111
 x 10
 y 15
 end
-arch grassd_4
+arch floor_sand_w3
 x 10
 y 16
 end
-arch floor_flagm1
+arch pathway_edge5
+x 10
+y 16
+end
+arch floor_sand_w3
 x 10
 y 17
 end
-arch grassd_m10
-x 10
-y 17
-end
-arch floor_flagm1
+arch floor_sand_w3
 x 10
 y 18
 end
-arch grassd_m7
+arch pathway_edge18
 x 10
 y 18
 end
@@ -1871,7 +1842,7 @@ arch water_still
 x 11
 y 1
 end
-arch earth_m15
+arch water_edge10
 x 11
 y 1
 end
@@ -1903,19 +1874,15 @@ arch wall_stone_w.111
 x 11
 y 5
 end
-arch floor_wood2_l1
+arch floor_flagstone1d
 x 11
 y 6
 end
-arch light2
-x 11
-y 6
-end
-arch floor_wood2_l1
+arch floor_flagstone1d
 x 11
 y 7
 end
-arch floor_wood2_l1
+arch floor_flagstone1d
 x 11
 y 8
 end
@@ -1923,11 +1890,15 @@ arch table_lab3.111
 x 11
 y 8
 end
-arch floor_wood2_l1
+arch floor_flagstone1d
 x 11
 y 9
 end
-arch floor_wood2_l1
+arch candlelight4.101
+x 11
+y 9
+end
+arch floor_flagstone1d
 x 11
 y 10
 end
@@ -1935,18 +1906,17 @@ arch spawn_point
 x 11
 y 10
 arch ranger
-name Guildmaster Cashin
-type 83
-title of the Mercenary Guild
+name Cashin
 level 100
+type 83
 arch event_obj
 name lua
-sub_type 13
+subtype 13
 race guildhall/cashin.lua
 end
 end
 end
-arch floor_wood2_l1
+arch floor_flagstone1d
 x 11
 y 11
 end
@@ -1954,7 +1924,7 @@ arch potted_plant1
 x 11
 y 11
 end
-arch floor_wood2_l1
+arch floor_flagstone1d
 x 11
 y 12
 end
@@ -1962,7 +1932,7 @@ arch wall_stone_1
 x 11
 y 12
 end
-arch floor_wood2_l1
+arch floor_flagstone1d
 x 11
 y 13
 end
@@ -1975,7 +1945,7 @@ direction 7
 x 11
 y 13
 end
-arch floor_wood2_l1
+arch floor_flagstone1d
 x 11
 y 14
 end
@@ -1988,31 +1958,35 @@ direction 7
 x 11
 y 14
 end
-arch floor_wood2_l1
+arch floor_flagstone1d
 x 11
 y 15
 end
-arch wall_stone_1
+arch wall_stone_4
 x 11
 y 15
 end
-arch grassd_2
+arch floor_sand_w3
 x 11
 y 16
 end
-arch floor_flagm1
+arch pathway_edge9
+x 11
+y 16
+end
+arch plant8
+x 11
+y 16
+end
+arch floor_sand_w3
 x 11
 y 17
 end
-arch grassd_m10
-x 11
-y 17
-end
-arch floor_flagm1
+arch floor_sand_w3
 x 11
 y 18
 end
-arch grassd_m7
+arch pathway_edge10
 x 11
 y 18
 end
@@ -2055,7 +2029,7 @@ arch water_still
 x 12
 y 1
 end
-arch earth_m11
+arch water_edge10
 x 12
 y 1
 end
@@ -2103,7 +2077,7 @@ arch wmask_bflag_fire1_1
 x 12
 y 5
 end
-arch floor_wood2_l1
+arch floor_flagstone1d
 x 12
 y 6
 end
@@ -2111,27 +2085,27 @@ arch chair2_111
 x 12
 y 6
 end
-arch floor_wood2_l1
+arch floor_flagstone1d
 x 12
 y 7
 end
-arch floor_wood2_l1
+arch floor_flagstone1d
 x 12
 y 8
 end
-arch floor_wood2_l1
+arch floor_flagstone1d
 x 12
 y 9
 end
-arch floor_wood2_l1
+arch floor_flagstone1d
 x 12
 y 10
 end
-arch floor_wood2_l1
+arch floor_flagstone1d
 x 12
 y 11
 end
-arch floor_wood2_l1
+arch floor_flagstone1d
 x 12
 y 12
 end
@@ -2139,7 +2113,7 @@ arch carpet1.151
 x 12
 y 12
 end
-arch floor_wood2_l1
+arch floor_flagstone1d
 x 12
 y 13
 end
@@ -2147,7 +2121,7 @@ arch carpet1
 x 12
 y 13
 end
-arch floor_wood2_l1
+arch floor_flagstone1d
 x 12
 y 14
 end
@@ -2155,11 +2129,7 @@ arch carpet1
 x 12
 y 14
 end
-arch light2
-x 12
-y 14
-end
-arch floor_wood2_l1
+arch floor_flagstone1d
 x 12
 y 15
 end
@@ -2167,7 +2137,11 @@ arch wall_stone_w.111
 x 12
 y 15
 end
-arch grassd_6
+arch floor_sand_w3
+x 12
+y 16
+end
+arch pathway_edge9
 x 12
 y 16
 end
@@ -2175,28 +2149,28 @@ arch plant10
 x 12
 y 16
 end
-arch floor_flagm1
+arch floor_sand_w3
 x 12
 y 17
 end
-arch grassd_m10
-x 12
-y 17
-end
-arch floor_flagm1
+arch floor_sand_w4
 x 12
 y 18
 end
-arch grassd_m7
+arch pathway_edge1
 x 12
 y 18
 end
-arch grassd_8
+arch floor_sand_w3
+x 12
+y 19
+end
+arch pathway_edge18
 x 12
 y 19
 end
 arch lantern_magic.131
-direction 1
+direction 3
 x 12
 y 19
 end
@@ -2235,7 +2209,7 @@ arch water_still
 x 13
 y 1
 end
-arch earth_m15
+arch water_edge10
 x 13
 y 1
 end
@@ -2251,7 +2225,7 @@ arch floor_ruin4
 x 13
 y 3
 end
-arch grassd_m7
+arch pathway_edge10
 x 13
 y 3
 end
@@ -2267,7 +2241,7 @@ arch wall_stone_w.111
 x 13
 y 5
 end
-arch floor_wood2_l1
+arch floor_flagstone1d
 x 13
 y 6
 end
@@ -2275,11 +2249,7 @@ arch table_lab2.111
 x 13
 y 6
 end
-arch light2
-x 13
-y 6
-end
-arch floor_wood2_l1
+arch floor_flagstone1d
 x 13
 y 7
 end
@@ -2287,35 +2257,27 @@ arch candlelight4.101
 x 13
 y 7
 end
-arch light2
-x 13
-y 7
-end
-arch floor_wood2_l1
+arch floor_flagstone1d
 x 13
 y 8
 end
-arch floor_wood2_l1
+arch floor_flagstone1d
 x 13
 y 9
 end
-arch light2
-x 13
-y 9
-end
-arch floor_wood2_l1
+arch floor_flagstone1d
 x 13
 y 10
 end
-arch floor_wood2_l1
+arch floor_flagstone1d
 x 13
 y 11
 end
-arch floor_wood2_l1
+arch floor_flagstone1d
 x 13
 y 12
 end
-arch floor_wood2_l1
+arch floor_flagstone1d
 x 13
 y 13
 end
@@ -2323,11 +2285,7 @@ arch carpet1.171
 x 13
 y 13
 end
-arch light2
-x 13
-y 13
-end
-arch floor_wood2_l1
+arch floor_flagstone1d
 x 13
 y 14
 end
@@ -2335,7 +2293,7 @@ arch carpet1.171
 x 13
 y 14
 end
-arch floor_wood2_l1
+arch floor_flagstone1d
 x 13
 y 15
 end
@@ -2343,27 +2301,35 @@ arch wall_stone_1
 x 13
 y 15
 end
-arch grassd_3
+arch warflag
+x 13
+y 15
+end
+arch floor_sand_w3
 x 13
 y 16
 end
-arch floor_flagm1
+arch pathway_edge9
+x 13
+y 16
+end
+arch plant13
+x 13
+y 16
+end
+arch floor_sand_w1
 x 13
 y 17
 end
-arch grassd_m10
-x 13
-y 17
-end
-arch floor_flagm1
+arch floor_sand_w3
 x 13
 y 18
 end
-arch grassd_m7
+arch floor_sand_w3
 x 13
-y 18
+y 19
 end
-arch grassd_7
+arch pathway_edge6
 x 13
 y 19
 end
@@ -2398,7 +2364,7 @@ arch water_still
 x 14
 y 1
 end
-arch earth_m11
+arch water_edge10
 x 14
 y 1
 end
@@ -2414,7 +2380,7 @@ arch floor_ruin1
 x 14
 y 3
 end
-arch grassd_m5
+arch pathway_edge16
 x 14
 y 3
 end
@@ -2435,9 +2401,11 @@ end
 arch sandals
 name Fanrir's Sandals
 no_pick 1
+identified 1
+is_named 1
 end
 end
-arch grassd_3
+arch grassd_4
 x 14
 y 4
 end
@@ -2445,19 +2413,19 @@ arch grassd_1
 x 14
 y 5
 end
-arch wall_stone_1
+arch wall_stone_round2_1
 x 14
 y 5
 end
-arch floor_wood2_l1
+arch floor_flagstone1d
 x 14
 y 6
 end
-arch wall_stone_3
+arch wall_stone_round3_3
 x 14
 y 6
 end
-arch floor_wood2_l1
+arch floor_flagstone1d
 x 14
 y 7
 end
@@ -2465,7 +2433,7 @@ arch wall_stone_w.131
 x 14
 y 7
 end
-arch floor_wood2_l1
+arch floor_flagstone1d
 x 14
 y 8
 end
@@ -2473,28 +2441,23 @@ arch wall_stone_3
 x 14
 y 8
 end
-arch floor_wood2_l1
+arch floor_flagstone1d
 x 14
 y 9
 end
-arch wall_stone_w.131
+arch wall_doorway_stone_right.d
 x 14
 y 9
 end
-arch floor_wood2_l1
+arch floor_flagstone1d
 x 14
 y 10
 end
-arch wall_stone_3
+arch light1
 x 14
 y 10
 end
-arch floor_wood2_l1
-x 14
-y 11
-end
-arch door_wood1
-direction 3
+arch floor_flagstone1d
 x 14
 y 11
 end
@@ -2502,28 +2465,19 @@ arch light1
 x 14
 y 11
 end
-arch floor_wood2_l1
+arch floor_flagstone1d
 x 14
 y 12
+end
+arch floor_flagstone1d
+x 14
+y 13
 end
 arch wall_stone_3
 x 14
-y 12
-end
-arch floor_wood2_l1
-x 14
 y 13
 end
-arch chair2_111
-direction 3
-x 14
-y 13
-end
-arch wall_stone_w.131
-x 14
-y 13
-end
-arch floor_wood2_l1
+arch floor_flagstone1d
 x 14
 y 14
 end
@@ -2531,35 +2485,44 @@ arch wall_stone_3
 x 14
 y 14
 end
-arch floor_wood2_l1
+arch warflag
+direction 6
+x 14
+y 14
+end
+arch grassd_5
 x 14
 y 15
 end
-arch wall_stone_4
+arch wall_stone_round4
 x 14
 y 15
 end
-arch grassd_3
+arch floor_sand_w3
 x 14
 y 16
 end
-arch floor_flagm1
+arch pathway_edge5
+x 14
+y 16
+end
+arch floor_sand_w3
 x 14
 y 17
 end
-arch grassd_m10
-x 14
-y 17
-end
-arch floor_flagm1
+arch floor_sand_w3
 x 14
 y 18
 end
-arch grassd_m7
+arch floor_sand_w3
 x 14
-y 18
+y 19
 end
-arch grassd_6
+arch pathway_edge10
+x 14
+y 19
+end
+arch plant6
 x 14
 y 19
 end
@@ -2586,14 +2549,11 @@ end
 arch water_still
 x 15
 end
-arch earth_m5
-x 15
-end
 arch water_still
 x 15
 y 1
 end
-arch earth_m20
+arch water_edge15
 x 15
 y 1
 end
@@ -2605,12 +2565,12 @@ arch spawn_point
 x 15
 y 2
 arch monk
-name Advisor Fanrir
-type 83
+name Fanrir
 level 15
+type 83
 arch event_obj
 name lua
-sub_type 13
+subtype 13
 race guildhall/fanrir.lua
 end
 end
@@ -2635,7 +2595,16 @@ arch plant12
 x 15
 y 5
 end
-arch grassd_7
+arch lantern_magic.131
+direction 3
+x 15
+y 5
+end
+arch floor_flagm1
+x 15
+y 6
+end
+arch pathway_edge13
 x 15
 y 6
 end
@@ -2643,15 +2612,23 @@ arch rows
 x 15
 y 6
 end
-arch grassd_7
+arch floor_sand_w1
 x 15
 y 7
 end
-arch plant9
+arch pathway_edge7
 x 15
 y 7
 end
-arch grassd_2
+arch plant22
+x 15
+y 7
+end
+arch floor_sand_w1
+x 15
+y 8
+end
+arch pathway_edge11
 x 15
 y 8
 end
@@ -2665,7 +2642,25 @@ direction 3
 x 15
 y 8
 end
-arch grassd_2
+arch torch_wall_1
+direction 5
+x 15
+y 8
+end
+arch floor_sand_w1
+no_pass 1
+x 15
+y 9
+end
+arch pathway_edge12
+x 15
+y 9
+end
+arch plant7
+x 15
+y 9
+end
+arch light1
 x 15
 y 9
 end
@@ -2683,77 +2678,125 @@ race guildhall/gimli.lua
 end
 end
 end
-arch grassd_3
+arch floor_flagstone1d
 x 15
 y 10
 end
-arch lantern2_magic.131
-direction 7
+arch doorway_stone_wide_right
 x 15
 y 10
 end
-arch floor_flagm1
+arch light1
+x 15
+y 10
+end
+arch sand_dm5
+x 15
+y 10
+end
+arch floor_flagstone1d
 x 15
 y 11
 end
-arch grass_fullmask2
+arch doorway_stone_wide_middle
 x 15
 y 11
 end
-arch grassd_7
+arch light1
+x 15
+y 11
+end
+arch sand_dm9
+x 15
+y 11
+end
+arch floor_flagstone1d
 x 15
 y 12
 end
-arch plant16
+arch doorway_stone_wide_left
 x 15
 y 12
 end
-arch lantern2_magic.131
-direction 7
+arch light1
 x 15
 y 12
 end
-arch grassd_3
+arch sand_dm5
+x 15
+y 12
+end
+arch floor_sand_w3
+no_pass 1
 x 15
 y 13
 end
-arch grassd_2
+arch pathway_edge11
+x 15
+y 13
+end
+arch plant6
+x 15
+y 13
+end
+arch light1
+x 15
+y 13
+end
+arch torch_wall_1
+direction 5
+x 15
+y 13
+end
+arch floor_sand_w3
 x 15
 y 14
 end
-arch grassd_4
+arch pathway_edge11
+x 15
+y 14
+end
+arch plant22
+x 15
+y 14
+end
+arch floor_sand_w3
 x 15
 y 15
 end
-arch plant_flower6
+arch pathway_edge12
 x 15
 y 15
 end
-arch grassd_2
+arch floor_sand_w3
 x 15
 y 16
 end
-arch floor_flagm1
+arch pathway_edge2
+x 15
+y 16
+end
+arch plant_big1
+x 15
+y 16
+end
+arch floor_sand_w1
 x 15
 y 17
 end
-arch grassd_m10
-x 15
-y 17
-end
-arch floor_flagm1
+arch floor_sand_w4
 x 15
 y 18
 end
-arch grassd_m7
-x 15
-y 18
-end
-arch grassd_4
+arch floor_sand_w3
 x 15
 y 19
 end
-arch plant_mushroom3
+arch pathway_edge10
+x 15
+y 19
+end
+arch plant8
 x 15
 y 19
 end
@@ -2777,170 +2820,125 @@ arch grassd_8
 x 15
 y 23
 end
-arch water_still
+arch bridge_wood_NS.101
 x 16
 end
-arch earth_m11
+arch bridge_wood_NS.131
 x 16
 end
-arch grassd_2
-x 16
-y 1
-end
-arch lantern_magic.131
+arch bridge_wood_NS.101
 x 16
 y 1
 end
-arch spawn_point
+arch bridge_wood_NS.161
 x 16
 y 1
-arch peasant
-name Stupir
-type 83
-arch event_obj
-sub_type 13
-name lua
-race guildhall/stupir.lua
 end
-end
-end
-arch floor_flagm1
+arch floor_sand_w3
 x 16
 y 2
 end
-arch grassd_m4
+arch pathway_edge11
 x 16
 y 2
 end
-arch floor_flagm1
+arch floor_sand_w1
 x 16
 y 3
 end
-arch grassd_m9
+arch pathway_edge7
 x 16
 y 3
 end
-arch floor_flagm1
+arch floor_sand_w1
 x 16
 y 4
 end
-arch grassd_m9
+arch pathway_edge11
 x 16
 y 4
 end
-arch floor_flagm1
+arch floor_sand_w1
 x 16
 y 5
 end
-arch grassd_m9
+arch pathway_edge7
 x 16
 y 5
 end
-arch floor_flagm1
+arch floor_sand_w1
 x 16
 y 6
 end
-arch grassd_m9
+arch pathway_edge2
 x 16
 y 6
 end
-arch floor_flagm1
+arch floor_sand_w1
 x 16
 y 7
 end
-arch grassd_m9
-x 16
-y 7
-end
-arch floor_flagm1
+arch floor_sand_w1
 x 16
 y 8
 end
-arch grassd_m9
-x 16
-y 8
-end
-arch floor_flagm1
+arch floor_sand_w1
 x 16
 y 9
 end
-arch grassd_m9
-x 16
-y 9
-end
-arch floor_flagm1
+arch floor_sand_w1
 x 16
 y 10
 end
-arch grassd_m9
+arch light1
 x 16
 y 10
 end
-arch floor_flagm1
+arch floor_sand_w3
 x 16
 y 11
 end
-arch grassd_m13
+arch light1
 x 16
 y 11
 end
-arch floor_flagm1
+arch floor_sand_w1
 x 16
 y 12
 end
-arch grassd_m9
-x 16
-y 12
-end
-arch floor_flagm1
+arch floor_sand_w1
 x 16
 y 13
 end
-arch grassd_m9
-x 16
-y 13
-end
-arch floor_flagm1
+arch floor_sand_w4
 x 16
 y 14
 end
-arch grassd_m9
-x 16
-y 14
-end
-arch floor_flagm1
+arch floor_sand_w3
 x 16
 y 15
 end
-arch grassd_m9
-x 16
-y 15
-end
-arch floor_flagm1
+arch floor_sand_w4
 x 16
 y 16
 end
-arch grassd_m9
-x 16
-y 16
-end
-arch floor_flagm1
+arch floor_sand_w3
 x 16
 y 17
 end
-arch floor_flagm1
+arch floor_sand_w3
 x 16
 y 18
 end
-arch grassd_m7
+arch pathway_edge
 x 16
 y 18
 end
-arch grassd_6
+arch floor_sand_w3
 x 16
 y 19
 end
-arch plant16
+arch pathway_edge15
 x 16
 y 19
 end
@@ -2968,150 +2966,130 @@ arch grassd_8
 x 16
 y 23
 end
-arch water_still
+arch bridge_wood_NS.101
 x 17
 end
-arch grassd_3
-x 17
-y 1
-end
-arch bridge_wood_EW.181
+arch bridge_wood_NS.101
 x 17
 y 1
 end
-arch floor_flagm1
+arch floor_sand_w1
 x 17
 y 2
 end
-arch bridge_wood_EW.171
-x 17
-y 2
-end
-arch floor_flagm1
+arch floor_sand_w1
 x 17
 y 3
 end
-arch grassd_m8
-x 17
-y 3
-end
-arch floor_flagm1
+arch floor_sand_w4
 x 17
 y 4
 end
-arch grassd_m8
-x 17
-y 4
-end
-arch floor_flagm1
+arch floor_sand_w1
 x 17
 y 5
 end
-arch grassd_m8
-x 17
-y 5
-end
-arch floor_flagm1
+arch floor_sand_w1
 x 17
 y 6
 end
-arch grassd_m8
+arch pathway_edge
 x 17
 y 6
 end
-arch floor_flagm1
+arch floor_sand_w4
 x 17
 y 7
 end
-arch grassd_m8
+arch pathway_edge8
 x 17
 y 7
 end
-arch floor_flagm1
+arch floor_sand_w3
 x 17
 y 8
 end
-arch grassd_m8
+arch pathway_edge4
 x 17
 y 8
 end
-arch floor_flagm1
+arch plant1
+x 17
+y 8
+end
+arch floor_sand_w1
 x 17
 y 9
 end
-arch grassd_m8
+arch pathway_edge4
 x 17
 y 9
 end
-arch floor_flagm1
+arch floor_sand_w3
 x 17
 y 10
 end
-arch grassd_m8
+arch pathway_edge3
 x 17
 y 10
 end
-arch floor_flagm1
+arch floor_sand_w4
 x 17
 y 11
 end
-arch grassd_m12
-x 17
-y 11
-end
-arch floor_flagm1
+arch floor_sand_w1
 x 17
 y 12
 end
-arch grassd_m11
+arch pathway_edge
 x 17
 y 12
 end
-arch floor_flagm1
+arch floor_sand_w1
 x 17
 y 13
 end
-arch grassd_m8
+arch pathway_edge4
 x 17
 y 13
 end
-arch floor_flagm1
+arch floor_sand_w3
 x 17
 y 14
 end
-arch grassd_m8
+arch pathway_edge4
 x 17
 y 14
 end
-arch floor_flagm1
+arch floor_sand_w3
 x 17
 y 15
 end
-arch grassd_m8
+arch pathway_edge8
 x 17
 y 15
 end
-arch floor_flagm1
+arch floor_sand_w3
 x 17
 y 16
 end
-arch grassd_m8
+arch pathway_edge4
 x 17
 y 16
 end
-arch floor_flagm1
+arch floor_sand_w1
 x 17
 y 17
 end
-arch grassd_m8
+arch pathway_edge8
 x 17
 y 17
 end
-arch floor_flagm1
+arch floor_sand_w3
 x 17
 y 18
 end
-arch grassd_m5
+arch pathway_edge16
 x 17
 y 18
 end
@@ -3147,61 +3125,54 @@ arch fwall_fstone2
 x 17
 y 23
 end
-arch water_still
+arch bridge_wood_NS.101
 x 18
 end
-arch bridge_wood_EW.111
-x 18
-y 1
-end
-arch spawn_point
+arch bridge_wood_NS.101
 x 18
 y 1
-arch ship_captain
-name Dolfo
-is_male 1
-is_female 0
-type 83
-arch event_obj
-subtype 13
-race guildhall/dolfo.lua
 end
-end
-end
-arch bridge_wood_EW.101
+arch floor_sand_w4
 x 18
 y 2
 end
-arch grassd_6
+arch pathway_edge4
+x 18
+y 2
+end
+arch floor_sand_w1
 x 18
 y 3
 end
-arch bridge_wood_EW.161
+arch pathway_edge4
 x 18
 y 3
 end
-arch grassd_5
+arch floor_sand_w3
 x 18
 y 4
 end
-arch grassd_2
+arch pathway_edge4
+x 18
+y 4
+end
+arch floor_sand_w3
 x 18
 y 5
 end
-arch plant_flower7
+arch pathway_edge4
 x 18
 y 5
 end
 arch lantern_magic.131
-direction 7
 x 18
 y 5
 end
-arch grassd_7
+arch floor_sand_w3
 x 18
 y 6
 end
-arch plant_flower2
+arch pathway_edge16
 x 18
 y 6
 end
@@ -3230,7 +3201,7 @@ sp 8
 x 18
 y 8
 arch event_obj
-sub_type 12
+subtype 12
 race guildhall/boxes_examine.lua
 end
 end
@@ -3244,11 +3215,19 @@ no_pass 0
 x 18
 y 9
 arch event_obj
-sub_type 12
+subtype 12
 race guildhall/boxes_examine.lua
 end
 end
-arch grassd_2
+arch floor_sand_w3
+x 18
+y 10
+end
+arch pathway_edge14
+x 18
+y 10
+end
+arch plant6
 x 18
 y 10
 end
@@ -3256,19 +3235,23 @@ arch lantern_magic.131
 x 18
 y 10
 end
-arch floor_flagm1
+arch floor_sand_w1
 x 18
 y 11
 end
-arch grassd_m10
+arch pathway_edge3
 x 18
 y 11
 end
-arch floor_flagm1
+arch floor_sand_w3
 x 18
 y 12
 end
-arch grassd_m7
+arch pathway_edge6
+x 18
+y 12
+end
+arch plant9
 x 18
 y 12
 end
@@ -3281,7 +3264,7 @@ no_pass 0
 x 18
 y 13
 arch event_obj
-sub_type 12
+subtype 12
 race guildhall/boxes_examine.lua
 end
 end
@@ -3294,20 +3277,20 @@ no_pass 0
 x 18
 y 14
 arch event_obj
-sub_type 12
+subtype 12
 race guildhall/boxes_examine.lua
 end
 end
-arch grassd_2
+arch grassd_3
 x 18
 y 15
 end
 arch lantern_magic.131
-direction 7
+direction 3
 x 18
 y 15
 end
-arch floor_sand_d4
+arch floor_earth1b
 x 18
 y 16
 end
@@ -3320,7 +3303,7 @@ direction 5
 x 18
 y 16
 end
-arch floor_sand_d1
+arch earth_brown3
 x 18
 y 17
 end
@@ -3334,7 +3317,6 @@ y 17
 end
 arch spawn_point
 last_grace 0
-last_heal 1
 x 18
 y 17
 arch golem
@@ -3388,7 +3370,7 @@ resist_snare 250
 face target.131
 end
 end
-arch floor_sand_d2
+arch floor_earth1a
 x 18
 y 18
 end
@@ -3433,14 +3415,25 @@ arch fwall_fstone2
 x 18
 y 23
 end
-arch water_still
+arch water_still_deepest
 x 19
 end
-arch bridge_wood_EW.101
+arch bridge_wood_NS.131
+x 19
+end
+arch water_still_deepest
 x 19
 y 1
 end
-arch bridge_wood_EW.101
+arch bridge_wood_NS.131
+x 19
+y 1
+end
+arch water_still
+x 19
+y 2
+end
+arch water_edge_earth7
 x 19
 y 2
 end
@@ -3448,7 +3441,7 @@ arch water_still
 x 19
 y 3
 end
-arch earth_m17
+arch water_edge12
 x 19
 y 3
 end
@@ -3468,11 +3461,19 @@ arch grassd_2
 x 19
 y 6
 end
+arch plant8
+x 19
+y 6
+end
 arch grassd_7
 x 19
 y 7
 end
 arch grassd_8
+x 19
+y 8
+end
+arch plant8
 x 19
 y 8
 end
@@ -3485,7 +3486,7 @@ no_pass 0
 x 19
 y 9
 arch event_obj
-sub_type 12
+subtype 12
 race guildhall/boxes_examine.lua
 end
 end
@@ -3493,23 +3494,23 @@ arch grassd_2
 x 19
 y 10
 end
-arch plant15
+arch plant13
 x 19
 y 10
 end
-arch floor_flagm1
+arch floor_sand_w4
 x 19
 y 11
 end
-arch grassd_m10
+arch pathway_edge9
 x 19
 y 11
 end
-arch floor_flagm1
+arch floor_sand_w1
 x 19
 y 12
 end
-arch grassd_m7
+arch pathway_edge10
 x 19
 y 12
 end
@@ -3521,11 +3522,15 @@ arch grassd_2
 x 19
 y 14
 end
-arch grassd_2
+arch plant8
+x 19
+y 14
+end
+arch grassd_4
 x 19
 y 15
 end
-arch floor_sand_d4
+arch earth_dark3
 x 19
 y 16
 end
@@ -3533,7 +3538,7 @@ arch grass_fullmask2
 x 19
 y 16
 end
-arch floor_sand_d4
+arch earth_brown4
 x 19
 y 17
 end
@@ -3541,7 +3546,7 @@ arch grass_fullmask2
 x 19
 y 17
 end
-arch floor_sand_d4
+arch earth_dark3
 x 19
 y 18
 end
@@ -3581,25 +3586,14 @@ arch fwall_fstone2
 x 19
 y 23
 end
-arch water_still_deep
+arch water_still
 x 20
 end
-arch water_still_fmask.103
-x 20
-end
-arch bridge_wood_EW.101
+arch water_still
 x 20
 y 1
 end
-arch light2
-x 20
-y 1
-end
-arch bridge_wood_EW.101
-x 20
-y 2
-end
-arch light2
+arch water_still
 x 20
 y 2
 end
@@ -3607,7 +3601,7 @@ arch water_still
 x 20
 y 3
 end
-arch earth_m11
+arch water_edge10
 x 20
 y 3
 end
@@ -3615,11 +3609,15 @@ arch grassd_2
 x 20
 y 4
 end
+arch plant_big1
+x 20
+y 4
+end
 arch grassd_5
 x 20
 y 5
 end
-arch grassd_2
+arch grassd_5
 x 20
 y 6
 end
@@ -3635,27 +3633,27 @@ arch grassd_5
 x 20
 y 9
 end
-arch plant1
-x 20
-y 9
-end
 arch grassd_7
 x 20
 y 10
 end
-arch floor_flagm1
+arch plant11
+x 20
+y 10
+end
+arch floor_sand_w3
 x 20
 y 11
 end
-arch grassd_m10
+arch pathway_edge5
 x 20
 y 11
 end
-arch floor_flagm1
+arch floor_sand_w3
 x 20
 y 12
 end
-arch grassd_m7
+arch pathway_edge6
 x 20
 y 12
 end
@@ -3668,7 +3666,7 @@ no_pass 0
 x 20
 y 13
 arch event_obj
-sub_type 12
+subtype 12
 race guildhall/boxes_examine.lua
 end
 end
@@ -3676,11 +3674,11 @@ arch grassd_1
 x 20
 y 14
 end
-arch grassd_2
+arch grassd_6
 x 20
 y 15
 end
-arch floor_sand_d4
+arch floor_earth1b
 x 20
 y 16
 end
@@ -3688,7 +3686,7 @@ arch grass_fullmask2
 x 20
 y 16
 end
-arch floor_sand_d4
+arch earth_brown2
 x 20
 y 17
 end
@@ -3696,7 +3694,7 @@ arch grass_fullmask2
 x 20
 y 17
 end
-arch floor_sand_d4
+arch earth_brown2
 x 20
 y 18
 end
@@ -3740,14 +3738,14 @@ arch fwall_fstone2
 x 20
 y 23
 end
-arch water_still_deep
+arch water_still
 x 21
 end
-arch bridge_wood_EW.101
+arch water_still
 x 21
 y 1
 end
-arch bridge_wood_EW.101
+arch water_still
 x 21
 y 2
 end
@@ -3755,15 +3753,11 @@ arch water_still
 x 21
 y 3
 end
-arch earth_m15
+arch water_edge6
 x 21
 y 3
 end
-arch grassd_3
-x 21
-y 4
-end
-arch plant17
+arch grassd_7
 x 21
 y 4
 end
@@ -3772,6 +3766,10 @@ x 21
 y 5
 end
 arch grassd_5
+x 21
+y 6
+end
+arch plant13
 x 21
 y 6
 end
@@ -3787,27 +3785,27 @@ arch grassd_8
 x 21
 y 9
 end
-arch grassd_4
+arch floor_flagm1
 x 21
 y 10
 end
-arch plant1
+arch pathway_edge13
 x 21
 y 10
 end
-arch floor_flagm1
+arch floor_sand_w1
 x 21
 y 11
 end
-arch grassd_m10
+arch pathway_edge2
 x 21
 y 11
 end
-arch floor_flagm1
+arch floor_sand_w3
 x 21
 y 12
 end
-arch grassd_m7
+arch pathway_edge10
 x 21
 y 12
 end
@@ -3820,7 +3818,7 @@ no_pass 0
 x 21
 y 13
 arch event_obj
-sub_type 12
+subtype 12
 race guildhall/boxes_examine.lua
 end
 end
@@ -3832,7 +3830,7 @@ arch grassd_8
 x 21
 y 15
 end
-arch floor_sand_d4
+arch earth_dark3
 x 21
 y 16
 end
@@ -3840,7 +3838,7 @@ arch grass_fullmask2
 x 21
 y 16
 end
-arch floor_sand_d4
+arch earth_brown2
 x 21
 y 17
 end
@@ -3848,7 +3846,7 @@ arch grass_fullmask2
 x 21
 y 17
 end
-arch floor_sand_d4
+arch floor_earth1b
 x 21
 y 18
 end
@@ -3888,17 +3886,10 @@ arch fwall_fstone2
 x 21
 y 23
 end
-arch water_still_deepest
+arch water_still
 x 22
 end
-arch water_still_deep_fmask.102
-x 22
-end
-arch water_still_deep
-x 22
-y 1
-end
-arch water_still_fmask.101
+arch water_still
 x 22
 y 1
 end
@@ -3906,7 +3897,7 @@ arch water_still
 x 22
 y 2
 end
-arch earth_m5
+arch water_edge
 x 22
 y 2
 end
@@ -3914,7 +3905,7 @@ arch water_still
 x 22
 y 3
 end
-arch earth_m20
+arch water_edge15
 x 22
 y 3
 end
@@ -3930,39 +3921,43 @@ arch grassd_1
 x 22
 y 6
 end
-arch grassd_2
+arch grassd_7
 x 22
 y 7
 end
-arch grassd_1
+arch grassd_5
 x 22
 y 8
 end
-arch grassd_5
+arch floor_sand_w3
 x 22
 y 9
 end
-arch grassd_3
+arch pathway_edge13
+x 22
+y 9
+end
+arch floor_sand_w1
 x 22
 y 10
 end
-arch plant_flower6
+arch pathway_edge2
 x 22
 y 10
 end
-arch floor_flagm1
+arch floor_sand_w4
 x 22
 y 11
 end
-arch grassd_m10
-x 22
-y 11
-end
-arch floor_flagm1
+arch floor_sand_w3
 x 22
 y 12
 end
-arch grassd_m7
+arch pathway_edge10
+x 22
+y 12
+end
+arch plant6
 x 22
 y 12
 end
@@ -3971,7 +3966,7 @@ x 22
 y 13
 end
 arch lantern_magic.131
-direction 1
+direction 3
 x 22
 y 13
 end
@@ -4035,7 +4030,7 @@ bow_attack_enemy
 endmsg
 end
 arch event_obj
-sub_type 13
+subtype 13
 race guildhall/gaffrey.lua
 end
 end
@@ -4085,17 +4080,10 @@ arch fwall_fstone2
 x 22
 y 23
 end
-arch water_still_deepest
+arch water_still
 x 23
 end
-arch water_still_deep_fmask.106
-x 23
-end
-arch water_still_deep
-x 23
-y 1
-end
-arch water_still_fmask.101
+arch water_still
 x 23
 y 1
 end
@@ -4103,11 +4091,11 @@ arch water_still
 x 23
 y 2
 end
-arch earth_m11
+arch water_edge10
 x 23
 y 2
 end
-arch grassd_2
+arch grassd_7
 x 23
 y 3
 end
@@ -4139,35 +4127,35 @@ arch grassd_7
 x 23
 y 8
 end
-arch grassd_7
+arch floor_sand_w3
 x 23
 y 9
 end
-arch plant1
+arch pathway_edge14
 x 23
 y 9
 end
-arch grassd_6
+arch floor_sand_w1
 x 23
 y 10
 end
-arch floor_flagm1
+arch floor_sand_w3
 x 23
 y 11
 end
-arch grassd_m10
-x 23
-y 11
-end
-arch floor_flagm1
+arch floor_sand_w1
 x 23
 y 12
 end
-arch grassd_m7
+arch pathway_edge6
 x 23
 y 12
 end
 arch grassd_3
+x 23
+y 13
+end
+arch plant8
 x 23
 y 13
 end
@@ -4176,6 +4164,10 @@ x 23
 y 14
 end
 arch plant13
+x 23
+y 14
+end
+arch plant8
 x 23
 y 14
 end
@@ -4195,7 +4187,7 @@ arch grassd_4
 x 23
 y 18
 end
-arch grassd_4
+arch grassd_3
 x 23
 y 19
 end
