@@ -17,8 +17,8 @@
 -- finish quest
 ---> finish quest, reward
 
-local pl        = event.activator
-local me        = event.me
+local pl = event.activator
+local me = event.me
 
 require("interface_builder")
 local ib = InterfaceBuilder()
@@ -31,25 +31,41 @@ local quest =
   {name = "Quest Example 1", type = game.QUEST_NORMAL},
   {name = "Quest Example 2", type = game.QUEST_ITEM},
   {name = "Quest Example 3", type = game.QUEST_KILL},
-  {name = "Quest Example 4", type = game.QUEST_KILLITEM}
+  {name = "Quest Example 4", type = game.QUEST_KILLITEM},
+  {name = "5 - Kill 2 red ants", type = game.QUEST_KILL},
+  {name = "6 - Kill 2 red ants, Chance 50%", type = game.QUEST_KILL},
+  {name = "7 - Kill red ant and black ant", type = game.QUEST_KILL},
+  {name = "8 - Get ant head and ant eye", type = game.QUEST_KILLITEM},
+  {name = "9 - Kill queen, get queen head", type = game.QUEST_KILLITEM}
 }
 -- you can assign more than 1 item to one quest? todo test this
 local quest_items =
 {
   {questnr=2, amount=1, type = "quest_object", icon = "coppercoin.101", name = "quest example copper coin"}
 }
--- you can assign more than 1 target to one quest? todo test this
+-- you can assign more than 1 target to one quest.
 local quest_targets =
 {
-  {questnr=3, amount=1, chance=1, arch="ant_red", name="Red Ant"},
-  {questnr=4, amount=1, chance=1, arch="ant_red", name="Red Ant", id=1}
+  {questnr=3, chance=1, amount=1, arch="ant_red", name="Red Ant"},
+  {questnr=4, chance=1, amount=1, arch="ant_red", name="Red Ant", id=1},
+  {questnr=5, chance=1, amount=2, arch="ant_red", name="Red Ant"},
+  {questnr=6, chance=2, amount=2, arch="ant_red", name="Red Ant"},
+  {questnr=7, chance=1, amount=1, arch="ant_red", name="Red Ant"},
+  {questnr=7, chance=1, amount=1, arch="ant_soldier", name="Black Ant"},
+  {questnr=8, chance=1, amount=1, arch="ant_red", name="Red Ant", id=2},
+  {questnr=8, chance=1, amount=1, arch="ant_soldier", name="Black Ant", id=3},
+  {questnr=9, chance=1, amount=1, arch="ant_queen", name="Ant Queen", id=4}
 }
--- you can assign more than 1 kill item to a target? todo test this
+-- you can assign 1 kill item to each target
 local quest_kill_items =
 {
-  {id=1, amount=1, type = "quest_object", icon = "head_ant_queen.101", name = "Ant Head"}
+  {id=1, amount=1, type = "quest_object", icon = "head_ant_queen.101", name = "Ant Head"},
+  {id=2, amount=1, type = "quest_object", icon = "head_ant_queen.101", name = "Ant Head"},
+  {id=3, amount=1, type = "quest_object", icon = "eye_beholder.101", name = "Ant Eye"},
+  {id=4, amount=1, type = "quest_object", icon = "head_ant_queen.101", name = "Ant Head"}
 }
 
+-- you can also define a description with a reward
 local function quest_description(questnr)
   if questnr == 1 then
     ib:SetDesc("Open the chest to the right.")
@@ -59,20 +75,21 @@ local function quest_description(questnr)
     ib:SetDesc("Kill one red ant.")
   elseif questnr == 4 then
     ib:SetDesc("Kill a red ant. Bring me it's head.")
+  elseif questnr == 5 then
+    ib:SetDesc("Kill two red ant.")
+  elseif questnr == 6 then
+    ib:SetDesc("Kill two red ant. You need also luck to get the kill.")
+  elseif questnr == 7 then
+    ib:SetDesc("Kill one red ant and one black ant.")
+  elseif questnr == 8 then
+    ib:SetDesc("Get red ant head and black ant eye.")
+  elseif questnr == 9 then
+    ib:SetDesc("Kill the queen. Bring me here head.",10,0,0,0)
   end
 end
 
 for i, x in quest do
   qb:AddQuest(x.name, x.type)
-end
-
-local function addQuestItem(questnr)
--- we want a check here for quest type? and what happens, when we put 2 items in here?
-  for i, x in quest_item do
-    if (x.questnr==questnr) then
-      qb:AddQuestItem(questnr, x.amount, x.type, x.icon, x.name)
-    end
-  end
 end
 
 local function RegisterQuest(questnr)
@@ -88,7 +105,7 @@ local function RegisterQuest(questnr)
   elseif quest[questnr].type == game.QUEST_KILL or quest[questnr].type == game.QUEST_KILLITEM then
     for i, x in quest_targets do
       if (x.questnr==questnr) then
-        local target=qb:AddQuestTarget(questnr, x.amount, x.chance, x.arch, x.name)
+        local target=qb:AddQuestTarget(questnr, x.chance, x.amount, x.arch, x.name)
         if (x.id ~= nil) then
           for j, y in quest_kill_items do
             if (x.id==y.id) then
@@ -108,11 +125,11 @@ local questnr = qb:Build(pl)
 -- but except this split, hello should build a sitelink topic to quest
 -- and should have shortcuts to fast except and fast finish quests.
 -- an optional dialog like "I have not finished your quest" is useless and not worth the work for the scripters.
--- also the check if player has lied or not, who cares. only useless blowing up code
+-- also the check if player has lied or not, who cares. Only useless blowing up code.
 local function topicDefault()
   ib:SetTitle("Hello")
   if questnr<1 then
-    ib:AddMsg("\nNo more quests.\n") -- questnr 0 is no more quest, questnr<0 is quests are somehow forbidden
+    ib:AddMsg("\nI have no more quests for you.\n") -- questnr 0 is no more quest, questnr<0 is quests are somehow forbidden
     return
   end
   ib:SetMsg("|^Quest^|\n\n\n") -- show quest topic in side menu
@@ -126,10 +143,10 @@ local function topicDefault()
       ib:AddMsg("- quest trigger QUEST_NORMAL\n")
       ib:AddMsg("- name = questname\n")
       ib:AddMsg("- quest step (last_heal) = 1\n")
-      ib:AddLink("Start Quest Example 1", "accept quest") -- shortcut to start the quest
+      ib:AddLink("Start Quest Example 1", "accept quest") -- shortcut start quest
     else
       ib:AddMsg("Have you opened the chest?")
-      ib:AddLink("Yes, i have.", "finish quest") -- shortcut to finish the quest, if player lies, this must be handled there
+      ib:AddLink("Yes, i have.", "finish quest") -- shortcut finish quest
     end
   end
 
@@ -142,10 +159,10 @@ local function topicDefault()
       ib:AddMsg("With quest trigger QUEST_ITEM\n")
       ib:AddMsg("With name = questname\n")
       ib:AddMsg("And quest step (last_heal) = 1\n")
-      ib:AddLink("Start Quest Example 2", "accept quest") -- shortcut to start the quest
+      ib:AddLink("Start Quest Example 2", "accept quest")
     else
       ib:AddMsg("Have you opened the chest?")
-      ib:AddLink("Yes, i have.", "finish quest") -- shortcut to finish the quest, if player lie, this must be handled there
+      ib:AddLink("Yes, i have.", "finish quest")
     end
   end
 
@@ -155,10 +172,10 @@ local function topicDefault()
       ib:AddMsg("Without a defined QuestTarget, this quest is always SOLVED when started.\n\n")
       ib:AddMsg("Triggered by killing the QuestTarget(s).\n")
       ib:AddMsg("This example is kill 1 red ant.\n")
-      ib:AddLink("Start Quest Example 3", "accept quest") -- shortcut to start the quest
+      ib:AddLink("Start Quest Example 3", "accept quest")
     else
       ib:AddMsg("Have you killed the ant?")
-      ib:AddLink("Yes, i have.", "finish quest") -- shortcut to finish the quest, if player lie, this must be handled there
+      ib:AddLink("Yes, i have.", "finish quest")
     end
   end
 
@@ -170,19 +187,30 @@ local function topicDefault()
       ib:AddMsg("With a defined QuestItem, this quest is nearly same to the KILL quest, except we get items on kill.\n\n")
       ib:AddMsg("Triggered by killing the target(s).\n")
       ib:AddMsg("This is kill one red ant, get their heat.\n\n")
-      ib:AddLink("Start Quest Example 4", "accept quest") -- shortcut to start the quest
+      ib:AddLink("Start Quest Example 4", "accept quest")
     else
       ib:AddMsg("Have you found a ant head?")
-      ib:AddLink("Yes, i have.", "finish quest") -- shortcut to finish the quest, if player lie, this must be handled there
+      ib:AddLink("Yes, i have.", "finish quest")
+    end
+  end
+
+  if questnr>4 then
+    if qstat == game.QSTAT_NO then
+      ib:AddMsg("Quest Example ".. questnr.."\n\n")
+      ib:AddLink("Start "..quest[questnr].name, "accept quest")
+    else
+      ib:AddMsg("Have you finished the quest?")
+      ib:AddLink("Finish "..quest[questnr].name, "finish quest")
     end
   end
 end
 
--- short quest logic to handle the quest from quest topic
+-- quest logic to handle the quest from quest topic
 -- with accept and finish quest logic and also shows quest description and status (qb:AddItemList)
 local function topicQuest()
   if questnr<1 then
     topicDefault()
+    return
   end
   local qstat = qb:GetStatus(questnr)
   ib:SetTitle(quest[questnr].name)
@@ -203,9 +231,11 @@ local function topicQuest()
   end
 end
 
+-- accept quest
 local function topicAcceptQuest()
   if questnr<1 then
     topicDefault()
+    return
   end
 
   local qstat = qb:GetStatus(questnr)
@@ -215,32 +245,28 @@ local function topicAcceptQuest()
   topicQuest()
 end
 
+-- finish quest todo, more dynamic, split unique parts from equal parts?
 local function topicFinishQuest()
-  if questnr==0 then
+  if questnr<1 then
     topicDefault()
+    return
   end
+		
   ib:SetTitle(quest[questnr].name)
+		local qstat = qb:GetStatus(questnr)
+  if qstat ~= game.QSTAT_SOLVED then
+    topicQuest()
+    return
+  end
+
+  --pl:Sound(0, 0, 2, 0) -- we have quest finish sound, we want also a second sound?
 
   if questnr==1 then
-    local qstat = qb:GetStatus(questnr)
-    if qstat ~= game.QSTAT_SOLVED then
-      ib:SetMsg("|^Quest^|\n\n\n")
-      ib:AddMsg("You need to open the chest first.\n")
-      return
-    end
-    pl:Sound(0, 0, 2, 0)
     ib:SetMsg("You finished quest example 1!")
     qb:Finish(questnr)
   end
 	
   if questnr==2 then
-    local qstat = qb:GetStatus(questnr)
-    if qstat ~= game.QSTAT_SOLVED then
-      ib:SetMsg("|^Quest^|\n\n\n")
-      ib:AddMsg("Bring me the quest example copper coin.\n")
-      return
-    end
-    pl:Sound(0, 0, 2, 0)
     ib:SetMsg("You finished quest example 2!\n")
     ib:SetMsg("You can keep the coin!\n")
     ib:SetCoins(1, 0, 0, 0)
@@ -249,13 +275,6 @@ local function topicFinishQuest()
   end
 	
   if questnr==3 then
-    local qstat = qb:GetStatus(questnr)
-    if qstat ~= game.QSTAT_SOLVED then
-      ib:SetMsg("|^Quest^|\n\n\n")
-      ib:AddMsg("Kill one red ant.\n")
-      return
-    end
-    pl:Sound(0, 0, 2, 0)
     ib:SetMsg("You finished quest example 3!\n")
     qb:Finish(questnr)
   end
@@ -263,14 +282,23 @@ local function topicFinishQuest()
   if questnr==4 then
     local qstat = qb:GetStatus(questnr)
     if qstat ~= game.QSTAT_SOLVED then
-      ib:SetMsg("|^Quest^|\n\n\n")
-      ib:AddMsg("Kill a red ant. Bring me it's head.\n")
-      return
+      topicQuest()
     end
-    pl:Sound(0, 0, 2, 0)
     ib:SetMsg("You finished quest example 4!\n")
     qb:Finish(questnr)
   end
+		
+  if questnr>4 then
+    ib:SetMsg("You finished quest example "..questnr..".\n\n"..quest[questnr].name.."!\n")
+    qb:Finish(questnr)
+  end
+		
+  if questnr==9 then
+		  ib:SetMsg("Here is your reward!\n")
+    ib:SetCoins(10, 0, 0, 0)
+    pl:AddMoneyEx(10,0,0,0)
+  end
+		
 end
 
 require("topic_list")
