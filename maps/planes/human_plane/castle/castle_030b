@@ -2067,9 +2067,23 @@ arch grassd_7
 x 17
 y 21
 end
+arch spawn_point
+x 17
+y 21
+arch ant_red
+type 83
+end
+end
 arch grassd_5
 x 17
 y 22
+end
+arch spawn_point
+x 17
+y 22
+arch ant_red
+type 83
+end
 end
 arch grassd_7
 x 17
@@ -2174,9 +2188,23 @@ arch grassd_7
 x 18
 y 21
 end
+arch spawn_point
+x 18
+y 21
+arch ant_red
+type 83
+end
+end
 arch grassd_7
 x 18
 y 22
+end
+arch spawn_point
+x 18
+y 22
+arch ant_red
+type 83
+end
 end
 arch grassd_5
 x 18
@@ -2261,9 +2289,23 @@ arch grassd_2
 x 19
 y 19
 end
+arch spawn_point
+x 19
+y 19
+arch ant_red
+type 83
+end
+end
 arch grassd_7
 x 19
 y 20
+end
+arch spawn_point
+x 19
+y 20
+arch ant_red
+type 83
+end
 end
 arch grassd_2
 x 19
@@ -2356,9 +2398,23 @@ arch grassd_8
 x 20
 y 19
 end
+arch spawn_point
+x 20
+y 19
+arch ant_red
+type 83
+end
+end
 arch grassd_5
 x 20
 y 20
+end
+arch spawn_point
+x 20
+y 20
+arch ant_red
+type 83
+end
 end
 arch grassd_4
 x 20
@@ -2371,13 +2427,24 @@ end
 arch spawn_point
 x 20
 y 22
-arch ant_red
+arch ant_soldier
+name Black Ant
+unaggressive 1
 type 83
 end
 end
 arch grassd_3
 x 20
 y 23
+end
+arch spawn_point
+x 20
+y 23
+arch ant_soldier
+name Black Ant
+unaggressive 1
+type 83
+end
 end
 arch grassd_3
 x 21
@@ -2464,9 +2531,23 @@ arch grassd_3
 x 21
 y 17
 end
+arch spawn_point
+x 21
+y 17
+arch ant_red
+type 83
+end
+end
 arch grassd_7
 x 21
 y 18
+end
+arch spawn_point
+x 21
+y 18
+arch ant_red
+type 83
+end
 end
 arch grassd_1
 x 21
@@ -2480,20 +2561,31 @@ arch grassd_7
 x 21
 y 21
 end
-arch spawn_point
-x 21
-y 21
-arch ant_red
-type 83
-end
-end
 arch grassd_1
 x 21
 y 22
 end
+arch spawn_point
+x 21
+y 22
+arch ant_soldier
+name Black Ant
+unaggressive 1
+type 83
+end
+end
 arch grassd_8
 x 21
 y 23
+end
+arch spawn_point
+x 21
+y 23
+arch ant_soldier
+name Black Ant
+unaggressive 1
+type 83
+end
 end
 arch grassd_6
 x 22
@@ -2566,9 +2658,23 @@ arch grassd_8
 x 22
 y 17
 end
+arch spawn_point
+x 22
+y 17
+arch ant_red
+type 83
+end
+end
 arch grassd_5
 x 22
 y 18
+end
+arch spawn_point
+x 22
+y 18
+arch ant_red
+type 83
+end
 end
 arch grassd_7
 x 22
@@ -2581,13 +2687,24 @@ end
 arch spawn_point
 x 22
 y 20
-arch ant_red
+arch ant_soldier
+name Black Ant
+unaggressive 1
 type 83
 end
 end
 arch grassd_1
 x 22
 y 21
+end
+arch spawn_point
+x 22
+y 21
+arch ant_soldier
+name Black Ant
+unaggressive 1
+type 83
+end
 end
 arch grassd_8
 x 22
@@ -2596,13 +2713,6 @@ end
 arch grassd_4
 x 22
 y 23
-end
-arch spawn_point
-x 22
-y 23
-arch ant_red
-type 83
-end
 end
 arch grassd_7
 x 23
@@ -2702,22 +2812,42 @@ arch grassd_4
 x 23
 y 20
 end
+arch spawn_point
+x 23
+y 20
+arch ant_soldier
+name Black Ant
+unaggressive 1
+type 83
+end
+end
 arch grassd_3
 x 23
 y 21
+end
+arch spawn_point
+x 23
+y 21
+arch ant_soldier
+name Black Ant
+unaggressive 1
+type 83
+end
 end
 arch grassd_5
 x 23
 y 22
 end
-arch spawn_point
-x 23
-y 22
-arch ant_red
-type 83
-end
-end
 arch grassd_2
 x 23
 y 23
+end
+arch spawn_point
+x 23
+y 23
+arch ant_queen
+level 2
+unaggressive 1
+type 83
+end
 end
