@@ -62,6 +62,11 @@ static float LevExp[MAXMOBLEVEL + 1] =
     375.20f, 375.26f,                            // 126-127
 };
 
+float getLevExp(int level)
+{
+  return LevExp[level];
+}
+
 // not used, todo build a exp gen function setting stats.exp without overwritten by fix_monster
 // think like we need to target the base arch object?
 int exp_level_adjust(object_t *op)
@@ -720,8 +725,8 @@ float calc_level_difference(int who_lvl, int op_lvl)
 // also do we need additional level, when we have who?
 int calc_skill_exp(object_t *who, object_t *op, float mod, int level, int *real)
 {
-  ndi(NDI_UNIQUE | NDI_RED, 0, who, "function : calc_skill_exp");
-	ndi(NDI_UNIQUE | NDI_BLUE, 0, who, "level = %d", level);
+  //ndi(NDI_UNIQUE | NDI_RED, 0, who, "function : calc_skill_exp");
+	//ndi(NDI_UNIQUE | NDI_BLUE, 0, who, "level = %d", level);
 
 	// we handle this overwrite logic first, no need to calculate all below, when we use this direct formula
 	if(real != NULL)
@@ -769,18 +774,18 @@ int calc_skill_exp(object_t *who, object_t *op, float mod, int level, int *real)
         // adjust exp by level and by server_exp_factor
         // this is not best place here, normaly should be done on spawn or on create spawn
         // also we have logic error here, when fix_monster reduces monster levels when drained
-        if (op_lvl>1) op_exp*=LevExp[op_lvl];
-        op_exp*=server_exp_factor;
+        // if (op_lvl>1) op_exp*=LevExp[op_lvl];
+        // op_exp*=server_exp_factor;
     }
 
     if (op_lvl < 1 || op_exp < 1)
         return 0; /* no exp for no level and no exp ;) */
 
     // ? logic misses a check for who_lvl=0
-	  ndi(NDI_UNIQUE | NDI_BLUE, 0, who, "who player lvl %d", who_lvl);
-	  ndi(NDI_UNIQUE | NDI_BLUE, 0, who, "op killed lvl %d", op_lvl);
-	  ndi(NDI_UNIQUE | NDI_BLUE, 0, who, "op->stats.exp %d", op->stats.exp);
-	  ndi(NDI_UNIQUE | NDI_BLUE, 0, who, "exp level and server adjust %d", op_exp);
+	  //ndi(NDI_UNIQUE | NDI_BLUE, 0, who, "who player lvl %d", who_lvl);
+	  //ndi(NDI_UNIQUE | NDI_BLUE, 0, who, "op killed lvl %d", op_lvl);
+	  //ndi(NDI_UNIQUE | NDI_BLUE, 0, who, "op->stats.exp %d", op->stats.exp);
+	  //ndi(NDI_UNIQUE | NDI_BLUE, 0, who, "exp level and server adjust %d", op_exp);
 
     /* we get first a global level difference mulitplicator */
     exp_mul = calc_level_difference(who_lvl, op_lvl);
