@@ -7,12 +7,14 @@ ib = InterfaceBuilder() -- we need this global ...
 -- these must be the correct arch names. we need this global ...
 for_sale =
 {
+	{arch = "small_shield"},
 	{arch = "shield_round"},
 	{arch = "shield"},
 	{arch = "gauntlets_leather"},
 	{arch = "gauntlets_spiked"},
-	{arch = "leather_cuirass"},
-	{arch = "ring_mail"}
+	{arch = "leather_spiked"},
+	{arch = "leather_studded"},
+	{arch = "leather_cuirass"}
 }
 
 local function topic_greeting()
