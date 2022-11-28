@@ -9,7 +9,7 @@ end
 
 function topic_shop()
 	ib:SetTitle("Shop")
-  ib:SetMsg("So, what do you want?")
+ ib:SetMsg("So, what do you want? You have " .. pl:ShowCost(pl:GetMoney(), game.COSTSTRING_SHORT) .. ".")
 	
 	for index, data in for_sale do
 	  local ob = game:CreateObject(data.arch, game.IDENTIFIED, 1)
