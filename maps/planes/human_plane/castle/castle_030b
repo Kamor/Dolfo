@@ -899,6 +899,11 @@ cha 2
 dam 2
 attack_cleave 10
 end
+arch quest_trigger
+subtype 3
+name Example 11
+last_heal 1
+end
 end
 arch grassd_8
 x 8
@@ -910,6 +915,11 @@ x 8
 y 15
 arch rune_slow
 cha 2
+end
+arch quest_trigger
+subtype 3
+name Example 11
+last_heal 2
 end
 end
 arch grassd_4
@@ -923,6 +933,11 @@ y 16
 arch rune_confusion
 cha 2
 end
+arch quest_trigger
+subtype 3
+name Example 11
+last_heal 3
+end
 end
 arch grassd_1
 x 8
@@ -934,6 +949,11 @@ x 8
 y 17
 arch rune_paralyze
 cha 2
+end
+arch quest_trigger
+subtype 3
+name Example
+last_heal 4
 end
 end
 arch grassd_8
@@ -2106,7 +2126,7 @@ arch spawn_point
 x 18
 y 3
 arch peasant
-name Quest Example
+name Questus
 type 83
 arch event_obj
 subtype 13
