@@ -2,7 +2,7 @@ arch map
 name Guildhall Testarea
 msg
 Created:  2004-06-30 Daimonin Map Editor
-Modified: 2022-11-27 Karsten
+Modified: 2022-11-29 Karsten
 endmsg
 width 24
 height 24
@@ -10,8 +10,6 @@ difficulty 1
 darkness -1
 outdoor 1
 tile_path_1 castle_030a
-tile_path_5 castle_040a
-tile_path_8 castle_020a
 background_music rainthunder.ogg
 end
 arch grassd_2
@@ -2467,11 +2465,11 @@ x 21
 y 3
 arch quest_trigger
 subtype 3
-name Quest Example 2
+name Example 2
 last_heal 1
 end
 arch quest_trigger
-name Quest Example 1
+name Example 1
 last_heal 1
 end
 end
