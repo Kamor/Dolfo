@@ -25,19 +25,22 @@ local ib = InterfaceBuilder()
 
 require("quest_builder")
 local qb = QuestBuilder()
--- quest name, type, level, skillgroup, ? , ?, 1, quest goal, ?
+-- quest name, type, level, skillgroup, ?required , ?finalstep, 1repeats, questGoal, questReward, silent
+-- questGoal can be a function, which is launched when quest is started (registered)
+---> we mostly do this automated here in relation to the arrays below
+-- questReward can be a function, which is launched when quest is finished
 local quest =
 {
   {name = "Example 1", type = game.QUEST_NORMAL},
   {name = "Example 2", type = game.QUEST_ITEM},
   {name = "Example 3", type = game.QUEST_KILL},
   {name = "Example 4", type = game.QUEST_KILLITEM},
-  {name = "5 - Kill 2 red ants", type = game.QUEST_KILL},
-  {name = "6 - Kill 2 red ants, Chance 50%", type = game.QUEST_KILL},
-  {name = "7 - Kill red ant and black ant", type = game.QUEST_KILL},
-  {name = "8 - Get ant head and ant eye", type = game.QUEST_KILLITEM},
-  {name = "9 - Kill queen, get queen head", type = game.QUEST_KILLITEM},
-  {name = "10 - Level Requirement", type = game.QUEST_KILLITEM, level=2}, -- can't say if lua checks also for drained levels?
+  {name = "Example 5", type = game.QUEST_KILL},
+  {name = "Example 6", type = game.QUEST_KILL},
+  {name = "Example 7", type = game.QUEST_KILL},
+  {name = "Example 8", type = game.QUEST_KILLITEM},
+  {name = "Example 9", type = game.QUEST_KILLITEM},
+  {name = "Example 10", type = game.QUEST_KILLITEM, level=5}, -- can't say if lua checks also for drained levels?
 		
   -- !using skillgroup restriction
   -- wonderful, questbuilder uses different constants for skillgroups
@@ -50,12 +53,17 @@ local quest =
   -- {"ITEM_SKILL_MAGIC",       SKILLGROUP_MAGIC + 1},
   -- {"ITEM_SKILL_WISDOM",      SKILLGROUP_WISDOM + 1},
   -- !if someone fix this mess in questbuilder in future, this must be fixed here to
-  {name = "11 - Level 2 Skill Quest", type = game.QUEST_NORMAL, level=2, skillgroup=game.SKILLGROUP_AGILITY+1} -- TODO
+  {name = "Example 11", type = game.QUEST_ITEM, level=2, skillgroup=game.SKILLGROUP_AGILITY+1}
 }
--- you can assign more than 1 item to one quest? todo test this
+-- you can assign more than 1 item to one quest
+-- todo how to split these items not to be found in same places, quest steps? repeats?
 local quest_items =
 {
-  {questnr=2, amount=1, type = "quest_object", icon = "coppercoin.101", name = "quest example copper coin"}
+  {questnr=2, amount=1, type = "quest_object", icon = "coppercoin.101", name = "quest example copper coin"},
+  {questnr=11, amount=1, type = "quest_object", icon = "book.101", name = "Questus' book"},
+  {questnr=11, amount=1, type = "quest_object", icon = "dagger.101", name = "Questus' dagger"},
+  {questnr=11, amount=1, type = "quest_object", icon = "shirt.101", name = "Questus' shirt"},
+  {questnr=11, amount=1, type = "quest_object", icon = "pants.101", name = "Questus' pants"}
 }
 
 -- you can assign more than 1 target to one quest.
@@ -82,7 +90,7 @@ local quest_kill_items =
   {id=5, amount=1, type = "quest_object", icon = "pudding_black.111", name = "Black Pudding"}
 }
 
--- descriptions
+-- descriptions todo is there a better way to handle quest descriptions?
 local function quest_description(questnr)
   if questnr == 1 then
     ib:SetDesc("Open the chest to the right.")
@@ -93,19 +101,46 @@ local function quest_description(questnr)
   elseif questnr == 4 then
     ib:SetDesc("Kill a red ant. Bring me it's head.")
   elseif questnr == 5 then
-    ib:SetDesc("Kill two red ant.")
+    ib:SetDesc("Kill two red ants.")
   elseif questnr == 6 then
-    ib:SetDesc("Kill two red ant. You need also luck to get the kill.")
+    ib:SetDesc("Kill two red ants. You need also luck to get the kill (50%).")
   elseif questnr == 7 then
     ib:SetDesc("Kill one red ant and one black ant.")
   elseif questnr == 8 then
-    ib:SetDesc("Get red ant head and black ant eye.")
+    ib:SetDesc("Kill one red ant and one black ant. Get red ant head and black ant eye.")
   elseif questnr == 9 then
     -- you can also define a description with a reward
-    ib:SetDesc("Kill the queen. Bring me here head.",10,0,0,0)
+    ib:SetDesc("Kill the queen. Bring me her head.",10,0,0,0)
   elseif questnr == 10 then
     ib:SetDesc("Kill the shivering black pudding under guildhall. Search behind a secret wall, between these slugs and goblins. Bring me some pudding.")
+  elseif questnr == 11 then
+    ib:SetDesc("Bring Questus his shirt, pant, dagger and book from the chests to the left. Carefully they are trapped.")
   end
+end
+
+-- quest rewards
+local function quest_reward(questnr)
+  if questnr==2 then
+    ib:AddMsg("You can keep the coin!\n")
+    ib:SetCoins(1, 0, 0, 0)
+    pl:AddMoneyEx(1, 0, 0, 0)
+  end
+		
+  if questnr==9 then
+    ib:AddMsg("Here is your reward!\n")
+    ib:SetCoins(10, 0, 0, 0)
+    pl:AddMoneyEx(10, 0, 0, 0)
+  end
+		
+  if questnr==10 then
+    ib:AddMsg("Here is your reward! Don't ask me what is in these cookies. He smiles.\n")
+    ib:AddIcon("Cookies", "cookie01.101", "|** Delicious cookies with a secret special ingredient**|", 5)
+    local ob = game:CreateObject("cookie", game.IDENTIFIED, 5)
+    if (ob~=nil) then
+      pl:PickUp(ob, nil, 5)
+    end
+  end
+
 end
 
 -- add the quests
@@ -206,12 +241,56 @@ local function topicDefault()
     end
   end
 		
+  if questnr==5 then
+    if qstat == game.QSTAT_NO then
+      ib:AddMsg("Kill two read ants.\n\n")
+    end
+  end
+		
+  if questnr==6 then
+    if qstat == game.QSTAT_NO then
+      ib:AddMsg("Kill two read ants.\n\nYou need also luck to get the kill. In this example 50%.\n\n")
+      ib:AddMsg("This would make more sense on QUEST_KILLITEM quests, but also work on QUEST_KILL quests.\n\n")
+    end
+  end
+		
+  if questnr==7 then
+    if qstat == game.QSTAT_NO then
+      ib:AddMsg("Kill one red ant and one black ant.\n\n")
+    end
+  end
+		
+  if questnr==8 then
+    if qstat == game.QSTAT_NO then
+      ib:AddMsg("Kill one red ant and one black ant.\n\nGet red ant head and black ant eye.\n\n")
+    end
+  end
+		
+  if questnr==9 then
+    if qstat == game.QSTAT_NO then
+      ib:AddMsg("Kill the queen. Bring me here head.\n\n")
+      ib:AddMsg("If you do this, I give you some coppers.\n\n")
+      -- ib:SetCoins(10, 0, 0, 0) -- looks ugly, with a text link behind, to close
+      -- we show the coopers, when player is accepting quest and he can also look in quest list
+    end
+  end
+		
   if questnr==10 then
     if qstat == game.QSTAT_NO then
-      ib:AddMsg("Quest Example 10 - Level Restriction\n\n")
       ib:AddMsg("Oh yeah, you look strong enough to help me.\n\n")
       ib:AddMsg("Under guildhall between all these slugs and gobs, there is a hidden area, with a black pudding.\n\n")
       ib:AddMsg("Find the pudding, kill it and bring it to me.\n\n")
+      ib:AddMsg("|This example is restricted to at least level 5 in main level.|\n\n")
+    end
+  end
+		
+  if questnr==11 then
+    if qstat == game.QSTAT_NO then
+      ib:AddMsg("Can you bring me my shirt, pant, dagger and book?\n\n")
+      ib:AddMsg("They are in these chests left of us.\n\n")
+      ib:AddMsg("But someone is trolling and trapped these chests.\n\n")
+      ib:AddMsg("Perhaps you ask Frah'ak in jail for some trap training?\n\n")
+      ib:AddMsg("|This example is restricted to at least level 2 in agility.|\n\n")
     end
   end
 
@@ -229,7 +308,6 @@ local function topicQuest()
   if questnr<0 then
     questnr=math.abs(questnr)
     ib:SetTitle("Quest "..quest[questnr].name)
-    ib:AddMsg("\nQuestnr "..questnr..".\n")
     ib:AddMsg("\nYou need level "..quest[questnr].level)
     if quest[questnr].skillgroup~=nil then
 						
@@ -259,7 +337,7 @@ local function topicQuest()
         ib:AddMsg(" in skillgroup (questbuilder) ".. sg)
       end
     end
-    ib:AddMsg(" for my next quest.\n")
+    ib:AddMsg(" for this quest.\n")
     return
   end
   if questnr==0 then
@@ -299,7 +377,7 @@ local function topicAcceptQuest()
   topicQuest()
 end
 
--- finish quest todo, more dynamic, split unique parts from equal parts?
+-- finish quest
 local function topicFinishQuest()
   if questnr<1 then
     topicDefault()
@@ -314,31 +392,11 @@ local function topicFinishQuest()
 
   ib:SetTitle("Quest "..quest[questnr].name)
   --pl:Sound(0, 0, 2, 0) -- we have quest finish sound, we want also a second sound?
-  --ib:SetMsg("You finished quest example "..questnr..".\n\n"..quest[questnr].name.."!\n")
-  ib:SetMsg("You finished the quest.")
+  ib:SetMsg("You finished the quest.\n\n")
   qb:Finish(questnr)
-
-  if questnr==2 then
-    ib:AddMsg("You can keep the coin!\n")
-    ib:SetCoins(1, 0, 0, 0)
-    pl:AddMoneyEx(1,0,0,0)
-  end
-		
-  if questnr==9 then
-    ib:AddMsg("Here is your reward!\n")
-    ib:SetCoins(10, 0, 0, 0)
-    pl:AddMoneyEx(10,0,0,0)
-  end
-		
-  if questnr==10 then
-    ib:AddMsg("Here is your reward! Don't ask me what is in these cookies. He smiles.\n")
-    ib:AddIcon("Cookies", "cookie01.101", "|** Delicious cookies with a secret special ingredient**|", 5)
-    local ob = game:CreateObject("cookie", game.IDENTIFIED, 5)
-    if (ob~=nil) then
-      pl:PickUp(ob,nil,5)
-    end
-  end
-		
+  -- TODO we want always jump to reward or only when its defined in our arrays?
+  -- we can also do the jump from here or by questbuilder?
+		quest_reward(questnr)
 end
 
 require("topic_list")
