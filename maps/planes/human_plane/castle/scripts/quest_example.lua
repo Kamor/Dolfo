@@ -28,10 +28,10 @@ local qb = QuestBuilder()
 -- quest name, type, level, skillgroup, ? , ?, 1, quest goal, ?
 local quest =
 {
-  {name = "Quest Example 1", type = game.QUEST_NORMAL},
-  {name = "Quest Example 2", type = game.QUEST_ITEM},
-  {name = "Quest Example 3", type = game.QUEST_KILL},
-  {name = "Quest Example 4", type = game.QUEST_KILLITEM},
+  {name = "Example 1", type = game.QUEST_NORMAL},
+  {name = "Example 2", type = game.QUEST_ITEM},
+  {name = "Example 3", type = game.QUEST_KILL},
+  {name = "Example 4", type = game.QUEST_KILLITEM},
   {name = "5 - Kill 2 red ants", type = game.QUEST_KILL},
   {name = "6 - Kill 2 red ants, Chance 50%", type = game.QUEST_KILL},
   {name = "7 - Kill red ant and black ant", type = game.QUEST_KILL},
@@ -161,63 +161,48 @@ local function topicDefault()
   end
   ib:SetMsg("|^Quest^|\n\n\n") -- show quest topic in side menu
   ib:SetLHSButton("Quest")
+  ib:AddMsg("|Quest "..quest[questnr].name.."|\n\n")
 
   local qstat = qb:GetStatus(questnr)
   if questnr==1 then
     if qstat == game.QSTAT_NO then
-      ib:AddMsg("Quest Example 1 - Open a chest - game.QUEST_NORMAL\n\n")
+      ib:AddMsg("Open a chest - game.QUEST_NORMAL\n\n")
       ib:AddMsg("Triggered by this near chest:\n")
       ib:AddMsg("- quest trigger QUEST_NORMAL\n")
       ib:AddMsg("- name = questname\n")
       ib:AddMsg("- quest step (last_heal) = 1\n")
-      ib:AddLink("Start Quest Example 1", "accept quest") -- shortcut start quest
-    else
-      ib:AddMsg("Have you opened the chest?")
-      ib:AddLink("Yes, i have.", "finish quest") -- shortcut finish quest
     end
   end
 
   if questnr==2 then
     if qstat == game.QSTAT_NO then
-      ib:AddMsg("Quest Example 2 - Open a chest - game.QUEST_ITEM\n\n")
-      ib:AddMsg("Without a defined quest item, this quest is always SOLVED when started.")
-      ib:AddMsg(" With a defined quest item, this quest is nearly same to first example, except we get a quest item.\n\n")
+      ib:AddMsg("Open a chest - game.QUEST_ITEM\n\n")
+      ib:AddMsg("Without a defined quest item, this quest is always SOLVED when started.\n\n")
+      ib:AddMsg("With a defined quest item, this quest is nearly same to first example, except we get a quest item.\n\n")
       ib:AddMsg("Triggered by this near chest:\n")
       ib:AddMsg("With quest trigger QUEST_ITEM\n")
       ib:AddMsg("With name = questname\n")
       ib:AddMsg("And quest step (last_heal) = 1\n")
-      ib:AddLink("Start Quest Example 2", "accept quest")
-    else
-      ib:AddMsg("Have you opened the chest?")
-      ib:AddLink("Yes, i have.", "finish quest")
     end
   end
 
   if questnr==3 then
     if qstat == game.QSTAT_NO then
-      ib:AddMsg("Quest Example 3 - Kill red ant - game.QUEST_KILL\n\n")
+      ib:AddMsg("Kill red ant - game.QUEST_KILL\n\n")
       ib:AddMsg("Without a defined QuestTarget, this quest is always SOLVED when started.\n\n")
       ib:AddMsg("Triggered by killing the QuestTarget(s).\n")
       ib:AddMsg("This example is kill 1 red ant.\n")
-      ib:AddLink("Start Quest Example 3", "accept quest")
-    else
-      ib:AddMsg("Have you killed the ant?")
-      ib:AddLink("Yes, i have.", "finish quest")
     end
   end
 
   if questnr==4 then
     if qstat == game.QSTAT_NO then
-      ib:AddMsg("Quest Example 4 - Kill read ant - game.QUEST_KILLITEM\n\n")
+      ib:AddMsg("Kill read ant - game.QUEST_KILLITEM\n\n")
       ib:AddMsg("Without a defined QuestTarget, this quest is always SOLVED when started.\n\n")
       ib:AddMsg("Without a defined QuestItem, this quest is always SOLVED when started.\n\n")
       ib:AddMsg("With a defined QuestItem, this quest is nearly same to the KILL quest, except we get items on kill.\n\n")
-      ib:AddMsg("Triggered by killing the target(s).\n")
+      ib:AddMsg("Triggered by killing the target(s).\n\n")
       ib:AddMsg("This is kill one red ant, get it's heat.\n\n")
-      ib:AddLink("Start Quest Example 4", "accept quest")
-    else
-      ib:AddMsg("Have you found a ant head?")
-      ib:AddLink("Yes, i have.", "finish quest")
     end
   end
 		
@@ -229,16 +214,12 @@ local function topicDefault()
       ib:AddMsg("Find the pudding, kill it and bring it to me.\n\n")
     end
   end
-		
 
-  if questnr>4 then
-    if qstat == game.QSTAT_NO then
-      ib:AddMsg("Quest Example ".. questnr.."\n\n")
-      ib:AddLink("Start "..quest[questnr].name, "accept quest")
-    else
-      ib:AddMsg("Have you finished the quest?")
-      ib:AddLink("Finish "..quest[questnr].name, "finish quest")
-    end
+  -- shortcut links to start and finish a quest
+  if qstat == game.QSTAT_NO then
+    ib:AddLink("Start quest "..quest[questnr].name, "accept quest")
+  else
+    ib:AddLink("Finish quest "..quest[questnr].name, "finish quest")
   end
 end
 
@@ -247,9 +228,9 @@ end
 local function topicQuest()
   if questnr<0 then
     questnr=math.abs(questnr)
-    ib:SetTitle(quest[questnr].name)
+    ib:SetTitle("Quest "..quest[questnr].name)
     ib:AddMsg("\nQuestnr "..questnr..".\n")
-    ib:AddMsg("\nYou need level " .. quest[questnr].level)
+    ib:AddMsg("\nYou need level "..quest[questnr].level)
     if quest[questnr].skillgroup~=nil then
 						
       -- {"ITEM_SKILL_NO",          0},
@@ -286,7 +267,7 @@ local function topicQuest()
     return
   end
   local qstat = qb:GetStatus(questnr)
-  ib:SetTitle(quest[questnr].name)
+  ib:SetTitle("Quest "..quest[questnr].name)
   if qstat == game.QSTAT_ACTIVE or qstat == game.QSTAT_SOLVED then
     qb:AddItemList(questnr, ib)
   end
@@ -324,56 +305,33 @@ local function topicFinishQuest()
     topicDefault()
     return
   end
-		
-  ib:SetTitle(quest[questnr].name)
+
   local qstat = qb:GetStatus(questnr)
   if qstat ~= game.QSTAT_SOLVED then
     topicQuest()
     return
   end
 
+  ib:SetTitle("Quest "..quest[questnr].name)
   --pl:Sound(0, 0, 2, 0) -- we have quest finish sound, we want also a second sound?
+  --ib:SetMsg("You finished quest example "..questnr..".\n\n"..quest[questnr].name.."!\n")
+  ib:SetMsg("You finished the quest.")
+  qb:Finish(questnr)
 
-  if questnr==1 then
-    ib:SetMsg("You finished quest example 1!")
-    qb:Finish(questnr)
-  end
-	
   if questnr==2 then
-    ib:SetMsg("You finished quest example 2!\n")
-    ib:SetMsg("You can keep the coin!\n")
+    ib:AddMsg("You can keep the coin!\n")
     ib:SetCoins(1, 0, 0, 0)
     pl:AddMoneyEx(1,0,0,0)
-    qb:Finish(questnr)
-  end
-	
-  if questnr==3 then
-    ib:SetMsg("You finished quest example 3!\n")
-    qb:Finish(questnr)
-  end
-	
-  if questnr==4 then
-    local qstat = qb:GetStatus(questnr)
-    if qstat ~= game.QSTAT_SOLVED then
-      topicQuest()
-    end
-    ib:SetMsg("You finished quest example 4!\n")
-    qb:Finish(questnr)
-  end
-		
-  if questnr>4 then
-    ib:SetMsg("You finished quest example "..questnr..".\n\n"..quest[questnr].name.."!\n")
-    qb:Finish(questnr)
   end
 		
   if questnr==9 then
-		  ib:SetMsg("Here is your reward!\n")
+    ib:AddMsg("Here is your reward!\n")
     ib:SetCoins(10, 0, 0, 0)
     pl:AddMoneyEx(10,0,0,0)
   end
 		
   if questnr==10 then
-    ib:SetMsg("Here is your reward! Don't ask me what is in these cookies. He smiles.\n")
+    ib:AddMsg("Here is your reward! Don't ask me what is in these cookies. He smiles.\n")
     ib:AddIcon("Cookies", "cookie01.101", "|** Delicious cookies with a secret special ingredient**|", 5)
     local ob = game:CreateObject("cookie", game.IDENTIFIED, 5)
     if (ob~=nil) then
