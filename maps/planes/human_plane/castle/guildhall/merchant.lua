@@ -1,5 +1,5 @@
-local me = event.me
-pl = event.activator -- we need this global for included included npc_shop script
+local npc = event.me
+player = event.activator -- we need this global for npc_shop
 
 require("interface_builder")
 ib = InterfaceBuilder() -- we need this global ...
@@ -7,23 +7,23 @@ ib = InterfaceBuilder() -- we need this global ...
 -- these must be the correct arch names. we need this global ...
 for_sale =
 {
-	{arch = "small_shield"},
-	{arch = "shield_round"},
-	{arch = "shield"},
-	{arch = "gauntlets_leather"},
-	{arch = "gauntlets_spiked"},
-	{arch = "leather_spiked"},
-	{arch = "leather_studded"},
-	{arch = "leather_cuirass"}
+  {arch = "small_shield"},
+  {arch = "shield_round"},
+  {arch = "shield"},
+  {arch = "gauntlets_leather"},
+  {arch = "gauntlets_spiked"},
+  {arch = "leather_spiked"},
+  {arch = "leather_studded"},
+  {arch = "leather_cuirass"}
 }
 
 local function topic_greeting()
   ib:SetTitle("Greetings")
   ib:SetMsg("Welcome to my small shop.")
-	ib:AddMsg("You want to see my stuff?")
-	ib:AddLink("Sure.","Services")
-	ib:AddLink("No, not now.","")
-	ib:SetLHSButton("Services")
+  ib:AddMsg("You want to see my stuff?")
+  ib:AddLink("Sure.","shop")
+  ib:AddLink("No, not now.","")
+  ib:SetLHSButton("Shop")
 end
 
 require("/scripts/npc_shop.lua")
