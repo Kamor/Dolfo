@@ -17,8 +17,8 @@
 -- finish quest
 ---> finish quest, reward
 
-local pl = event.activator
-local me = event.me
+local player = event.activator
+local npc = event.me
 
 require("interface_builder")
 local ib = InterfaceBuilder()
@@ -123,13 +123,13 @@ local function quest_reward(questnr)
   if questnr==2 then
     ib:AddMsg("You can keep the coin!\n")
     ib:SetCoins(1, 0, 0, 0)
-    pl:AddMoneyEx(1, 0, 0, 0)
+    player:AddMoneyEx(1, 0, 0, 0)
   end
 		
   if questnr==9 then
     ib:AddMsg("Here is your reward!\n")
     ib:SetCoins(10, 0, 0, 0)
-    pl:AddMoneyEx(10, 0, 0, 0)
+    player:AddMoneyEx(10, 0, 0, 0)
   end
 		
   if questnr==10 then
@@ -137,7 +137,7 @@ local function quest_reward(questnr)
     ib:AddIcon("Cookies", "cookie01.101", "|** Delicious cookies with a secret special ingredient**|", 5)
     local ob = game:CreateObject("cookie", game.IDENTIFIED, 5)
     if (ob~=nil) then
-      pl:PickUp(ob, nil, 5)
+      player:PickUp(ob, nil, 5)
     end
   end
 
@@ -151,7 +151,7 @@ end
 -- register quest, add quest items, quest targets and quest kill items
 local function RegisterQuest(questnr)
   quest_description(questnr) -- is there no better way to send description to quest builder?
-  qb:RegisterQuest(questnr, me, ib)
+  qb:RegisterQuest(questnr, mpc, ib)
 
   if quest[questnr].type == game.QUEST_ITEM then
     for i, x in quest_items do
@@ -175,7 +175,7 @@ local function RegisterQuest(questnr)
   end
 end
 
-local questnr = qb:Build(pl)
+local questnr = qb:Build(player)
 -- hello (default), here are mostly the unique npc's dialogs
 -- some npc's want to have a kind of "can you do something for me?"
 -- so here we need a split between hello and quest story - TODO - must also see, where we go back with buttons? to hi?
@@ -391,12 +391,12 @@ local function topicFinishQuest()
   end
 
   ib:SetTitle("Quest "..quest[questnr].name)
-  --pl:Sound(0, 0, 2, 0) -- we have quest finish sound, we want also a second sound?
+  --player:Sound(0, 0, 2, 0) -- we have quest finish sound, we want also a second sound?
   ib:SetMsg("You finished the quest.\n\n")
   qb:Finish(questnr)
   -- TODO we want always jump to reward or only when its defined in our arrays?
   -- we can also do the jump from here or by questbuilder?
-		quest_reward(questnr)
+  quest_reward(questnr)
 end
 
 require("topic_list")
