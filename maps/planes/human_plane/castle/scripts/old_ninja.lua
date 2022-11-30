@@ -1,5 +1,5 @@
-me = event.me  -- we need this global for included included npc_shop script
-pl = event.activator -- we need this global for included included npc_shop script
+npc = event.me  -- we need this global for npc_trainer
+player = event.activator -- we need this global for npc_trainer and npc_shop
 
 require("interface_builder")
 ib = InterfaceBuilder() -- we need this global ...
@@ -7,12 +7,12 @@ ib = InterfaceBuilder() -- we need this global ...
 -- these must be the correct arch names. we need this global ...
 for_sale =
 {
-	{arch = "helmet_ag"},
-	{arch = "bracers_ag"},
-	{arch = "armour_ag"},
-	{arch = "belt_ag"},
-	{arch = "pants_ag"},
-	{arch = "boots_ag"}
+  {arch = "helmet_ag"},
+  {arch = "bracers_ag"},
+  {arch = "armour_ag"},
+  {arch = "belt_ag"},
+  {arch = "pants_ag"},
+  {arch = "boots_ag"}
 }
 
 -- 1 must be the correct lua definitions for the skills
@@ -20,16 +20,16 @@ for_sale =
 -- we need this global ...
 to_train =
 {
-	{skill_name = "Punching", icon = "gauntlets_chain.101"}
+  {skill_name = "Punching", icon = "gauntlets_chain.101"}
 }
 
 local function topic_greeting()
   ib:SetTitle("Greetings")
   ib:SetMsg("Welcome to my small shop.")
-	ib:AddMsg("You want to see my stuff?")
-	ib:AddMsg("\n\nOr should i train you in punching skill?")
-	ib:AddLink("Sure, show me what you sell." , "Shop")
-	ib:AddLink("Yeah, train me in punching." , "Training")
+  ib:AddMsg("You want to see my stuff?")
+  ib:AddMsg("\n\nOr should i train you in punching skill?")
+  ib:AddLink("Sure, show me what you sell." , "shop")
+  ib:AddLink("Yeah, train me in punching." , "training")
 end
 
 require("/scripts/npc_shop.lua")
