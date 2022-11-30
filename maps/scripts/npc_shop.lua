@@ -8,7 +8,7 @@ local function getTableSize(t)
 end
 
 -- groups is array, group_to_show is group index to show, group is user command
-function topic_shop(group)
+function topic_shop(group) -- we need this global
   local group_to_show=0 -- lua starts array indexes with 1, so 0 is invalid index, or no index
   ib:SetTitle("Shop")
   -- when user has not choose a group he want to see, check if we have a groups array, then show groups
@@ -31,7 +31,7 @@ function topic_shop(group)
     -- invalid group command, we handle like no group
   end
 
-  ib:SetMsg("What do you want to see? You have " .. pl:ShowCost(pl:GetMoney(), game.COSTSTRING_SHORT) .. ".")
+  ib:SetMsg("What do you want to see? You have " .. player:ShowCost(player:GetMoney(), game.COSTSTRING_SHORT) .. ".")
 
   for index, data in for_sale do
     local ob = game:CreateObject(data.arch, game.IDENTIFIED, 1)
@@ -48,12 +48,12 @@ function topic_shop(group)
         -- only to be save, todo do we need this?
         if ob.item_skill == nil then
           ob.item_skill = 0
-          pl:Write("debug : item_skill is nil ", game.COLOR_YELLOW)
+          player:Write("debug : item_skill is nil ", game.COLOR_YELLOW)
         end
 		
         local skill_group_name=""
         if ob.item_skill > 0 then
-          local skill_group = pl:GetSkill(game.TYPE_SKILLGROUP, ob.item_skill-1)
+          local skill_group = player:GetSkill(game.TYPE_SKILLGROUP, ob.item_skill-1)
           if skill_group ~= nil then
             skill_group_name=skill_group.name
           end
@@ -67,7 +67,7 @@ function topic_shop(group)
           requirements=requirements .. ")"
         end
 
-        ib:AddSelect(	"Show me " .. ob.name .. requirements,	"show " .. index,	ob:GetFace() ,"price " .. pl:ShowCost(ob.value))
+        ib:AddSelect(	"Show me " .. ob.name .. requirements,	"show " .. index,	ob:GetFace() ,"price " .. player:ShowCost(ob.value))
       end
     end
   end
@@ -75,13 +75,13 @@ function topic_shop(group)
   -- if we are in "group to show" mode we set a button back to "no group shop"
   -- sadly the "back" button from topic_show now always targets the group choice logic
   if (group_to_show>0) then
-    ib:SetLHSButton("Back", "Services")	
+    ib:SetLHSButton("Back", "shop")	
   end
 end
 
 local function topic_show(index)
   ib:SetTitle("Show item " .. index)
-  ib:SetLHSButton("Back", "Services")
+  ib:SetLHSButton("Back", "shop")
 
   if index~=nil then
     local i = tonumber(index)
@@ -99,7 +99,7 @@ end
 
 local function topic_buy(index)
   ib:SetTitle("Buy item " .. index)
-  ib:SetLHSButton("Back", "Services")
+  ib:SetLHSButton("Back", "shop")
 
   if index~=nil then
   local i = tonumber(index)
@@ -107,9 +107,9 @@ local function topic_buy(index)
       local ob = game:CreateObject(for_sale[i].arch, game.IDENTIFIED, 1) -- create 1 identified obj
       if (ob~=nil) then
 
-        if pl:PayAmount(ob.value) == 1 then
+        if player:PayAmount(ob.value) == 1 then
           ib:SetMsg("Nice that you found something.")
-          pl:PickUp(ob,nil,1)
+          player:PickUp(ob,nil,1)
         else
           ib:SetMsg("Sorry, come back if you have the money for it.")				
         end
@@ -121,7 +121,7 @@ local function topic_buy(index)
 end
 
 function shopAddTopics(tlx) -- we need this global
-  tlx:AddTopics("shop (.*)", topic_shop)
+  tlx:AddTopics({"shop", "shop (.*)"}, topic_shop)
   tlx:AddTopics("show (%d+)", topic_show)
   tlx:AddTopics("buy (%d+)", topic_buy)
   return tlx
