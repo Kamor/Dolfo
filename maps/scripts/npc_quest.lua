@@ -1,16 +1,55 @@
+--[[
+
+these are the splitted uniform parts of quest logics, see quest_example.lua
+
+you need to "include" npc_quest.lua in your script
+example:
+require("scripts/npc_quest.lua")
+
+you need to "include" topics from npc_quest.lua in your script
+use tl = questAddTopics(tl) after you included topiclist and initialized t1
+example:
+require("topic_list")
+tl = TopicList()
+tl = questAddTopics(tl)
+
+you need global definitions and correct names for player, npc, ib, qb and questnr
+you need at least one defined quest, if not QuestBuilder crashes, when trying to get the questnr
+you need also the two functions quest_description and quest_reward, to prevent crashing
+you can use multiply arrays to define quests, define at least one quest in quests array
+example
+quests =
+{
+  {name = "Example 1", type = game.QUEST_NORMAL}
+}
+for more complex quests see quest_example.lua
+
+add quests to questbuilder with addQuests()
+build your unique quest goal text in your script
+you can target from there, quest, accept quest and finish quest
+see quest_example.lua
+
+]]
+
+-- add the quests
+function addQuests()
+  for i, x in quests do
+    qb:AddQuest(x.name, x.type, x.level, x.skillgroup)
+  end
+end
 
 -- register quest, add quest items, quest targets and quest kill items
-function RegisterQuest(questnr)
+function registerQuest(questnr)
   quest_description(questnr) -- is there no better way to send description to quest builder?
   qb:RegisterQuest(questnr, mpc, ib)
 
-  if quest[questnr].type == game.QUEST_ITEM then
+  if quests[questnr].type == game.QUEST_ITEM then
     for i, x in quest_items do
       if (x.questnr==questnr) then
         qb:AddQuestItem(questnr, x.amount, x.type, x.icon, x.name)
       end
     end
-  elseif quest[questnr].type == game.QUEST_KILL or quest[questnr].type == game.QUEST_KILLITEM then
+  elseif quests[questnr].type == game.QUEST_KILL or quests[questnr].type == game.QUEST_KILLITEM then
     for i, x in quest_targets do
       if (x.questnr==questnr) then
         local target=qb:AddQuestTarget(questnr, x.chance, x.amount, x.arch, x.name)
@@ -31,9 +70,9 @@ end
 function topicQuest()
   if questnr<0 then
     questnr=math.abs(questnr)
-    ib:SetTitle("Quest "..quest[questnr].name)
-    ib:AddMsg("\nYou need level "..quest[questnr].level)
-    if quest[questnr].skillgroup~=nil then
+    ib:SetTitle("Quest "..quests[questnr].name)
+    ib:SetMsg("\nYou need level "..quests[questnr].level)
+    if quests[questnr].skillgroup~=nil then
 						
       -- {"ITEM_SKILL_NO",          0},
       -- {"ITEM_SKILL_AGILITY",     SKILLGROUP_AGILITY + 1},
@@ -43,8 +82,8 @@ function topicQuest()
       -- {"ITEM_SKILL_MAGIC",       SKILLGROUP_MAGIC + 1},
       -- {"ITEM_SKILL_WISDOM",      SKILLGROUP_WISDOM + 1},
 						
-      -- wonderful a simple game:get_skillgroupname function would be nice, also this incompatible of questbuilder sucks 
-      local sg=quest[questnr].skillgroup
+      -- wonderful a simple game:get_skillgroupname function would be nice 
+      local sg=quests[questnr].skillgroup
       if sg==game.SKILLGROUP_AGILITY+1 then
         ib:AddMsg(" in agility")
       elseif sg==game.SKILLGROUP_PERSONAL+1 then
@@ -65,11 +104,11 @@ function topicQuest()
     return
   end
   if questnr==0 then
-    topicDefault()
+    ib:SetMsg("\nThere are no more quests for you.\n")
     return
   end
   local qstat = qb:GetStatus(questnr)
-  ib:SetTitle("Quest "..quest[questnr].name)
+  ib:SetTitle("Quest "..quests[questnr].name)
   if qstat == game.QSTAT_ACTIVE or qstat == game.QSTAT_SOLVED then
     qb:AddItemList(questnr, ib)
   end
@@ -90,13 +129,13 @@ end
 -- accept quest
 function topicAcceptQuest()
   if questnr<1 then
-    topicDefault()
+    topicQuest()
     return
   end
 
   local qstat = qb:GetStatus(questnr)
   if qstat == game.QSTAT_NO then
-    RegisterQuest(questnr)
+    registerQuest(questnr)
   end
   topicQuest()
 end
@@ -104,7 +143,7 @@ end
 -- finish quest
 function topicFinishQuest()
   if questnr<1 then
-    topicDefault()
+    topicQuest()
     return
   end
 
@@ -114,8 +153,7 @@ function topicFinishQuest()
     return
   end
 
-  ib:SetTitle("Quest "..quest[questnr].name)
-  ib:SetMsg("You finished the quest.\n\n")
+  ib:SetTitle("Quest "..quests[questnr].name) -- we keep this here? last chance before finish the quest to get it's name
   qb:Finish(questnr)
   -- TODO we want always jump to reward or only when its defined in our arrays?
   -- we can also do the jump from here or by questbuilder?
