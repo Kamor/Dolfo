@@ -1,6 +1,6 @@
-Object booze_generic
+Object booze_winter
 name booze
-face booze.101
+face booze_winter.101
 last_eat 10
 hp 0
 can_stack 1
