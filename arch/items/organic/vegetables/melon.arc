@@ -2,9 +2,9 @@ Object melon
 name melon
 face melon01.101
 last_eat 2
-hp 10
-sp 10
-grace 10
+hp 25
+sp 25
+grace 25
 can_stack 1
 nrof 1
 layer 3
