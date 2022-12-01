@@ -1,0 +1,39 @@
+Object bread
+name bread
+face bread01.101
+last_eat 10
+can_stack 1
+hp 10
+sp 0
+grace 0
+item_quality 0
+nrof 1
+layer 3
+type 6
+speed_left 0.002
+material_real -1
+material 32
+value 5
+weight 125
+subtype 1
+end
+
+Object bread1
+name bread
+can_stack 1
+face bread02.101
+last_eat 10
+hp 10
+sp 0
+grace 0
+item_quality 0
+nrof 1
+layer 3
+type 6
+speed_left 0.002
+material_real -1
+material 32
+value 5
+weight 125
+subtype 1
+end
