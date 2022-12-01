@@ -1,44 +1,39 @@
--- example for intelligent and understandable quest logic, easy to use for scripters
--- improved buttons, links, reduced redundancy
--- uniform parts of quest logics are splitted to npc_quest.lua
--- unique parts of quest logic must be set by scripters, like in this example
--- scripters needs to implement npc_quest.lua, call questAddTopics and define a default topic
--- base vars and functions must be global to work with npc_quest.lua
+--[[
+example for intelligent and understandable quest logic, easy to use for scripters
+improved buttons, links, reduced redundancy
+uniform parts of quest logics are splitted to npc_quest.lua
+unique parts of quest logic must be set by scripters, like in this example
+scripters needs to implement npc_quest.lua, define their quests, call addQuests and call questAddTopics
+base vars and functions must be global to work with npc_quest.lua
+more informations about implementing npc_quest.lua see there
 
--- scripters can define there quests very easy with the arrays.
--- if scripters want more than the command interface to target quests logic, they need to connect this somehow intelligent
--- example to do this, you find in function topicDefault (hello)
--- in this example hello text and quest intro text is also there
+scripters can define there quests very easy with arrays.
+if scripters want more than the command interface to target quest logics, they need to connect this somehow intelligent
+example to do this, you find in this script in function topicDefault (hello)
+in this example hello text and quest intro text is also combined in one topic
 
--- so scripters must work
---> introduction to npc
---> introduction to quest
---> quest button and side menu quest button
---> short cut links in relation to quest status, to start or finish the quest
---> sometimes it could be wise to split welcome from quest intro, then quest intro could be a separate topic
+so scripters must work
+- introduction to npc
+- introduction to quest
+- quest button and side menu quest button
+- short cut links in relation to quest status, to start or finish the quest
+- sometimes it could be wise to split welcome from quest intro, then quest intro could be a separate topic
+]]
 
--- this is done by npc_quest.lua
--- quest
---> this is all in one, in relation to quest status it is accept quest, view quest status and finish quest
----> it targets accept quest and finish quest function
--- accept quest
----> register quest
--- finish quest
----> finish quest, reward
-
-player = event.activator
+player = event.activator  -- we need this global for npc_quest
 npc = event.me
 
 require("interface_builder")
 ib = InterfaceBuilder()
 
 require("quest_builder")
-qb = QuestBuilder() -- we need this global for npc_quest
+qb = QuestBuilder()
 -- quest name, type, level, skillgroup, ?required , ?finalstep, 1repeats, questGoal, questReward, silent
 -- questGoal can be a function, which is launched when quest is started (registered)
----> we mostly do this automated here in relation to the arrays below
+---> currently not implemented, we show quest goals in welcome/default topic
 -- questReward can be a function, which is launched when quest is finished
-quest =
+---> currently not implemented, we hardjump to quest_reward, when quest is finished
+quests =
 {
   {name = "Example 1", type = game.QUEST_NORMAL},
   {name = "Example 2", type = game.QUEST_ITEM},
@@ -144,17 +139,16 @@ function quest_reward(questnr)
     if (ob~=nil) then
       player:PickUp(ob, nil, 5)
     end
+  else
+    ib:AddMsg("You finished this Quest!\n")
   end
 end
 
--- add the quests
-for i, x in quest do
-  qb:AddQuest(x.name, x.type, x.level, x.skillgroup)
-end
-
+require("scripts/npc_quest.lua")
+addQuests()
 questnr = qb:Build(player)
 
--- in this example hello and default is same, we use default for back links from npc_quest.lua to jump back here
+-- in this example hello and default is same
 -- for a good flow on links, sitelinks and buttons
 -- we have build in
 --> a sitelink topic to quest *1
@@ -173,7 +167,7 @@ function topicDefault()
   end
   ib:SetMsg("|^Quest^|\n\n\n") -- *1 show quest topic in side menu 
   ib:SetLHSButton("Quest") -- *3
-  ib:AddMsg("|Quest "..quest[questnr].name.."|\n\n")
+  ib:AddMsg("|Quest "..quests[questnr].name.."|\n\n")
 
   local qstat = qb:GetStatus(questnr)
   if qstat == game.QSTAT_NO then
@@ -213,7 +207,7 @@ function topicDefault()
     elseif questnr==8 then
       ib:AddMsg("Kill one red ant and one black ant.\n\nGet red ant head and black ant eye.\n\n")
     elseif questnr==9 then
-      ib:AddMsg("Kill the queen. Bring me here head.\n\n")
+      ib:AddMsg("Kill the queen. Bring me her head.\n\n")
       ib:AddMsg("If you do this, I give you some coppers.\n\n")
       -- ib:SetCoins(10, 0, 0, 0) -- looks ugly, with a text link behind, to close
       -- we show the coopers, when player is accepting quest and he can also look in quest list
@@ -231,13 +225,11 @@ function topicDefault()
     end
 
     -- * 2shortcut links to start and finish a quest
-    ib:AddLink("Start quest "..quest[questnr].name, "accept quest")
+    ib:AddLink("Start quest "..quests[questnr].name, "accept quest")
   else
-    ib:AddLink("Finish quest "..quest[questnr].name, "finish quest")
+    ib:AddLink("Finish quest "..quests[questnr].name, "finish quest")
   end
 end
-
-require("/scripts/npc_quest.lua")
 
 require("topic_list")
 tl = TopicList()
