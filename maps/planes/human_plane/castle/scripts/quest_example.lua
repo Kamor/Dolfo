@@ -28,7 +28,16 @@ ib = InterfaceBuilder()
 
 require("quest_builder")
 qb = QuestBuilder()
--- quest name, type, level, skillgroup, ?required , ?finalstep, 1repeats, questGoal, questReward, silent
+-- quest name, type, level, skillgroup, required , finalstep, repeats, questGoal, questReward, silent
+
+-- ?looks like required can be a function, which is called when players don't have the requirements to do this quest
+-- ?looks like repeats can be used to repeat quests, so far it only worked for me with nil or 1
+-- ?also server hangs massiv when using >1 and finish quest.
+-- finalstep>1 somehow can not finish the quests here
+-- so for the moment finalstep and repeats are limited to default=1, you can also use nil
+-- it's a pain, there are no working examples on public trunk and reading deeper in quest_builder.lua only reveals
+--> that quest_builder.lua targets quest_manager.lua
+--> that's a joke saying quest_manager.lua is deprecated, but using it as kernel for quest_builder.lua *lol*
 -- questGoal can be a function, which is launched when quest is started (registered)
 ---> currently not implemented, we show quest goals in welcome/default topic
 -- questReward can be a function, which is launched when quest is finished
