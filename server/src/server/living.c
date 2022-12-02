@@ -2253,6 +2253,7 @@ void fix_player(object_t *op)
 /** Adjust the monster's datas for level, map settings and game settings
  * when put in play.
  */
+
 void fix_monster(object_t *op)
 {
     sint8     tmpthac0;
@@ -2262,6 +2263,7 @@ void fix_monster(object_t *op)
     int wc_mali=0, ac_mali=0, snare_penalty=0, slow_penalty=0;
     object_t *base, *tmp, *next, *spawn_info=NULL, *bow=NULL, *wc_tmp;
 
+    // wow, so op->head means, we have a pointer to our head somewhere
     if (op->head) /* don't adjust tails or player - only single objects or heads */
         return;
 
@@ -2269,7 +2271,15 @@ void fix_monster(object_t *op)
     LOG(llevDebug, "FIX_MONSTER(%s [%x]): called\n", STRING_OBJ_NAME(op), op->count);
 #endif
 
+
+    // instead of using this base info shit, we should get the infos from our spawn point mob
+    // this logic below kills everything we adjusted before
+    // also using such a logic will not allow changes of base object, because this would stack
+
     base = insert_base_info_object(op); /* will insert or/and return base info */
+
+    //LOG(llevDebug, "FIX_MONSTER base level %d op level %d\n", base->level, op->level);
+    //LOG(llevDebug, "FIX_MONSTER base exp %d op exp %d\n", base->stats.exp, op->stats.exp);
     op->level = base->level;
 
     if (!QUERY_FLAG(&op->arch->clone, FLAG_BLIND))
@@ -2360,7 +2370,7 @@ void fix_monster(object_t *op)
     }
 
     /* pre adjust */
-    op->stats.maxhp = (base->stats.maxhp * (op->level + 2) + (sint32)((float)(op->level) / 1.25f) * base->stats.maxhp) / 10 - 7;
+    op->stats.maxhp = (base->stats.maxhp * (op->level + 2) + (sint32)((float)(op->level) / 1.25f) * base->stats.maxhp) / 10; //-7
     if(op->stats.maxhp <= 0)
         op->stats.maxhp = 1;
     op->stats.maxsp = base->stats.maxsp * (op->level + 1);
@@ -2473,7 +2483,18 @@ void fix_monster(object_t *op)
     }
 
     /* post adjust */
-    op->stats.dam = (sint16)(op->stats.dam / 1800.0f * op->level * op->level) + 3;
+    // this is funny simply overwriting all early npc's up to level 10 with 3 damage
+    // that's how balancing works, useless arch definitions overwritten by stupid formula ;-)
+    // op->stats.dam = (sint16)(op->stats.dam / 1800.0f * op->level * op->level +3);
+
+    // dividing arches / 1800 is nearly same than ignoring it
+    // so theoretical we can clean arches and use dynamic on 0 damage
+    // and allow map editor to hardcode the damage
+
+    // lets try level*3, this is a nice, fair and challenging early game
+    // public server has no late game, so who cares ;-)
+    op->stats.dam=3*op->level;
+
 
     /* Set up AI in op->custom_attrset */
     if (!MOB_DATA(op))
@@ -2508,6 +2529,8 @@ object_t * insert_base_info_object(object_t *op)
     if ((tmp = find_base_info_object(head)))
         return tmp;
 
+
+    // why we get our baseobject from arch, when we have spawn point mob?
     tmp = get_object();
     tmp->arch = op->arch;
     /* we don't need to trigger the
