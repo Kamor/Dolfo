@@ -2,7 +2,7 @@ arch map
 name Guildhall Testarea
 msg
 Created:  2004-06-30 Daimonin Map Editor
-Modified: 2022-11-29 Karsten
+Modified: 2022-12-02 Karsten
 endmsg
 width 24
 height 24
@@ -88,6 +88,17 @@ y 23
 end
 arch grassd_6
 x 1
+end
+arch spawn_point
+x 1
+arch childm1
+name Cheatboy
+type 83
+arch event_obj
+subtype 13
+race scripts/cheatboy.lua
+end
+end
 end
 arch grassd_1
 x 1
