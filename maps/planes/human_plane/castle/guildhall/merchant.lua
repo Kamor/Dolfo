@@ -10,11 +10,25 @@ for_sale =
   {arch = "small_shield"},
   {arch = "shield_round"},
   {arch = "shield"},
+  
   {arch = "gauntlets_leather"},
   {arch = "gauntlets_spiked"},
+  
   {arch = "leather_spiked"},
   {arch = "leather_studded"},
-  {arch = "leather_cuirass"}
+  {arch = "leather_cuirass"},
+  
+  {arch = "low_boots"},
+  {arch = "spiked_boots"},
+  {arch = "high_boots"},
+  {arch = "leggings_leather"}, 
+  {arch = "fighting_boots"},
+  {arch = "kicking_boots"},
+  {arch = "combat_boots"},
+  {arch = "fencing_boots"},
+  
+  {arch = "helm_horn"}
+ 
 }
 
 local function topic_greeting()
