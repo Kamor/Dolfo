@@ -46,8 +46,7 @@ end
 
 function topic_training() -- we need this global
   ib:SetTitle("Training")
-  ib:SetMsg("So, what do you want?")
-  ib:AddMsg("\n\nYou have " .. player:ShowCost(player:GetMoney()) .. ".")
+  ib:SetMsg("You have " .. player:ShowCost(player:GetMoney()) .. ".")
 	
   for index, data in to_train do
     local skill_number=game:GetSkillNr(data.skill_name)
@@ -63,6 +62,11 @@ function topic_training() -- we need this global
           if (slevel<=npc.level) then
             local skill_group = player:GetSkill(game.TYPE_SKILLGROUP, skill.magic) -- in skill.magic we find the skill group
             if skill_group ~= nil then
+              -- we could allow players to train skills independent from skill groups and only cap main level
+              -- but we need to care about drain levels here
+              -- also training sessions, where players want to train some skills, leads to stupid clicking
+              -- we need some better logics, to train more than one level
+              -- if player.level >=slevel then
               if skill_group.level >= slevel then
                 ib:AddSelect("Train " .. data.skill_name .. " Level " .. slevel .. " - " .. player:ShowCost(npc_fee(to_pay(skill_number))) , "train " .. index, data.icon, "I can train you in ".. data.skill_name)
               else
@@ -137,6 +141,7 @@ local function topic_train(index)
         local skill_group = player:GetSkill(game.TYPE_SKILLGROUP, skill.magic) -- in skill.magic we find the skill group
 
         if skill_group ~= nil then
+          --if player.level >=slevel then
           if skill_group.level >= slevel then
             if player:PayAmount(npc_fee(to_pay(skill_number))) == 1 then
               -- we have no check here, also its to late player payed the money, but show a bug at least?
@@ -161,7 +166,7 @@ local function topic_train(index)
 end
 
 function trainerAddTopics(tlx) -- we need this global
-  tlx:AddTopics("training", topic_training)
+  tlx:AddTopics({"train", "training"}, topic_training)
   tlx:AddTopics("learn (%d+)", topic_learn)
   tlx:AddTopics("train (%d+)", topic_train)
   return tlx
