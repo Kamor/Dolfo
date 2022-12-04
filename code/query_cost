@@ -1,0 +1,75 @@
+sint64 query_cost(object_t *tmp, object_t *who, int flag)
+{
+    object_t * what = tmp; // todo change function parameter
+
+    sint64  value, material_value;
+    int     nrof;
+
+    nrof = max(1, what->nrof); // handle nrof 0 like nrof 1
+
+    if (what->type == MONEY)
+        return(nrof * tmp->value);
+
+    value=what->value;
+    material_value=0;
+    if (QUERY_FLAG(what, FLAG_IDENTIFIED))
+    {
+        if (QUERY_FLAG(what, FLAG_CURSED) || QUERY_FLAG(what, FLAG_DAMNED))
+            return 0;
+        else
+        {
+          // we do 2 calculations, one for material costs other is defined by value
+          // materialcosts done care about level of item
+          // but we need handle also magicical materials here TODO
+
+          // check if we have a real_material definition
+          int mr = what->material_real;
+          if (mr>=0)
+          {
+            material_value=material_real[mr].value;
+          }
+          // no material_real definitions (-1) leads to value 0
+          // also a zero definition in material_real array leads to value 0
+          // if we have no material_value, we try quality
+          if (material_value==0)
+          {
+            material_value=max(1, what->item_quality); // handle quality 0 like 1
+          }
+
+          // adjust weight, we multiplicate with kg, so under 1 kg items could become cheaper, we also round
+          if (what->weight>0)
+          {
+            material_value=(int)(what->weight/1000.0f*material_value+0.5f);
+          }
+
+          // TODO do something with magic materials?
+
+          // adjust * level, when we have levels above 1, this don't change the material costs
+          // it change the non material costs of an item
+          if (what->level>1)
+          {
+            value*=what->level;
+          }
+
+          // todo spell level, charges
+
+          LOG(llevDebug,"material_value %d non_material_value %d\n", material_value, value);
+
+          // now add both costs
+          value+=material_value;
+
+          // adjust *nrof, when we have more than 1
+          if (nrof>1)
+          {
+            value*=nrof;
+          }
+
+          // adjust condition in %, so we can have 0 condition items leading to 0 value
+          // for tasks like repairing we need later the value without condition adjustment
+          value=(int)(what->item_condition/100.f*value+0.5f);
+        }
+    }
+
+    // test this first without charima or shop fee
+    return value;
+}
