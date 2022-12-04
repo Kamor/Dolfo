@@ -7,6 +7,13 @@ local function getTableSize(t)
     return count
 end
 
+local function calcValue(ob)
+  -- to be consistent we use the c function, perhaps we want calc later the npc level?
+  local value=player:GetItemCost(ob, game.COST_TRUE)
+  -- type is one of game.COST_TRUE, game.COST_BUY or game.COST_SELL 
+  return value
+end
+
 -- groups is array, group_to_show is group index to show, group is user command
 function topic_shop(group) -- we need this global
   local group_to_show=0 -- lua starts array indexes with 1, so 0 is invalid index, or no index
@@ -66,8 +73,7 @@ function topic_shop(group) -- we need this global
           end
           requirements=requirements .. ")"
         end
-
-        ib:AddSelect(	"Show me " .. ob.name .. requirements,	"show " .. index,	ob:GetFace() ,"price " .. player:ShowCost(ob.value))
+        ib:AddSelect(	"Show me " .. ob.name .. requirements,	"show " .. index,	ob:GetFace() ,"price " .. player:ShowCost(calcValue(ob)))
       end
     end
   end
