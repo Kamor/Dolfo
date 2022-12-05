@@ -29,6 +29,20 @@ static sint64 PayFrom(object_t *where, sint64 amount);
 static void   InsertCoin(uint8 cointype, uint32 nrof, object_t *into);
 
 
+// small function to check if player is in shop
+uint8 player_is_in_shop(player_t *pl)
+{
+    object_t *shop = NULL;
+    msp_t *msp = MSP_KNOWN(pl->ob);
+    MSP_GET_SYS_OBJ(msp, SHOP_FLOOR, shop);
+    if (shop)
+    {
+        return 1;
+    }
+        return 0;
+    }
+
+
 sint64 query_cost(object_t *tmp, object_t *who, int flag)
 {
     object_t * what = tmp; // todo change function parameter
