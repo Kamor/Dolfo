@@ -135,7 +135,11 @@ function topicAcceptQuest()
 
   local qstat = qb:GetStatus(questnr)
   if qstat == game.QSTAT_NO then
+    -- sadly we have redundancy here, but registerQuest add an icon and when we jump to topicQuest we add this icon again 
+    ib:SetTitle("Quest "..quests[questnr].name)
     registerQuest(questnr)
+    qb:AddItemList(questnr, ib)    
+    return
   end
   topicQuest()
 end
@@ -161,7 +165,7 @@ function topicFinishQuest()
 end
 
 function questAddTopics(tlx) -- we need this global
-  tlx:AddTopics({"quest", "explain%s+quest"}, topicQuest)
+  tlx:AddTopics("quest", topicQuest)
   tlx:AddTopics("accept quest", topicAcceptQuest)
   tlx:AddTopics("finish quest", topicFinishQuest)
   return tlx
