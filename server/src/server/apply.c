@@ -1443,6 +1443,7 @@ int apply_object(object_t *who, object_t *what, int aflag)
             what->type == CONTAINER ||
             what->type == TREASURE ||
             what->type == SAVEBED ||
+            what->type == HOMESTONE ||
             QUERY_FLAG(what, FLAG_PLAYER_ONLY) ||
             QUERY_FLAG(what, FLAG_UNPAID) ||
             egoitem_check(who, what, -1) > 0 ||
@@ -1457,6 +1458,30 @@ int apply_object(object_t *who, object_t *what, int aflag)
      * object type differently (yuck!) when it comes to apply events. */
     switch (what->type)
     {
+        case HOMESTONE:
+        if (player_is_in_shop(pl))
+        {
+            ndi(NDI_UNIQUE, 0, who, "Shop Magic cancels the magic of your homestone. Nothing happens.");
+            r = 9;
+            break;
+        }
+        if(!pl->rest_sitting)
+        {
+            ndi(NDI_UNIQUE, 0, who, "You need to rest first to use it.");
+            r = 9;
+            break;
+        }
+        // looks like rest_sitting and rest_mode and nearly same, so we need to check resting_reg_timer
+        if(pl->resting_reg_timer>0)
+        {
+            ndi(NDI_UNIQUE, 0, who, "You need to fully rest first to use it.");
+            r = 9;
+            break;
+        }
+        ApplyHomestone(who, what);
+        r = 9;
+        break;
+            
         case HOLY_ALTAR:
         ndi(NDI_UNIQUE, 0, who, "You touch the %s.",
             QUERY_SHORT_NAME(what, who));
@@ -2723,5 +2748,20 @@ static void ApplyAnvil(object_t *op, object_t *anv)
     if (orig_quality != item->item_quality)
     {
         ndi(NDI_UNIQUE, 0, op, "But no matter how hard you try, %s doesn't feel quite like it used to.", item_name);
+    }
+}
+
+static void ApplyHomestone(object_t *op, object_t *homestone)
+{
+    if (op->type == PLAYER)
+    {
+        player_t *pl = NULL;
+        if (pl = CONTR(op))
+        {
+            ndi(NDI_WHITE, 0, op, "You use your homestone.");
+            decrease_ob_nr(homestone, 1);
+           (void)enter_map_by_name(pl->ob, pl->savebed_map, pl->orig_savebed_map, pl->bed_x, pl->bed_y, pl->bed_status);
+           play_sound_player_only(pl, SOUND_TELEPORT, SOUND_NORMAL, 0, 0);
+        }
     }
 }
