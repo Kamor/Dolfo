@@ -28,31 +28,109 @@
 static sint64 PayFrom(object_t *where, sint64 amount);
 static void   InsertCoin(uint8 cointype, uint32 nrof, object_t *into);
 
+
+sint64 query_cost(object_t *tmp, object_t *who, int flag)
+{
+    object_t * what = tmp; // todo change function parameter
+
+    sint64  value, material_value;
+    int     nrof;
+
+    nrof = max(1, what->nrof); // handle nrof 0 like nrof 1
+
+    if (what->type == MONEY)
+        return(nrof * tmp->value);
+
+    value=what->value;
+    material_value=0;
+    if (QUERY_FLAG(what, FLAG_IDENTIFIED))
+    {
+        if (QUERY_FLAG(what, FLAG_CURSED) || QUERY_FLAG(what, FLAG_DAMNED))
+            return 0;
+        else
+        {
+          // we do 2 calculations, one for material costs other is defined by value
+          // materialcosts done care about level of item
+          // but we need handle also magicical materials here TODO
+
+          // check if we have a real_material definition
+          int mr = what->material_real;
+          if (mr>=0)
+          {
+            material_value=material_real[mr].value;
+          }
+          // no material_real definitions (-1) leads to value 0
+          // also a zero definition in material_real array leads to value 0
+          // if we have no material_value, we try quality
+          if (material_value==0)
+          {
+            material_value=max(1, what->item_quality); // handle quality 0 like 1
+          }
+
+          // adjust weight, we multiplicate with kg, so under 1 kg items could become cheaper, we also round
+          if (what->weight>0)
+          {
+            material_value=(int)(what->weight/1000.0f*material_value+0.5f);
+          }
+
+          // TODO do something with magic materials?
+
+          // adjust * level, when we have levels above 1, this don't change the material costs
+          // it change the non material costs of an item
+          if (what->level>1)
+          {
+            value*=what->level;
+          }
+
+          // todo spell level, charges
+
+          LOG(llevDebug,"material_value %d non_material_value %d\n", material_value, value);
+
+          // now add both costs
+          value+=material_value;
+
+          // adjust *nrof, when we have more than 1
+          if (nrof>1)
+          {
+            value*=nrof;
+          }
+
+          // adjust condition in %, so we can have 0 condition items leading to 0 value
+          // for tasks like repairing we need later the value without condition adjustment
+          value=(int)(what->item_condition/100.f*value+0.5f);
+        }
+    }
+
+    // test this first without charima or shop fee
+    return value;
+}
+
+
 /* query_cost() will return the real value of an item
  * Thats not always ->value - and in some cases the value
  * is calced using the default arch
  */
-sint64 query_cost(object_t *tmp, object_t *who, int flag)
+sint64 query_costOLD(object_t *tmp, object_t *who, int flag)
 {
     sint64  val;
-    int     number; /* used to better calculate value */
+    int     nrof;
 
-    if ((number = tmp->nrof) == 0)
-        number = 1;
+    if ((nrof = tmp->nrof) == 0)
+        nrof = 1;
 
-    if (tmp->type == MONEY) /* money is always identified */
-        return(number * tmp->value);
+    if (tmp->type == MONEY) // money
+        return(nrof * tmp->value);
 
-    /* handle identified items */
+    // identified items
     if (QUERY_FLAG(tmp, FLAG_IDENTIFIED))
     {
         if (QUERY_FLAG(tmp, FLAG_CURSED) || QUERY_FLAG(tmp, FLAG_DAMNED))
-            return 0;
+            return 0; // cursed or damned
         else
         {
             if (flag == F_TRUE)
             {
-                val = tmp->value * number;
+                val = tmp->value * nrof;
             }
             else
             {
@@ -75,7 +153,7 @@ sint64 query_cost(object_t *tmp, object_t *who, int flag)
                 }
 
                 /* No bulk discounts or anything ATM. */
-                val *= number;
+                val *= nrof;
             }
         }
     }
@@ -86,11 +164,11 @@ sint64 query_cost(object_t *tmp, object_t *who, int flag)
             if (flag == F_BUY)
             {
                 LOG(llevMapbug, "MAPBUG:: Asking for buy-value of unidentified object %s.\n", STRING_OBJ_NAME(tmp));
-                val = tmp->arch->clone.value * number * 100;
+                val = tmp->arch->clone.value * nrof * 100;
             }
             else    /* Trying to sell something, or get true value -- *always* stupid */
             {
-                val = number;
+                val = nrof;
             }
         }
         else
@@ -100,11 +178,11 @@ sint64 query_cost(object_t *tmp, object_t *who, int flag)
             if (flag == F_BUY)
             {
                 LOG(llevBug, "BUG: Asking for buy-value of unidentified object without arch.\n");
-                val = number * 1000;
+                val = nrof * 1000;
             }
             else
             {
-                val = number;
+                val = nrof;
             }
         }
     }
@@ -279,7 +357,8 @@ sint64 query_money(object_t *where, moneyblock_t *money)
     return total;
 }
 
-sint64 PayFromWithCooper(object_t *where, sint64 amount)
+// value 1 for copper, 100 for silver, 10000 for gold, 10000000 for mithril
+sint64 PayFromWithValue(object_t *where, int coin_value, sint64 amount)
 {
     object_t *this;
 
@@ -303,16 +382,29 @@ sint64 PayFromWithCooper(object_t *where, sint64 amount)
 
         if (this->type == MONEY)
         {
-          if (this->value==1)
+          if (this->value == coin_value) // ?found the right coin we want pay with . 1=copper, 100 silver, ...
           {
-            if (amount<this->value*this->nrof)
+            if (amount < this->value*this->nrof) // we have more coins, we need
             {
-              // this->nrof-=amount; // this manipulation don't refresh client
-              decrease_ob_nr(this, amount);
-              amount=0;
-              break;
+              if (coin_value == 1)
+              {
+                // if we pay with copper, use part of this coins to pay
+                decrease_ob_nr(this, amount);
+                amount=0;
+                break;
+              }
+              else
+              {
+                // if we pay with silver, gold or mith, use part of this coins,
+                // but use one more coin, if we also have amounts to pay which are lower than or coin_value
+                sint64 coins=this->nrof-amount/coin_value; // how much of our coins we need
+                if (coins*coin_value<amount) coins++; // we have lower values to pay, we need one more coin
+                decrease_ob_nr(this, coins);
+                amount-=coins*coin_value; // this can go minus now, so we know we must give back change
+              }
+
             }
-            else
+            else // use all this coins to pay
             {
               amount -= (this->nrof * this->value);
               remove_ob(this);
@@ -324,144 +416,7 @@ sint64 PayFromWithCooper(object_t *where, sint64 amount)
     return amount;
 }
 
-sint64 PayFromWithSilver(object_t *where, sint64 amount)
-{
-    object_t *this;
-
-    /* Sanity checks. */
-    if (!where ||
-        amount <= 0)
-    {
-        return amount;
-    }
-
-    this = where->inv;
-
-    while (this)
-    {
-        object_t *next = this->below;
-        if (amount <= 0)
-        {
-            break;
-        }
-        if (this->type == MONEY)
-        {
-          if (this->value==100)
-          {
-            if (amount<this->value*this->nrof)
-            {
-              sint64 coins=this->nrof-amount/100;
-              if (coins*100<amount) coins++; // if there are coppers to pay, we need one extra silver
-              decrease_ob_nr(this, coins);
-              amount-=coins*100; // this can go minus now, so we know we must give back change
-              break;
-            }
-            else
-            {
-              amount -= (this->nrof * this->value);
-              remove_ob(this);
-            }
-          }
-        }
-        this = next;
-      } // while(this)
-    return amount;
-}
-
-sint64 PayFromWithGold(object_t *where, sint64 amount)
-{
-    object_t *this;
-
-    /* Sanity checks. */
-    if (!where ||
-        amount <= 0)
-    {
-        return amount;
-    }
-
-    this = where->inv;
-
-    while (this)
-    {
-        object_t *next = this->below;
-
-        if (amount <= 0)
-        {
-            break;
-        }
-
-        if (this->type == MONEY)
-        {
-          if (this->value==10000)
-          {
-            if (amount<this->value*this->nrof)
-            {
-              sint64 coins=this->nrof-amount/10000;
-              if (coins*10000<amount) coins++; // if there are still silver or coppers to pay, we need one extra gold
-              decrease_ob_nr(this, coins);
-              amount-=coins*10000; // this can go - now, so we now we must give back change
-              break;
-            }
-            else
-            {
-              amount -= (this->nrof * this->value);
-              remove_ob(this);
-            }
-          }
-        }
-        this = next;
-      } // while(this)
-    return amount;
-}
-
-sint64 PayFromWithMithril(object_t *where, sint64 amount)
-{
-    object_t *this;
-
-    /* Sanity checks. */
-    if (!where ||
-        amount <= 0)
-    {
-        return amount;
-    }
-
-    this = where->inv;
-
-    while (this)
-    {
-        object_t *next = this->below;
-
-        if (amount <= 0)
-        {
-            break;
-        }
-
-        if (this->type == MONEY)
-        {
-          if (this->value==10000000)
-          {
-            if (amount<this->value*this->nrof)
-            {
-              sint64 coins=this->nrof-amount/10000000;
-              if (coins*10000000<amount) coins++; // if there are still silver or coppers to pay, we need one extra gold
-              decrease_ob_nr(this, coins);
-              amount-=coins*10000000; // this can go - now, so we now we must give back change
-              break;
-            }
-            else
-            {
-              amount -= (this->nrof * this->value);
-              remove_ob(this);
-            }
-          }
-        }
-        this = next;
-      } // while(this)
-    return amount;
-}
-
-/* Tries to pay to_pay if op can afford it. Returns 1 or 0 on success or
- * failure. */
+// Tries to pay if op can afford it. Returns 1 on success or 0 on failure.
 uint8 shop_pay_amount(sint64 amount, object_t *op)
 {
     /* Sanity check. */
@@ -470,20 +425,29 @@ uint8 shop_pay_amount(sint64 amount, object_t *op)
         return 0;
     }
 
-    if (amount <= 0) // hurray, it's free!
+    if (amount <= 0) // free
     {
         return 1;
     }
+    else if (amount > query_money(op, NULL)) // can't afford it
+    {
+        return 0;
+    }
 
-    // prototyp : paying with a marked creditcard, currently name is relevant
+    if (op->type == PLAYER)
+    {
+        SET_FLAG(op, FLAG_NO_FIX_PLAYER);
+    }
+
+    // when a moneycard is marked we try to pay from bank account
     object_t *mark;
 	  if ((mark = find_marked_object(op)))
     {
-        if (strcmp(mark->name, "creditcard") == 0)
+        if (mark->type==MONEYCARD)
+        // if (strcmp(mark->name, "creditcard") == 0)
         {
-            // check money from bank account
-            object_t *this,
-                      *next;
+            // search for bank object in player and try to pay from this
+            object_t *this, *next;
         		FOREACH_OBJECT_IN_OBJECT(this, op, next)
             {
                 if (this->name &&
@@ -503,105 +467,54 @@ uint8 shop_pay_amount(sint64 amount, object_t *op)
                     }
                 }
             }
+            ndi(NDI_UNIQUE, 0, op, "Perhaps you open a bank account first, before trying to pay with this card.");
+            return 0;
         }
     }
 
-    if (amount > query_money(op, NULL)) // can't afford it
+    int coin_value=1; // start with coppers
+    while (amount>0)
     {
-        return 0;
-    }
-
-    if (op->type == PLAYER)
-    {
-        SET_FLAG(op, FLAG_NO_FIX_PLAYER);
-    }
-
-    // new pay logic we pay first with coppers, then silver, gold, last mithril
-    // prototyp : should be improved
-
-    if ((amount = PayFromWithCooper(op, amount)) > 0)
-    {
-        object_t *this,
-               *next;
-
-        FOREACH_OBJECT_IN_OBJECT(this, op, next)
+        // try to pay from player root inventar first
+        if ((amount = PayFromWithValue(op, coin_value, amount)) > 0)
         {
-            if (this->type == CONTAINER &&
-                (amount = PayFromWithCooper(this, amount)) <= 0)
+            object_t *this,
+                  *next;
+            // try to pay out of each container next
+            FOREACH_OBJECT_IN_OBJECT(this, op, next)
             {
-                break;
+                if (this->type == CONTAINER &&
+                    (amount = PayFromWithValue(this, coin_value, amount)) <= 0)
+                {
+                    break;
+                }
+            }
+        }
+
+        if (amount>0) // still to pay?
+        {
+            if (coin_value==1)
+            {
+                coin_value=100; // pay next with silver
+            }
+            else if (coin_value==100)
+            {
+                coin_value=10000; // pay next with gold
+            }
+            else if (coin_value==10000)
+            {
+                coin_value=10000000; // pay next with mith
+            }
+            else
+            {
+                // this can normaly not happen, but when someone call this function without the check before ...
+                // if we have enough money, we come here and this would lead to a endless while loop
+                LOG(llevDebug,"error : shop_pay_amount, someone called this function without enough money to pay.\n");
+                // originally function also don't check for this, so we only avoid the endless loop
+                amount=0;
             }
         }
     }
-
-    if (amount>0)
-    {
-      if ((amount = PayFromWithSilver(op, amount)) > 0)
-      {
-        object_t *this,
-               *next;
-
-        FOREACH_OBJECT_IN_OBJECT(this, op, next)
-        {
-            if (this->type == CONTAINER &&
-                (amount = PayFromWithSilver(this, amount)) <= 0)
-            {
-                break;
-            }
-        }
-      }
-    }
-
-    if (amount>0)
-    {
-      if ((amount = PayFromWithGold(op, amount)) > 0)
-      {
-        object_t *this,
-               *next;
-
-        FOREACH_OBJECT_IN_OBJECT(this, op, next)
-        {
-            if (this->type == CONTAINER &&
-                (amount = PayFromWithGold(this, amount)) <= 0)
-            {
-                break;
-            }
-        }
-      }
-    }
-
-    if (amount>0)
-    {
-      if ((amount = PayFromWithMithril(op, amount)) > 0)
-      {
-        object_t *this,
-               *next;
-
-        FOREACH_OBJECT_IN_OBJECT(this, op, next)
-        {
-            if (this->type == CONTAINER &&
-                (amount = PayFromWithMithril(this, amount)) <= 0)
-            {
-                break;
-            }
-        }
-      }
-    }
-
-    /*if ((amount = PayFrom(op, amount)) > 0)
-    {
-        object_t *this,
-               *next;
-
-        FOREACH_OBJECT_IN_OBJECT(this, op, next)
-        {
-            if (this->type == CONTAINER &&
-                (amount = PayFrom(this, amount)) <= 0)
-            {
-                break;
-            }
-        }
-    }*/
 
     /* Negative means we're due change. */
     if (amount < 0)
@@ -618,9 +531,6 @@ uint8 shop_pay_amount(sint64 amount, object_t *op)
     return 1;
 }
 
-
-
-
 static sint64 PayFrom(object_t *where, sint64 amount)
 {
     object_t *this;
@@ -632,10 +542,6 @@ static sint64 PayFrom(object_t *where, sint64 amount)
         return amount;
     }
 
-    // try first pay with the coppers, sadly we need to count first
-    // because there is no container in container allowed, we really don't need a recursion
-
-    // count cooper
     this = where->inv;
 
     while (this)
@@ -649,20 +555,10 @@ static sint64 PayFrom(object_t *where, sint64 amount)
 
         if (this->type == MONEY)
         {
-          if (this->value==1)
-          {
-            if (amount<this->value)
-            {
-              this->nrof-=amount;
-              amount=0;
-            }
-            else
-            {
-              amount -= (this->nrof * this->value);
-              remove_ob(this);
-            }
-          }
+            amount -= (this->nrof * this->value);
+            remove_ob(this);
         }
+
         this = next;
     }
 
@@ -677,13 +573,13 @@ uint8 shop_checkout(object_t *op, object_t *this)
 
     /* Always report success in these cases even though we are not actually
      * making a purchase. */
-    if (!this ||
-        QUERY_FLAG(this, FLAG_SYS_OBJECT))
+    if (!this)
     {
         return 1;
     }
 
-    if (QUERY_FLAG(this, FLAG_UNPAID))
+    if (QUERY_FLAG(this, FLAG_UNPAID) &&
+        !QUERY_FLAG(this, FLAG_SYS_OBJECT))
     {
         sint64 price = query_cost(this, op, F_BUY);
 
@@ -710,10 +606,17 @@ uint8 shop_checkout(object_t *op, object_t *this)
     /* Recursively go through EVERY item in the inv, no matter how deeply
      * buried in closed containers. TODO: In future we can modify this function
      * to perhaps allow a chance for shoplifting. */
-    if (success &&
-        (success = shop_checkout(op, this->inv)))
+    if (success)
     {
-        success = shop_checkout(op, this->below);
+        if (!QUERY_FLAG(this, FLAG_SYS_OBJECT))
+        {
+            success = shop_checkout(op, this->inv);
+        }
+
+        if (success)
+        {
+            success = shop_checkout(op, this->below);
+        }
     }
 
     return success;
