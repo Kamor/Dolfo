@@ -28,20 +28,18 @@
 static sint64 PayFrom(object_t *where, sint64 amount);
 static void   InsertCoin(uint8 cointype, uint32 nrof, object_t *into);
 
-
 // small function to check if player is in shop
 uint8 player_is_in_shop(player_t *pl)
 {
-    object_t *shop = NULL;
-    msp_t *msp = MSP_KNOWN(pl->ob);
-    MSP_GET_SYS_OBJ(msp, SHOP_FLOOR, shop);
-    if (shop)
-    {
-        return 1;
-    }
-        return 0;
-    }
-
+ object_t *shop = NULL;
+ msp_t *msp = MSP_KNOWN(pl->ob);
+ MSP_GET_SYS_OBJ(msp, SHOP_FLOOR, shop);
+ if (shop)
+ {
+  return 1;
+ }
+ return 0;
+}
 
 sint64 query_cost(object_t *tmp, object_t *who, int flag)
 {
@@ -61,62 +59,68 @@ sint64 query_cost(object_t *tmp, object_t *who, int flag)
     {
         if (QUERY_FLAG(what, FLAG_CURSED) || QUERY_FLAG(what, FLAG_DAMNED))
             return 0;
-        else
+
+        // we do 2 calculations, one for material costs other is defined by value
+        // materialcosts done care about level of item
+        // but we need handle also magicical materials here TODO
+
+        // check if we have a real_material definition
+        int mr = what->material_real;
+        if (mr>=0)
         {
-          // we do 2 calculations, one for material costs other is defined by value
-          // materialcosts done care about level of item
-          // but we need handle also magicical materials here TODO
-
-          // check if we have a real_material definition
-          int mr = what->material_real;
-          if (mr>=0)
-          {
-            material_value=material_real[mr].value;
-          }
-          // no material_real definitions (-1) leads to value 0
-          // also a zero definition in material_real array leads to value 0
-          // if we have no material_value, we try quality
-          if (material_value==0)
-          {
-            material_value=max(1, what->item_quality); // handle quality 0 like 1
-          }
-
-          // adjust weight, we multiplicate with kg, so under 1 kg items could become cheaper, we also round
-          if (what->weight>0)
-          {
-            material_value=(int)(what->weight/1000.0f*material_value+0.5f);
-          }
-
-          // TODO do something with magic materials?
-
-          // adjust * level, when we have levels above 1, this don't change the material costs
-          // it change the non material costs of an item
-          if (what->level>1)
-          {
-            value*=what->level;
-          }
-
-          // todo spell level, charges
-
-          LOG(llevDebug,"material_value %d non_material_value %d\n", material_value, value);
-
-          // now add both costs
-          value+=material_value;
-
-          // adjust *nrof, when we have more than 1
-          if (nrof>1)
-          {
-            value*=nrof;
-          }
-
-          // adjust condition in %, so we can have 0 condition items leading to 0 value
-          // for tasks like repairing we need later the value without condition adjustment
-          value=(int)(what->item_condition/100.f*value+0.5f);
+          material_value=material_real[mr].value;
         }
-    }
+        // no material_real definitions (-1) leads to value 0
+        // also a zero definition in material_real array leads to value 0
+        // if we have no material_value, we try quality
+        if (material_value==0)
+        {
+            material_value=max(1, what->item_quality); // handle quality 0 like 1
+        }
 
-    // test this first without charima or shop fee
+        // adjust weight, we multiplicate with kg, so under 1 kg items could become cheaper, we also round
+        if (what->weight>0)
+        {
+            material_value=(int)(what->weight/1000.0f*material_value+0.5f);
+        }
+
+        // TODO do something with magic materials?
+
+        // adjust * level, when we have levels above 1, this don't change the material costs
+        // it change the non material costs of an item
+        if (what->level>1)
+        {
+            value*=what->level;
+        }
+
+        // todo spell level, charges
+
+        LOG(llevDebug,"material_value %d non_material_value %d\n", material_value, value);
+
+        // now add both costs
+        value+=material_value;
+
+        // adjust *nrof, when we have more than 1
+        if (nrof>1)
+        {
+            value*=nrof;
+        }
+
+        // adjust condition in %, so we can have 0 condition items leading to 0 value
+        // for tasks like repairing we need later the value without condition adjustment
+        value=(int)(what->item_condition/100.f*value+0.5f);
+
+        if (flag == F_BUY)
+        {
+            value*=1.25f; // buy 25% more
+        }
+        else if (flag == F_SELL)
+        {
+            value*=0.75f; // sell 25% less
+        }
+
     return value;
+    }
 }
 
 
@@ -486,6 +490,11 @@ uint8 shop_pay_amount(sint64 amount, object_t *op)
         }
     }
 
+    if (op->type == PLAYER)
+    {
+        SET_FLAG(op, FLAG_NO_FIX_PLAYER);
+    }
+
     int coin_value=1; // start with coppers
     while (amount>0)
     {
@@ -540,6 +549,11 @@ uint8 shop_pay_amount(sint64 amount, object_t *op)
         loot = create_financial_loot(&money, op, MODE_NO_INVENTORY);
         SHSTR_FREE_AND_ADD_STRING(loot->name, "your change");
         (void)thing_pick_up(op, loot, NULL, 1);
+    }
+
+    if (op->type == PLAYER)
+    {
+        CLEAR_FLAG(op, FLAG_NO_FIX_PLAYER);
     }
 
     return 1;
