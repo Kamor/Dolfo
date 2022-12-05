@@ -300,6 +300,7 @@ sint64                      query_cost(object_t *tmp, object_t *who, int flag);
 char                       *cost_string_from_value(sint64 cost, int mode);
 char                       *query_cost_string(object_t *tmp, object_t *who, int flag, int mode);
 sint64                      query_money(object_t *where, moneyblock_t *money);
+uint8                       player_is_in_shop(player_t *pl);
 uint8                       shop_pay_amount(sint64 amount, object_t *op);
 uint8                       shop_checkout(object_t *op, object_t *this);
 void                        shop_return_unpaid(object_t *who, msp_t *msp);
