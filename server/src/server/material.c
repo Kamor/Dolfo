@@ -35,26 +35,27 @@ The M_RANDOM_xx value will always counted from down. */
 */
 material_real_struct    material_real[NROFMATERIALS *NROFMATERIALS_REAL + 1]    =
 {
+  // name, tearing(not used), quality, value
     /* undefined Material - for stuff we don't need material information about */
     {"", 100,100,       0,0,0,      M_NONE,         RACE_TYPE_NONE},
 
         /* PAPERS */
-    {"paper ",         90,80,       0,0,0,      M_PAPER,         RACE_TYPE_NONE},
-    {"paper ",         90,81,       0,0,0,      M_PAPER,         RACE_TYPE_NONE},
-    {"paper ",         90,82,       0,0,0,      M_PAPER,         RACE_TYPE_NONE},
-    {"paper ",         90,83,       0,0,0,      M_PAPER,         RACE_TYPE_NONE},
-    {"paper ",         90,84,       0,0,0,      M_PAPER,         RACE_TYPE_NONE},
-    {"paper ",         90,85,       0,0,0,      M_PAPER,         RACE_TYPE_NONE},
-    {"paper ",         90,86,       0,0,0,      M_PAPER,         RACE_TYPE_NONE},
-    {"paper ",         90,87,       0,0,0,      M_PAPER,         RACE_TYPE_NONE},
-    {"paper ",         90,88,       0,0,0,      M_PAPER,         RACE_TYPE_NONE},
-    {"rice paper ",    90,89,       0,0,0,      M_PAPER,         RACE_TYPE_NONE},
-    {"parchment ",    100,90,       0,0,0,      M_PAPER,         RACE_TYPE_NONE},
-    {"parchment ",    100,91,       0,0,0,      M_PAPER,         RACE_TYPE_NONE},
-    {"parchment ",    100,92,       0,0,0,      M_PAPER,         RACE_TYPE_NONE},
-    {"vellum ",       100,93,       0,0,0,      M_PAPER,         RACE_TYPE_NONE},
-    {"demon vellum ", 100,94,       0,0,0,      M_PAPER,         RACE_TYPE_NONE},
-    {"papyrus ",      100,95,       0,0,0,      M_PAPER,         RACE_TYPE_NONE},
+    {"paper ",         90,1,       1,0,0,      M_PAPER,         RACE_TYPE_NONE},
+    {"paper ",         90,1,       1,0,0,      M_PAPER,         RACE_TYPE_NONE},
+    {"paper ",         90,1,       1,0,0,      M_PAPER,         RACE_TYPE_NONE},
+    {"paper ",         90,1,       1,0,0,      M_PAPER,         RACE_TYPE_NONE},
+    {"paper ",         90,1,       1,0,0,      M_PAPER,         RACE_TYPE_NONE},
+    {"paper ",         90,1,       1,0,0,      M_PAPER,         RACE_TYPE_NONE},
+    {"paper ",         90,1,       1,0,0,      M_PAPER,         RACE_TYPE_NONE},
+    {"paper ",         90,1,       1,0,0,      M_PAPER,         RACE_TYPE_NONE},
+    {"paper ",         90,1,       1,0,0,      M_PAPER,         RACE_TYPE_NONE},
+    {"rice paper ",    90,2,       2,0,0,      M_PAPER,         RACE_TYPE_NONE},
+    {"parchment ",    100,3,       3,0,0,      M_PAPER,         RACE_TYPE_NONE},
+    {"parchment ",    100,3,       3,0,0,      M_PAPER,         RACE_TYPE_NONE},
+    {"parchment ",    100,3,       3,0,0,      M_PAPER,         RACE_TYPE_NONE},
+    {"vellum ",       100,4,       4,0,0,      M_PAPER,         RACE_TYPE_NONE},
+    {"demon vellum ", 100,5,       5,0,0,      M_PAPER,         RACE_TYPE_NONE},
+    {"papyrus ",      100,6,       6,0,0,      M_PAPER,         RACE_TYPE_NONE},
     {"", 0,0,       0,0,0,      M_NONE,         RACE_TYPE_NONE},
     {"", 0,0,       0,0,0,      M_NONE,         RACE_TYPE_NONE},
     {"", 0,0,       0,0,0,      M_NONE,         RACE_TYPE_NONE},
@@ -364,8 +365,8 @@ material_real_struct    material_real[NROFMATERIALS *NROFMATERIALS_REAL + 1]    
     {"", 0,0,       0,0,0,      M_NONE,         RACE_TYPE_NONE},
     {"", 0,0,       0,0,0,      M_NONE,         RACE_TYPE_NONE},
     /* ORGANIC (321) */
-    {"organic ",       100,80,       0,0,0,      M_ORGANIC,       RACE_TYPE_NONE}, /* 321 used for misc organics */
-    {"dragon ",      50,96,       0,0,0,      M_ORGANIC,         RACE_TYPE_NONE}, /* 322 */
+    {"organic "             , 100,80,       0,0,0,      M_ORGANIC,       RACE_TYPE_NONE}, /* 321 used for misc organics */
+    {"dragon "              , 50,96,       0,0,0,      M_ORGANIC,         RACE_TYPE_NONE}, /* 322 */
     {"chitin "              , 50,45,       0,0,0,      M_ORGANIC,         RACE_TYPE_NONE}, /* 323 */
     {"scale "               , 50,55,       0,0,0,      M_ORGANIC,         RACE_TYPE_NONE},/* 324 */
     {"white dragonscale "   , 10,65,       0,0,0,      M_ORGANIC,         RACE_TYPE_NONE},/* 325 */
@@ -918,66 +919,66 @@ materialtype            material[NROFMATERIALS]                             =
 // imunities are deactivated, only check for weapon is in base
 // see comments in material_attack_damageOLD
 // droping items to the ground on condition 0 is also deactivated
-// such code, mostly never used by players is nice to have as a kind of secret unknown game behaviour
-// but also blows up the code, i deactivated it for the moment here, it is also bugged code, see below
-// the imunity system is not really good implemented in old code, see there, i have removed it here
+
 void material_attack_damage(object_t *op, int num, int chance, int base)
 {
-  object_t *item;
-  player_t *pl;
-  int slot;
-  if(op->type != PLAYER || !(pl = CONTR(op))) return;
+    object_t *item;
+    player_t *pl;
+    int slot;
+    if(op->type != PLAYER || !(pl = CONTR(op))) return;
 
-		//ndi(NDI_UNIQUE, 0, op, "DAMAGE = %d", num);
+    //ndi(NDI_UNIQUE, 0, op, "DAMAGE = %d", num);
 
-		// thats tricky now, more damage hitter has, more risk should be to damage gear
-		// we don't want each hit break our gear, so we need random
-		// original idea was 2%+xacid+xmagicweapon against 100 roll
-		// my idea is against quality roll
-		// my idea is to increase the chance by damage
-		// but 1 damage should have a chance to damage gear somehow
-		// thinking of a troll hitting 1000 on a quality 1 item
-		// this would be a 1000 roll against 1 ?
-		// this means quality is better adjusted in higher ranges 1-1000 to compensation incoming damage?
-		// but for the moment, lets keep quality in range 1-100 and use a *10 modificator for it
-		// so one roll is rnd%damage, where the other is rnd%quality*10
-		// this means a quality 100 have a 1000 roll, where a hitting 1 damage ant has a 1 roll
-		// so its really hard for such a weak ant to make item_damage on such a high quality item
+    // more damage hitter has, more risk should be to damage gear
+    // we don't want each hit break our gear, so we need random
+    // original idea was 2%+xacid+xmagicweapon against 100 roll
+    // new idea is against quality roll
+    // new idea is to increase the chance by damage
+    // but 1 damage should have always a chance to damage gear somehow
+    // thinking of a troll hitting 1000 on a quality 1 item
+    // this would be a 1000 roll against 1 ?
+    // this means quality is better adjusted in higher ranges 1-1000 to compensation incoming damage?
+    // but for the moment, lets keep quality in range 1-100 and use a *10 modificator for it
+    // so one roll is rnd%damage, where the other is rnd%(quality*10)
+    // this means a quality 100 have a 1000 roll, where a hitting 1 damage ant has a 1 roll
+    // so its really hard for such a weak ant to make item_damage on such a high quality item
 
-		// todo this is ugly and only temporary
-		chance=num;
+    // todo this is ugly and only temporary
+    chance=num;
 
-		// if he have HIT_FLAG_WEAPON, we pick the weapon slot, not a random slot
-		if(base & HIT_FLAG_WEAPON)
-		{
-			slot=PLAYER_EQUIP_WEAPON1; // weaponslot
-		}
-		else
-		{
-    slot = RANDOM() % PLAYER_EQUIP_MAX; // get a random slot
-    // todo slots could have different chances, like body slot gets the most hits?
-    // perhaps also a forced slot from outside, like aiming on head?
-		}
+    // if he have HIT_FLAG_WEAPON, we pick the weapon slot, not a random slot
+    if(base & HIT_FLAG_WEAPON)
+    {
+        slot=PLAYER_EQUIP_WEAPON1; // weaponslot
+    }
+    else
+    {
+        slot = RANDOM() % PLAYER_EQUIP_MAX; // get a random slot
+        // todo slots could have different chances, like body slot gets the most hits?
+        // perhaps also a forced slot from outside, like aiming on head?
+    }
 
-		if(!(item = pl->equipment[slot])) return; // very easy, if there is no item in this slot, do nothing
+    if(!(item = pl->equipment[slot])) return; // very easy, if there is no item in this slot, do nothing
 
-	// now we roll the chance(damage) from outside against the quality,
-  if (!item->item_quality) return; // todo launch error
-	if(RANDOM()%chance < (RANDOM()%10*item->item_quality)) return;
+    // now we roll the chance(damage) from outside against the quality,
+    if (item->item_quality>0) // item quali 0 we always damage, other we roll
+    {
+        if(RANDOM()%chance < RANDOM()%(item->item_quality*10)) return;
+    }
 
-	item->item_condition--;
-	// first make it slow, only decrease 1, we have also damage from outside (acid, magic weapons)
-	// we can also try more damage in relation to the rolls above?
-	// i temporary removed the different handling of item stacks
+    item->item_condition--;
+    // first make it slow, only decrease 1, we have also damage from outside (acid, magic weapons)
+    // we can also try more damage in relation to the rolls above?
+    // i temporary removed the different handling of item stacks
 
-	if (item->item_condition<0) item->item_condition=0;
+    if (item->item_condition<0) item->item_condition=0;
 
-	ndi(NDI_UNIQUE, 0, op, "%s %s damaged!",
+    ndi(NDI_UNIQUE, 0, op, "%s %s damaged!",
     query_name(item, op, ARTICLE_DEFINITE, 0),
     (item->nrof > 1) ? "are" : "is");
-  OBJECT_UPDATE_UPD(item, UPD_QUALITY);
+    OBJECT_UPDATE_UPD(item, UPD_QUALITY);
 
-	FIX_PLAYER(op ,"material_attack_damage - end");
+    FIX_PLAYER(op ,"material_attack_damage - end");
 }
 
 // Old code to keep the code syntax and logics alive
@@ -1079,9 +1080,7 @@ void material_attack_damageOLD(object_t *op, int num, int chance, int base)
             }
         }
 
-        // this is strange, this should be something like if ... and item_condition==0
-        // so i think this don't work
-        if (!item->item_condition)
+        if (item->item_condition==0)
         {
             /* If the player is daft enough to let an item get broken in this way,
              * it falls off -- but this is not an easy way to beat a curse! */
