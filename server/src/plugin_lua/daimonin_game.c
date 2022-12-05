@@ -29,20 +29,22 @@
 
 static struct method_decl Game_methods[] =
 {
+    {"CreateObject",     Game_CreateObject},
     {"EnumerateCoins",   Game_EnumerateCoins},
     {"FindPlayer",       Game_FindPlayer},
     {"GetSkillNr",       Game_GetSkillNr},
     {"GetSpellNr",       Game_GetSpellNr},
     {"GetTimeAndDate",   Game_GetTimeAndDate},
-    {"GlobalMessage",    Game_GlobalMessage},
+    {"GlobalMessage",    Game_Write}, // deprecated, use game:Write()
     {"IsValid",          Game_IsValid},
     {"LoadObject",       Game_LoadObject},
     {"LocateBeacon",     Game_LocateBeacon},
     {"Log",              Game_Log},
-    {"MatchString",      Game_MatchString},
     {"PrintTimeAndDate", Game_PrintTimeAndDate},
     {"ReadyMap",         Game_ReadyMap},
+    {"ServerTickDiff",   Game_ServerTickDiff},
     {"UpgradeApartment", Game_UpgradeApartment},
+    {"Write",            Game_Write},
 
     {NULL, NULL}
 };
@@ -123,7 +125,7 @@ static struct constant_decl preset_game_constants[] =
     {"CLONE_WITH_INVENTORY",    MODE_INVENTORY},
     {"CLONE_WITHOUT_INVENTORY", MODE_NO_INVENTORY},
 
-    /* colours (newclient.h) */
+    /* colours (newclient.h) -- deprecated, use NDI_COLR_* */
     {"COLOR_WHITE",   NDI_WHITE},
     {"COLOR_ORANGE",  NDI_ORANGE},
     {"COLOR_NAVY",    NDI_NAVY},
@@ -137,9 +139,25 @@ static struct constant_decl preset_game_constants[] =
     {"COLOR_YELLOW",  NDI_YELLOW},
     {"COLOR_DK_NAVY", NDI_DK_NAVY},
 
-    /* message modes (newclient.h) */
+    /* message modes (newclient.h) -- deprecated, use NDI_FLAG_* */
     {"VIM_MSG",      NDI_VIM},
-    {"UNIQUE_MSG",   NDI_UNIQUE},
+    {"UNIQUE_MSG",   NDI_UNIQUE}, // deprecated, scripts needn't worry about this
+
+    /* ndi colours and flags (newclient.h) -- TODO: Coming soon */
+    {"NDI_COLR_WHITE",   NDI_WHITE},
+    {"NDI_COLR_ORANGE",  NDI_ORANGE},
+    {"NDI_COLR_NAVY",    NDI_NAVY},
+    {"NDI_COLR_RED",     NDI_RED},
+    {"NDI_COLR_GREEN",   NDI_GREEN},
+    {"NDI_COLR_BLUE",    NDI_BLUE},
+    {"NDI_COLR_GREY",    NDI_GREY},
+    {"NDI_COLR_BROWN",   NDI_BROWN},
+    {"NDI_COLR_PURPLE",  NDI_PURPLE},
+    {"NDI_COLR_FLESH",   NDI_FLESH},
+    {"NDI_COLR_YELLOW",  NDI_YELLOW},
+    {"NDI_COLR_DK_NAVY", NDI_DK_NAVY},
+    {"NDI_FLAG_GSAY",    NDI_GSAY},
+    {"NDI_FLAG_VIM",     NDI_VIM},
 
     /* equipment slots of the player->equipment array (player.h) */
     {"EQUIP_MAIL",     PLAYER_EQUIP_MAIL},
@@ -159,29 +177,25 @@ static struct constant_decl preset_game_constants[] =
     {"EQUIP_BOW",      PLAYER_EQUIP_BOW},
     {"EQUIP_AMUN",     PLAYER_EQUIP_AMUN},
     {"EQUIP_MAX",      PLAYER_EQUIP_MAX},
-	
-	/* one hand weapons - allows shields in second hand */
-	{"WEAP_1H_IMPACT",  WEAP_1H_IMPACT},
+
+    /* weapons */
+    {"WEAP_1H_IMPACT",  WEAP_1H_IMPACT},
     {"WEAP_1H_SLASH",   WEAP_1H_SLASH},
     {"WEAP_1H_PIERCE",  WEAP_1H_PIERCE},
     {"WEAP_1H_CLEAVE",  WEAP_1H_CLEAVE},
-	/* two-hand weapons. you need base 1h skill + two-hand mastery for use */
-	/* exp goes always in 1h skill - mastery skills are indirect skills */
-	{"WEAP_2H_IMPACT",  WEAP_2H_IMPACT},
+    {"WEAP_2H_IMPACT",  WEAP_2H_IMPACT},
     {"WEAP_2H_SLASH",   WEAP_2H_SLASH},
     {"WEAP_2H_PIERCE",  WEAP_2H_PIERCE},
     {"WEAP_2H_CLEAVE",  WEAP_2H_CLEAVE},
-	/* same like 2h but for polearms */
-	{"WEAP_POLE_IMPACT",  WEAP_POLE_IMPACT},
+    {"WEAP_POLE_IMPACT",  WEAP_POLE_IMPACT},
     {"WEAP_POLE_SLASH",   WEAP_POLE_SLASH},
     {"WEAP_POLE_PIERCE",  WEAP_POLE_PIERCE},
     {"WEAP_POLE_CLEAVE",  WEAP_POLE_CLEAVE},
-	/* range weapons  */
-	{"RANGE_WEAP_BOW",      RANGE_WEAP_BOW},	  /* range weapons - bows */
-    {"RANGE_WEAP_XBOWS",    RANGE_WEAP_XBOWS},	  /* crossbows */
-    {"RANGE_WEAP_SLINGS",   RANGE_WEAP_SLINGS},	  /* slings */
-    {"RANGE_WEAP_FIREARMS", RANGE_WEAP_FIREARMS}, /* firearms - not implemented */
-	
+    {"RANGE_WEAP_BOW",      RANGE_WEAP_BOW},
+    {"RANGE_WEAP_XBOWS",    RANGE_WEAP_XBOWS},
+    {"RANGE_WEAP_SLINGS",   RANGE_WEAP_SLINGS},
+    {"RANGE_WEAP_FIREARMS", RANGE_WEAP_FIREARMS}, /* not implemented */
+
     /* map loading modes (plugin_lua/include/plugin_lua.h) */
     {"MAP_CHECK", PLUGIN_MAP_CHECK},
     {"MAP_NEW",   PLUGIN_MAP_NEW},
@@ -256,6 +270,7 @@ static struct constant_decl preset_game_constants[] =
     {"TYPE_HORN",             HORN},
     {"TYPE_MONEY",            MONEY},
     {"TYPE_LOOT",             LOOT},
+    {"TYPE_MONEYCARD",        MONEYCARD},
     {"TYPE_AMULET",           AMULET},
     {"TYPE_PLAYERMOVER",      PLAYERMOVER},
     {"TYPE_TELEPORTER",       TELEPORTER},
@@ -316,6 +331,7 @@ static struct constant_decl preset_game_constants[] =
     {"TYPE_BASE_INFO",        TYPE_BASE_INFO},
     {"TYPE_RANDOM_DROP",      TYPE_RANDOM_DROP},
     {"TYPE_BRACERS",          BRACERS},
+    {"TYPE_HOMESTONE",        HOMESTONE},
     {"TYPE_SAVEBED",          SAVEBED},
     {"TYPE_POISONCLOUD",      POISONCLOUD},
     {"TYPE_FIREHOLES",        FIREHOLES},
@@ -797,22 +813,46 @@ static int Game_LoadObject(lua_State *L)
 }
 
 /*****************************************************************************/
-/* Name   : Game_MatchString                                                 */
-/* Lua    : game:MatchString(firststr, secondstr)                            */
-/* Info   : Case insensitive string comparision. Returns 1 if the two        */
-/*          strings are the same, or 0 if they differ.                       */
-/*          secondstring can contain regular expressions.                    */
+/* Name   : Game_CreateObject                                                */
+/* Lua    : game:CreateObject(archname, identified, number, value)           */
+/* Info   : Creates an object from archname.                                 */
+/*          identified is either game.IDENTIFIED or game.UNIDENTIFIED        */
+/*          number is the number of objects to create in a stack             */
+/*          If value is >= 0 it will be used as the new object's value,      */
+/*          otherwise the value will be taken from the arch.                 */
 /*****************************************************************************/
-static int Game_MatchString(lua_State *L)
+static int Game_CreateObject(lua_State *L)
 {
-    char   *premiere;
-    char   *seconde;
+    object_t *myob;
+    int         value = -1, id = 0, nrof = 1;
+    char *archname;
     lua_object *self;
 
-    get_lua_args(L, "Gss", &self, &premiere, &seconde);
+    get_lua_args(L, "Gs|iii", &self, &archname, &id, &nrof, &value);
 
-    lua_pushboolean(L, (hooks->re_cmp(premiere, seconde) != NULL));
-    return 1;
+    myob = hooks->arch_to_object(hooks->find_archetype(archname));
+
+    if (!myob)
+    {
+        return luaL_error(L, "game:CreateObject(): Can't find archetype '%s'", STRING_SAFE(archname));
+    }
+
+    if (value != -1) /* -1 means, we use original value */
+    {
+        myob->value = value;
+    }
+
+    if (id)
+    {
+        THING_IDENTIFY(myob);
+    }
+
+    if (nrof > 1)
+    {
+        myob->nrof = nrof;
+    }
+
+    return push_object(L, &GameObject, myob);
 }
 
 /*****************************************************************************/
@@ -949,6 +989,10 @@ static int Game_GetSkillNr(lua_State *L)
 /*          (Useful for datastore and coroutine usage).                      */
 /*          This is the only lua function that doesn't generate an error if  */
 /*          given an invalid object.                                         */
+/* Note   : For maps, IsValid() checks that the map has spaces on it. If not,*/
+/*          there's nothing you can really do with scripts that won't crash  */
+/*          the server. game:ReadyMap(path, game.MAP_CHECK) can tell you if  */
+/*          the map is valid and COULD be loaded.                            */
 /*****************************************************************************/
 static int Game_IsValid(lua_State *L)
 {
@@ -972,6 +1016,39 @@ static int Game_IsValid(lua_State *L)
     }
 
     return 1;
+}
+
+/*****************************************************************************/
+/* Name   : Game_ServerTickDiff                                              */
+/* Lua    : game:ServerTickDiff(mytick)                                      */
+/* Info   : Returns the difference between mytick and the current server     */
+/*          tick. Actually, two values are returned. Firstly, the precise    */
+/*          difference in ticks. Secondly, the approximate difference in     */
+/*          seconds (always a whole number, rounded up to the nearest        */
+/*          second). Positive returns mean mytick is less than the current   */
+/*          server tick (that is, the time has passed). Negative means mytick*/
+/*          is greater (the time is yet to pass).                            */
+/*****************************************************************************/
+static int Game_ServerTickDiff(lua_State * L)
+{
+    lua_object * self;
+    sint32      mytick;
+    sint32      tdiff;
+    sint32      sdiff;
+
+    get_lua_args(L, "Gi", &self, &mytick);
+    tdiff = (sint32)ROUND_TAG - MAX(0, mytick);
+    sdiff = ABS(tdiff) / *hooks->pticks_second;
+
+    if (ABS(tdiff) % *hooks->pticks_second > 0)
+    {
+        sdiff += 1;
+    }
+
+    sdiff *= SGN(tdiff);
+    lua_pushnumber(L, tdiff);
+    lua_pushnumber(L, sdiff);
+    return 2;
 }
 
 /*****************************************************************************/
@@ -1148,26 +1225,37 @@ static int Game_GetTimeAndDate(lua_State *L)
 }
 
 /*****************************************************************************/
-/* Name   : GameObject_GlobalMessage                                         */
-/* Lua    : game:GlobalMessage(message, color)                               */
-/* Info   : Writes a message to every online player.                         */
-/*          color should be one of the game.COLOR_xxx constants.             */
-/*          default color is red.                                            */
+/* Name   : Game_Write                                                       */
+/* Lua    : game:Write(message, ndif)                                        */
+/* Info   : Writes a message to all players currently online.                */
+/*          ndif should be zero or one game.NDI_COLR_* and/or zero or more   */
+/*          game.NDI_FLAG_*. The default ndif is game.NDI_COLR_RED.          */
+/*          game.NDI_FLAG_GSAY is illegal and causes an error.               */
+/*          game.NDI_FLAG_VIM should be used *very* sparingly, if at all.    */
+/* Note   : The Lua language cannot do bitwise operations but it is fine to  */
+/*          add the ndif values.                                             */
 /*****************************************************************************/
-static int Game_GlobalMessage(lua_State *L)
+static int Game_Write(lua_State *L)
 {
-    char       *message;
-    int         color = NDI_RED;
     lua_object *self;
+    char       *message;
+    int         ndif = NDI_RED;
 
-    get_lua_args(L, "Gs|i", &self, &message, &color);
+    get_lua_args(L, "Gs|i", &self, &message, &ndif);
 
     /* No point mucking about with an empty message. */
-    if (*message)
+    if (*message == '\0')
     {
-        hooks->ndi(NDI_PLAYER | NDI_UNIQUE | NDI_ALL | color, 5, NULL,
-                      "%s", message);
+        return 0;
     }
+
+    if ((ndif & NDI_GSAY))
+    {
+        luaL_error(L, "game:Write() cannot be called with game.NDI_FLAG_GSAY!");
+        return 0;
+    }
+
+    hooks->ndi(ndif | NDI_UNIQUE | NDI_ALL, 5, NULL, "%s", message);
 
     return 0;
 }
