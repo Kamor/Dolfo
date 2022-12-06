@@ -157,6 +157,7 @@ int                         command_rskill(object_t *pl, char *params);
 object_t                   *find_marked_object(object_t *op);
 char                       *examine_monster(object_t *op, object_t *tmp, char *buf, int flag);
 char                       *examine(object_t *op, object_t *tmp, int flag);
+char                       *examine_item(object_t *op, object_t *item);
 /* c_party.c */
 /* c_range.c */
 float                       fire_magic_tool(object_t *owner, object_t *op, int dir);
