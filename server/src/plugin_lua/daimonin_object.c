@@ -39,6 +39,7 @@ static struct method_decl GameObject_methods[] =
     {"AddQuest",               (lua_CFunction) GameObject_AddQuest},
     {"AddQuestItem",           (lua_CFunction) GameObject_AddQuestItem},
     {"AddQuestTarget",         (lua_CFunction) GameObject_AddQuestTarget},
+    {"AddSparkly",             (lua_CFunction) GameObject_AddSparkly},
     {"AdjustLightSource",      (lua_CFunction) GameObject_AdjustLightSource},
     {"Apply",                  (lua_CFunction) GameObject_Apply},
     {"CastSpell",              (lua_CFunction) GameObject_CastSpell},
@@ -55,7 +56,6 @@ static struct method_decl GameObject_methods[] =
     {"Communicate",            (lua_CFunction) GameObject_Communicate},
     {"CreateArtifact",         (lua_CFunction) GameObject_CreateArtifact},
     {"CreateInvisibleInside",  (lua_CFunction) GameObject_CreateInvisibleInside},
-    {"CreateObject",           (lua_CFunction) GameObject_CreateObject},
     {"CreateObjectInside",     (lua_CFunction) GameObject_CreateObjectInside},
     {"CreateObjectInsideEx",   (lua_CFunction) GameObject_CreateObjectInsideEx},
     {"CreatePlayerForce",      (lua_CFunction) GameObject_CreatePlayerForce},
@@ -66,6 +66,7 @@ static struct method_decl GameObject_methods[] =
     {"Destruct",               (lua_CFunction) GameObject_Destruct},
     {"DoKnowSpell",            (lua_CFunction) GameObject_DoKnowSpell},
     {"Drop",                   (lua_CFunction) GameObject_Drop},
+    {"ExamineItem",            (lua_CFunction) GameObject_ExamineItem},
     {"FindMarkedObject",       (lua_CFunction) GameObject_FindMarkedObject},
     {"FindNextObject",         (lua_CFunction) GameObject_FindNextObject},
     {"FindSkill",              (lua_CFunction) GameObject_FindSkill},
@@ -95,6 +96,7 @@ static struct method_decl GameObject_methods[] =
     {"GetPets",                (lua_CFunction) GameObject_GetPets},
     {"GetPlayerInfo",          (lua_CFunction) GameObject_GetPlayerInfo},
     {"GetPlayerWeightLimit",   (lua_CFunction) GameObject_GetPlayerWeightLimit},
+    {"GetPrivacy",             (lua_CFunction) GameObject_GetPrivacy},
     {"GetQuest",               (lua_CFunction) GameObject_GetQuest},
     {"GetRepairCost",          (lua_CFunction) GameObject_GetRepairCost},
     {"GetSkill",               (lua_CFunction) GameObject_GetSkill},
@@ -1096,7 +1098,7 @@ static int GameObject_GetEquipment(lua_State *L)
 }
 
 /*****************************************************************************/
-/* Name   : GameObject_GetRepairCost                                         */
+/* Name   : GameObject_GetRepairCost                                        */
 /* Lua    : object:GetRepairCost()                                           */
 /*****************************************************************************/
 static int GameObject_GetRepairCost(lua_State *L)
@@ -1358,7 +1360,7 @@ static int GameObject_GetSkill(lua_State *L)
 /*                  non-leveling);                                           */
 /*              game.FAILURE_MAXLEVEL - failure (the skill is direct or      */
 /*                  indirect but has already reached maximum level);         */
-/*              game.FAILURE_INDIRECT_NO - failure (the skill is indirect and*/
+/*   (removed)  game.FAILURE_INDIRECT_NO - failure (the skill is indirect and*/
 /*                  has already gained experience via this method this       */
 /*                  level).                                                  */
 /*                                                                           */
@@ -1436,6 +1438,7 @@ static int GameObject_SetSkill(lua_State *L)
                 return 0;
             }
 
+            // this is dirty to say, when we level skillgroup, auto level highest skill in there
             skill = pl->highest_skill[nr];
             break;
 
@@ -1444,7 +1447,7 @@ static int GameObject_SetSkill(lua_State *L)
             return 0;
     }
 
-    /* If the player does not even have this skill, return 1, nil, 0, 0. */
+    // NO skill? return 1, nil, 0, 0.
     if (!skill)
     {
         failure = 1;
@@ -1452,12 +1455,7 @@ static int GameObject_SetSkill(lua_State *L)
     }
     else
     {
-        /* Scripts can change a max of 1 level, up or down. */
-        level = MAX(-1, MIN(level, 1));
-
-        /* If a TYPE_SKILL object has ->last_eat == NONLEVELING, it cannot be
-         * levelled; the player either has it or he does not. Return 2, skill,
-         * 0, 0. */
+        // NONLEVELING skill? return 2, skill, 0, 0.
         if (skill->last_eat == NONLEVELING)
         {
             failure = 2;
@@ -1465,96 +1463,55 @@ static int GameObject_SetSkill(lua_State *L)
         }
         else
         {
-            /* Already at maximum level? Return 3. skill, 0, 0. */
+            // MAXLEVEL skill? return 3, skill, 0, 0.
             if (skill->level == MAXLEVEL)
             {
                 failure = 3;
                 level = exp = 0;
             }
-
-            /* If ->last_eat == INDIRECT, it is levelled indirectly
-             * (accumulates experience which causes level gain/loss when it
-             * crosses certain thresholds). */
-            if (skill->last_eat == INDIRECT)
+            else if (skill->last_eat == INDIRECT ||
+            skill->last_eat == DIRECT)
             {
-                /* If ->item_level == ->level, this means it has already gained
-                 * some experience via a script this level so the player will
-                 * have to go back to normal grinding for experience until next
-                 * level. This prevents scripts being exploited too much to
-                 * gain mega-levels. Return 4, skill, 0, 0. */
-                //if (skill->item_level == skill->level &&
-                //    (level > 0 || (level == 0 && exp > 0)))
-                //{
-                //    failure = 4;
-                //    level = exp = 0;
-                //}
-                //else
-                //{
-                    /* Exp loss is limited to 1 point below the threshold for
-                     * the current level, and gain to the threshold for the
-                     * next level. */
-                    int lo = (hooks->new_levels[skill->level] - 1) - skill->stats.exp,
-                        hi = hooks->new_levels[skill->level + 1] - skill->stats.exp;
+              /* Scripts can change a max of 1 level, up or down. */
+              // this don't work, when gm command using this function to adjust levels?
+              level = MAX(-1, MIN(level, 1));
+              // this level adjustment is also ignored by the exp_threshold logic below, so TODO clean this later, currently its functional for +/-1 level
+              // this is still a mess, asyncron brain shit from multiply minds.
 
-                    if (level > 0)
-                    {
-                        exp = hi;
-                    }
-                    else if (level < 0)
-                    {
-                        exp = lo;
-                    }
-                    else
-                    {
-                        exp = MAX(lo, MIN(exp, hi));
-                    }
+             /* Exp loss is limited to 1 point below the threshold for
+              * the current level, and gain to the threshold for the
+              * next level. */
+              int lo = (hooks->exp_threshold[skill->level] - 1) - skill->stats.exp,
+              hi = hooks->exp_threshold[skill->level + 1] - skill->stats.exp;
 
-                    level = skill->level;
-                    exp = hooks->add_exp(WHO, exp, nr, 0);
-                    level = skill->level - level;
+              if (level > 0)
+              {
+                exp = hi;
+              }
+              else if (level < 0)
+              {
+                exp = lo;
+              }
+              else
+              {
+                exp = MAX(lo, MIN(exp, hi));
+              }
 
-                    if (exp >= 1)
-                    {
-                        skill->item_level = skill->level;
-                    }
-                //}
-            }
-            /* If ->last_eat == DIRECT, it is levelled directly (does not
-             * accumulate experience in the normal way but gains/loses levels
-             * directly). */
-            else if (skill->last_eat == DIRECT)
-            {
-                /* Exp loss is forced to the threshold for the previous level,
-                 * and gain to the threshold for the next level. */
-                int lo = skill->stats.exp - hooks->new_levels[skill->level - 1],
-                    hi = hooks->new_levels[skill->level + 1] - skill->stats.exp;
-
-                if (level > 0 ||
-                    exp > 0)
-                {
-                    exp = hi;
-                }
-                else if (level < 0 ||
-                         exp < 0)
-                {
-                    exp = lo;
-                }
-
-                level = skill->level;
-                (void)hooks->add_exp(WHO, exp, nr, 0);
-                level = skill->level - level;
-                exp = 0;
+              exp = hooks->exp_adjust(pl, nr, exp, EXP_FLAG_NO_BONUS);
+              // EXP_FLAG_CAP we can't cap this here, we want a clean level up/(down), not a capped 1/4 level up
+              // EXP_FLAG_NO_BONUS and we don't want bonus here
+              level = skill->level; // update level info for lua return parameters
             }
             else
             {
-                LOG(llevDebug, "DEBUG:: Skill (%d) with unhandled last_eat (%d)!\n",
-                    nr, skill->last_eat);
-                luaL_error(L, "object:SetSkill(): Bad skill!");
-                return 0;
+              LOG(llevDebug, "DEBUG:: Skill (%d) with unhandled last_eat (%d)!\n",
+              nr, skill->last_eat);
+              luaL_error(L, "object:SetSkill(): Bad skill!");
+              return 0;
             }
         }
     }
-
+    // success return 4, skill, level, exp
     lua_pushnumber(L, failure);
     push_object(L, &GameObject, skill);
     lua_pushnumber(L, level);
@@ -1789,6 +1746,30 @@ static int GameObject_Drop(lua_State *L)
 
     dropped = hooks->thing_drop_to_floor(WHO, WHAT, nrof);
     push_object(L, &GameObject, dropped);
+    return 1;
+}
+
+/*****************************************************************************/
+/* Name   : GameObject_ExamineItem                                           */
+/* Lua    : object:Examine(what)                                             */
+/*****************************************************************************/
+static int GameObject_ExamineItem(lua_State *L)
+{
+    lua_object *self,
+               *whatptr;
+    static char *result;
+
+    get_lua_args(L, "OO|i", &self, &whatptr);
+
+    if ((WHO->type != PLAYER ||
+         !CONTR(WHO)) &&
+        WHO->type != MONSTER)
+    {
+        return luaL_error(L, "object:Drop() can only be called on a player or monster!");
+    }
+
+    result = hooks->examine_item(WHO, WHAT);
+    lua_pushstring(L, result);
     return 1;
 }
 
@@ -2130,23 +2111,31 @@ static int GameObject_ChannelMsg(lua_State *L)
     if (*message)
     {
         char buf[SMALL_BUF];
+        /* FIXME: Was ECC_UNDERLINE but the client draws the underline too low
+         * which obscures the next line of text.
+         *
+         * --- Smacky 20190224 */
+        /* Should be replaced with either ECC_UNDERLINE or maybe "<u>" after transition
+         * to the Unity client, as it displays text formatting fine.
+         */
+        char c[1] = "";
 
         /* System messages don't use object's name, but are otherwise 'normal'
          * messages. */
         if (mode == 2)
         {
-            sprintf(buf, "%c|Daimonin|%c", ECC_UNDERLINE, ECC_UNDERLINE);
+            sprintf(buf, "%s|Daimonin|%s", c, c);
             mode = 0;
         }
         /* Actually this should never happen -- it's very important that
          * objects always have names (this is handled elsewhere), but JIC... */
         else if (!WHO->name)
         {
-            sprintf(buf, "%c???%c", ECC_UNDERLINE, ECC_UNDERLINE);
+            sprintf(buf, "%s|???|%s", c, c);
         }
         else
         {
-            sprintf(buf, "%c%s%c", ECC_UNDERLINE, WHO->name, ECC_UNDERLINE);
+            sprintf(buf, "%s%s%s", c, QUERY_SHORT_NAME(WHO, NULL), c);
         }
 
         if (hooks->lua_channel_message(channel, buf, message, mode) == 0)
@@ -2165,23 +2154,53 @@ static int GameObject_ChannelMsg(lua_State *L)
 
 /*****************************************************************************/
 /* Name   : GameObject_Write                                                 */
-/* Lua    : object:Write(message, color)                                     */
-/* Info   : Writes a message to a specific player.                           */
-/*          color should be one of the game.COLOR_xxx constants.             */
-/*          default color is game.COLOR_UNIQUE | game.COLOR_NAVY             */
+/* Lua    : object:Write(message, ndif)                                      */
+/* Info   : Only works for player objects. Other types generate an error.    */
+/*          Writes a message to a specific player or group.                  */
+/*          ndif should be zero or one game.NDI_COLR_* and/or zero or more   */
+/*          game.NDI_FLAG_*. The default ndif is game.NDI_COLR_WHITE.        */
+/*          As a special case, if ndif includes game.NDI_FLAG_GSAY it is sent*/
+/*          to all OTHER members of the player's group, if any, and is always*/
+/*          yellow.                                                          */
+/*          game.NDI_FLAG_VIM should be used *very* sparingly, if at all.    */
+/* Note   : The Lua language cannot do bitwise operations but it is fine to  */
+/*          add the ndif values.                                             */
 /*****************************************************************************/
 static int GameObject_Write(lua_State *L)
 {
     char       *message;
-    int         color = NDI_NAVY;
+    int         ndif = NDI_WHITE;
     lua_object *self;
 
-    get_lua_args(L, "Os|i", &self, &message, &color);
+    get_lua_args(L, "Os|i", &self, &message, &ndif);
+
+    if (WHO->type != PLAYER)
+    {
+        luaL_error(L, "object:Write() can only be called on a player!");
+        return 0;
+    }
 
     /* No point mucking about with an empty message. */
-    if (*message)
+    if (*message == '\0')
     {
-        hooks->ndi(NDI_UNIQUE | color, 0, WHO, "%s", message);
+        return 0;
+    }
+
+    if ((ndif & NDI_GSAY))
+    {
+        object_t * member;
+
+        for (member = CONTR(WHO)->group_leader; member; member = CONTR(member)->group_next)
+        {
+            if (member != WHO)
+            {
+                hooks->ndi(ndif | NDI_YELLOW | NDI_UNIQUE, 0, member, "%s", message);
+            }
+        }
+    }
+    else
+    {
+        hooks->ndi(ndif | NDI_UNIQUE, 0, WHO, "%s", message);
     }
 
     return 0;
@@ -2827,9 +2846,7 @@ static int GameObject_AddQuest(lua_State *L)
     myob->state = step_end;
     myob->item_skill = skill_lev;
     myob->item_level = lev;
-    repeats = MAX(1, repeats) - 1;
-    myob->last_eat = repeats;
-    myob->stats.food = repeats - 1;
+    myob->last_eat = myob->stats.food = MAX(0, repeats - 1);
 
     hooks->add_quest_trigger(WHO, myob);
 
@@ -3400,51 +3417,6 @@ static int GameObject_CreateInvisibleInside(lua_State *L)
     return push_object(L, &GameObject, myob);
 }
 
-// all other CreateObjectInside ignoring containers, because they are targeting low level function insert_ob_in_ob
-// this function is a clone of CreateObjectInsideBody without the call for insert_ob_in_ob, instead it returns the object
-// this object can be handled by PickUp then to work with containers
-/*****************************************************************************/
-/* Name   : GameObject_CreateObject                                		     */
-/* Lua    : object:CreateObject(archname, identified, number, value)         */                             							 */
-/* Info   : Creates an object from archname and return this object.          */
-/*          identified is either game.IDENTIFIED or game.UNIDENTIFIED        */
-/*          number is the number of objects to create in a stack             */
-/*          If value is >= 0 it will be used as the new object's value,      */
-/*          otherwise the value will be taken from the arch.				 */
-/*****************************************************************************/
-static int GameObject_CreateObject(lua_State *L)
-{
-    object_t *myob;
-    int         value = -1, id = 0, nrof = 1;
-    char       *archname;
-    lua_object *whatptr;
-
-    get_lua_args(L, "Os|iii", &whatptr, &archname, &id, &nrof, &value);
-
-    myob = hooks->arch_to_object(hooks->find_archetype(archname));
-
-    if (!myob)
-    {
-        char buf[MEDIUM_BUF];
-
-        sprintf(buf, "object:Create(): Can't find archetype '%s'", archname);
-        luaL_error(L, buf);
-
-        return NULL;
-    }
-	  if (value != -1) /* -1 means, we use original value */
-        myob->value = value;
-
-		if (id)
-    {
-        THING_IDENTIFY(myob);
-    }
-    if (nrof > 1)
-        myob->nrof = nrof;
-
-	return push_object(L, &GameObject, myob);
-}
-
 /* code body of the CreateObjectInside functions */
 static object_t *CreateObjectInside_body(lua_State *L, object_t *where, char *archname, int id, int nrof, int value)
 {
@@ -3492,7 +3464,7 @@ static int GameObject_CreateObjectInside(lua_State *L)
 
     get_lua_args(L, "Os|iii", &whatptr, &txt, &id, &nrof, &value);
 
-	  myob = CreateObjectInside_body(L, WHAT, txt, id, nrof, value);
+    myob = CreateObjectInside_body(L, WHAT, txt, id, nrof, value);
 
     return push_object(L, &GameObject, myob);
 }
@@ -4083,6 +4055,11 @@ static int GameObject_SendCustomCommand(lua_State *L)
     CFParm      CFP;
 
     get_lua_args(L, "Os", &self, &customcmd);
+
+    if (WHO->type != PLAYER || !CONTR(WHO))
+    {
+        return luaL_error(L, "object:SendCustomCommand() can only be called on a player!");
+    }
 
     CFP.Value[0] = (void *) (WHO);
     CFP.Value[1] = (void *) (customcmd);
@@ -4885,6 +4862,75 @@ static int GameObject_SetPersonalLight(lua_State *L)
     hooks->set_personal_light(CONTR(WHO), value);
     lua_pushnumber(L, CONTR(WHO)->personal_light);
 
+    return 1;
+}
+
+/*****************************************************************************/
+/* Name   : GameObject_GetPrivacy                                            */
+/* Lua    : object:GetPrivacy()                                              */
+/* Info   : Queries a player's privacy setting.                              */
+/* Arg    : -                                                                */
+/* Error  : object is not a player.                                          */
+/* Return : The player's privacy setting (true or false).                    */
+/* Note   : There is intentionally no SetPrivacy().                          */
+/*****************************************************************************/
+static int GameObject_GetPrivacy(lua_State * L)
+{
+    lua_object * self;
+
+    get_lua_args(L, "O", &self);
+
+    if (WHO->type != PLAYER)
+    {
+        return luaL_error(L, "object:GetPrivacy() can only be called on a player!");
+    }
+
+    lua_pushboolean(L, CONTR(WHO)->privacy);
+    return 1;
+}
+
+/*****************************************************************************/
+/* Name   : GameObject_AddSparkly                                            */
+/* Lua    : object:AddSparkly(arch_id, s)                                    */
+/* Info   : Associates a sparkly with object.                                */
+/* Arg    : arch_id is the name of the arch to use as the sparkly.           */
+/*          s is the time (in seconds, may be fractional) for the sparkly to */
+/*          last. This time is converted to server ticks (the exchange rate  */
+/*          may change) so may not be 100% exact. If unspecified (or <= 0),  */
+/*          the arch default is used.                                        */
+/* Error  : arch_id does not refer to an archetype or is not a sparkly       */
+/*          archetype.                                                       */
+/* Return : The newly created sparkly object (which may be nil under certain */
+/*          circumstances).                                                  0*/
+/* Note   : Sparklies in general, and therefore the Lua UI to that system,   */
+/*          suffers from several substantial problems and is easily broken.  */
+/*          There will be fairly major update at some point.                 */
+/*****************************************************************************/
+static int GameObject_AddSparkly(lua_State * L)
+{
+    lua_object  *self;
+    char        *arch_id;
+    float        s = 0;
+    archetype_t *at;
+    sint16       t;
+    object_t    *sparkly;
+
+    get_lua_args(L, "Os|f", &self, &arch_id, &s);
+
+    if (!(at = hooks->find_archetype(arch_id)))
+    {
+        return luaL_error(L, "object:AddSparkly(): Couldn't find archetype '%s'!",
+            arch_id);
+    }
+    else if (at->clone.type != TYPE_SPARKLY)
+    {
+        return luaL_error(L, "object:AddSparkly(): Archetype '%s' is not a sparkly!",
+            arch_id);
+    }
+
+    t = (s <= 0) ? 0 : (sint16)((float)*hooks->pticks_second * s);
+    sparkly = hooks->sparkly_create(at, WHO, t, -1, 0);
+    push_object(L, &GameObject, sparkly);
     return 1;
 }
 
