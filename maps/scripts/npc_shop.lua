@@ -43,12 +43,17 @@ function topic_shop(group) -- we need this global
   for index, data in for_sale do
     local ob = game:CreateObject(data.arch, game.IDENTIFIED, 1)
     if (ob~=nil) then
-      -- normally we could skip every item not in this group
-      -- but because lua has no continue and we don't want to use goto, we do the opposite
-      -- only if we find the correct type and subtype we show it
-      if ((group_to_show==0) or
-      (ob.type == groups[group_to_show].type and ob.subtype == groups[group_to_show].subtype)) then
+      -- lua has no continue and i don't want to use to complex one line comparisons, so i use a flag here
+      local show_item=true
+      if group_to_show~=0 then
+        if groups[group_to_show].type~=nil and groups[group_to_show].type~=ob.type then
+          show_item=false
+        elseif groups[group_to_show].subtype~=nil and groups[group_to_show].subtype~=ob.subtype then
+          show_item=false
+        end
+      end
 
+      if show_item==true then
         local requirements=""
 			
         -- c -- int tmp_lev = (what->item_skill) ? pl->skillgroup_ptr[what->item_skill-1]->level : who->level;
