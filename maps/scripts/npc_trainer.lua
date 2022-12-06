@@ -30,9 +30,8 @@ local function to_pay(skill)
   local costs = 100 * slevel * slevel * 2
 
   -- hybrid training - reduce the costs in relation to your present grinded exp.
-  -- !!! this part need the GetExpThreshold function in daimonin_object.c
-  -- without this function hybrid training didn't work
-  local exp_threshold = player:GetExpThreshold(slevel);
+  -- !!! this part need the GetExpThreshold function in daimonin_game.c
+  local exp_threshold = game:GetExpThreshold(slevel);
   if (exp_threshold) then
     local sexp = sobj.experience
     local exp_delta=exp_threshold - sexp
