@@ -4,6 +4,12 @@ player = event.activator -- we need this global for npc_shop
 require("interface_builder")
 ib = InterfaceBuilder() -- we need this global ...
 
+groups =
+{
+  {name = "mail", type = 16},
+  {name = "helm", type = 34}
+}
+
 -- these must be the correct arch names. we need this global ...
 for_sale =
 {
@@ -20,11 +26,24 @@ for_sale =
   {arch = "breastplate"},
   {arch = "plate_field"},
   {arch = "plate_full"},
-  {arch = "plate_mail"}
+  {arch = "plate_mail"},
   --{arch = "panoply_mail"},
   --{arch = "maximillian_mail"},
   --{arch = "dragon_plate_armour"},
   --{arch = "dragon_chain_armour"}
+  
+  {arch = "helm_horn"},
+  {arch = "coif_scale"},
+  {arch = "helm_iron"},
+  {arch = "coif_chain"},
+  {arch = "full_helmet"},
+  {arch = "helm_bronze"},
+  {arch = "helm_samurai"},
+  {arch = "helm_field"},
+  {arch = "helm_battle"},
+  {arch = "helm_war"},
+  {arch = "helm_plate"},
+  {arch = "helm_guard"}
 }
 
 local function topic_greeting()
