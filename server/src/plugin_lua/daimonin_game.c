@@ -34,6 +34,7 @@ static struct method_decl Game_methods[] =
     {"FindPlayer",       Game_FindPlayer},
     {"GetSkillNr",       Game_GetSkillNr},
     {"GetSpellNr",       Game_GetSpellNr},
+    {"GetExpThreshold",  Game_GetExpThreshold},
     {"GetTimeAndDate",   Game_GetTimeAndDate},
     {"GlobalMessage",    Game_Write}, // deprecated, use game:Write()
     {"IsValid",          Game_IsValid},
@@ -1072,6 +1073,26 @@ static int Game_LocateBeacon(lua_State *L)
     SHSTR_FREE(id_s);
 
     return push_object(L, &GameObject, foundob);
+}
+
+/*****************************************************************************/
+/* Name   : Game_GetExpThreshold                                             */
+/* Lua    : game:GetExpThreshold()                                           */
+/*****************************************************************************/
+// get the ExpThreshold value for a specific level
+static int Game_GetExpThreshold(lua_State *L)
+{
+ lua_object *self;
+ int level;
+
+ get_lua_args(L, "Oi", &self, &level);
+ if (level<0 || level >110) // todo this should be servermaxlevel not hardcoded 110
+ {
+  return 0; // error
+ }
+
+lua_pushnumber(L, hooks->exp_threshold[level]);
+return 1;
 }
 
 /*****************************************************************************/
