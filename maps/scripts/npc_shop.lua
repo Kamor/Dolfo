@@ -94,8 +94,10 @@ local function topic_show(index)
       if i>0 and i <= getTableSize(for_sale) then
         local ob = game:CreateObject(for_sale[i].arch, game.IDENTIFIED, 1)
         if (ob~=nil) then
-          ib:AddIcon(ob.name, ob:GetFace(), 'Condition: ~'.. ob.item_condition .. '~    Quality: ~' ..ob.item_quality .. '~')
-          ib:AddLink("Buy " .. ob.name , "buy " .. index)
+        
+        local result = player:ExamineItem(ob)
+        ib:AddMsg(result)
+        ib:AddLink("Buy " .. ob.name , "buy " .. index)
         return
       end
     end
@@ -113,7 +115,7 @@ local function topic_buy(index)
       local ob = game:CreateObject(for_sale[i].arch, game.IDENTIFIED, 1) -- create 1 identified obj
       if (ob~=nil) then
 
-        if player:PayAmount(ob.value) == 1 then
+        if player:PayAmount(calcValue(ob)) == 1 then
           ib:SetMsg("Nice that you found something.")
           player:PickUp(ob,nil,1)
         else
